@@ -1,0 +1,44 @@
+@font-face {
+  font-family: 'Motiva-sans';
+  src: url('../public/fonts/MotivaSansRegular.woff.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Motiva-sans';
+  font-weight: 300;
+  src: url('../public/fonts/MotivaSansThin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Motiva-sans';
+  font-weight: 500;
+  src: url('../public/fonts/MotivaSansBold.woff.ttf') format('truetype');
+}
+
+* {
+  font-family: 'Motiva-sans';
+}
+
+html {
+  overflow: scroll;
+}
+
+html,
+body {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  overflow-y: auto;
+}
+
+iframe {
+  display: none;
+}
+
+.swiper {
+  left: 125px;
+  overflow: visible;
+}

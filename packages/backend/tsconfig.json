@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "typeRoots": [
+      "@types/node",
+      "./src/types"
+    ],
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "target": "es5",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"]
+    }
+  },
+  "include": ["src/**/*"],
+}
