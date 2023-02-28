@@ -2,8 +2,8 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ThemeProvider } from 'styled-components';
-import { MainRouter } from '../navigation';
 
+import { MainRouter } from '../navigation';
 import * as theme from '../theme';
 import * as Styled from './app.styled';
 import '../../style.css';
