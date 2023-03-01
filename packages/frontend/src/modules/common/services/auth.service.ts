@@ -12,7 +12,7 @@ type SignInFormValues = {
   password: string;
 };
 
-const BASE_URL = `/api/auth`;
+const BASE_URL = `${process.env.API_URL}/api/auth` || 'http://localhost:4200/api/auth';
 
 const signUp = async (data: SignUpFormValues) => {
   console.log('sign up service');
