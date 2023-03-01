@@ -1,6 +1,7 @@
 {
   "name": "water-vapour",
   "private": true,
+  "workspaces": ["frontend", "backend"],
   "version": "0.0.0",
   "type": "module",
   "scripts": {
