@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.1ded0849.css",
+    "main.js": "/static/js/main.cc7ed3a9.js",
+    "static/media/MotivaSansThin.ttf": "/static/media/MotivaSansThin.d843c289bb62286d2729.ttf",
+    "static/media/MotivaSansRegular.woff.ttf": "/static/media/MotivaSansRegular.woff.a576eb133febecaf8aef.ttf",
+    "static/media/MotivaSansBold.woff.ttf": "/static/media/MotivaSansBold.woff.f39c6a7cff3590390c93.ttf",
+    "index.html": "/index.html",
+    "main.1ded0849.css.map": "/static/css/main.1ded0849.css.map",
+    "main.cc7ed3a9.js.map": "/static/js/main.cc7ed3a9.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1ded0849.css",
+    "static/js/main.cc7ed3a9.js"
+  ]
+}
