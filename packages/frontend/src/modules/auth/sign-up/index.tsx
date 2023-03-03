@@ -25,6 +25,7 @@ import {
   Checkbox
 } from './index.styled';
 import AppContainer from '../../app';
+import { Loader } from '../../common/loader/loader';
 
 const COUNTRY_API_URL = "https://get.geojs.io/v1/ip/country.json";
 
@@ -34,6 +35,7 @@ export const SignUp: React.FC = () => {
   const [country, setCountry] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [isSignedEmail, setIsSignedEmail] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -69,6 +71,15 @@ export const SignUp: React.FC = () => {
     }
   };
 
+  const isValid =
+    isChecked &&
+    !isLoading &&
+    !formik.errors.email &&
+    !formik.errors.password &&
+    formik.touched.password &&
+    !formik.errors.name &&
+    formik.touched.name;
+
   useEffect(() => {
     fetchCountry()
   }, []);
@@ -85,6 +96,7 @@ export const SignUp: React.FC = () => {
 
   const handleAuthorized = async (route: string) => {
     const { email, name, password, country } = formik.values;
+    setIsLoading(true);
 
     if (email && password && country && name) {
       const user = await signUpMutation.mutateAsync({
@@ -101,11 +113,15 @@ export const SignUp: React.FC = () => {
       );
     }
 
-    history.push(route);
+    setIsLoading(false);
+
+    if (isValid) {
+      history.push(route);
+    } else {
+      console.log(formik.errors)
+    }
   };
 
-
-  console.log(formik.errors)
 
   return (
     <Container>
@@ -128,14 +144,17 @@ export const SignUp: React.FC = () => {
             </FormControl>
           ))}
           <Button
-            disabled={!isChecked}
+            disabled={!isValid}
             onClick={async (event) => {
               event.preventDefault();
               await handleAuthorized(APP_KEYS.ROUTER_KEYS.HOME);
             }}
           >
-            {" "}
-            Done
+            {isLoading 
+            ? <Loader />
+            : "Done"
+            }
+            
           </Button>
         </Form>
       ) : (

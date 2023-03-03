@@ -7,7 +7,7 @@ import { APP_KEYS } from '../../common/consts';
 import { signInValidationSchema } from '../../common/utils/validation';
 import { IAccount } from '../../common/types/Account.interface';
 import { useSignIn } from '../../common/services/auth.service';
-
+import { Loader } from '../../common/loader/loader'
 import { Header } from '../../header';
 import {
   Form,
@@ -30,6 +30,7 @@ import { QRCode } from './qrcode/QRCode';
 
 export const SignIn: React.FC = () => {
   const [isChecked, setIsChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleCheckboxChange() {
     setIsChecked(!isChecked);
@@ -61,12 +62,15 @@ export const SignIn: React.FC = () => {
   const handleAuthorized =
     (route: string) => async (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
+      setIsLoading(true)
       console.log('handleauthorized');
 
       const user = await signInMutation.mutateAsync({
         name: formik.values.name,
         password: formik.values.password
       });
+
+      setIsLoading(false)
 
       if (user.message === 'password') {
         formik.setFieldError('password', 'error');
@@ -122,8 +126,11 @@ export const SignIn: React.FC = () => {
                 />
                 <FieldText>Remember me</FieldText>
               </CheckboxControl>
-              <Button onClick={handleAuthorized(APP_KEYS.ROUTER_KEYS.HOME)}>
-                Sign in
+              <Button disabled={isLoading} onClick={handleAuthorized(APP_KEYS.ROUTER_KEYS.HOME)}>
+                {isLoading 
+                ? <Loader />
+                : "Sign In"
+                }
               </Button>
               <FieldLink>Help, I can't sign in</FieldLink>
             </InputContainer>
