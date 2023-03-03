@@ -12,7 +12,16 @@ type SignInFormValues = {
   password: string;
 };
 
-const BASE_URL = "https://steam-website-react-type-script.vercel.app";
+let apiUrl = ''
+
+fetch("/config")
+  .then((response) => response.json())
+  .then((config) => {
+    apiUrl = config.apiURL;
+    return apiUrl
+  });
+
+const BASE_URL = apiUrl || 'http://localhost:4200';
 
 const signUp = async (data: SignUpFormValues) => {
   console.log('sign up service');

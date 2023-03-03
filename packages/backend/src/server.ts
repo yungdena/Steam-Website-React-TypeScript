@@ -5,6 +5,7 @@ import cors from 'cors';
 
 import AppRouter from './routes';
 import connectDB from './config/database';
+import { apiConfig } from './config/api';
 
 const app = express();
 
@@ -23,6 +24,10 @@ app.set('port', process.env.API_URL || 4200);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
+
+app.get("/config", (req, res) => {
+  res.send(apiConfig);
+});
 
 router.init();
 
