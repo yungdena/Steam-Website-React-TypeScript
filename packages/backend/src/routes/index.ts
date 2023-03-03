@@ -1,4 +1,5 @@
 import { Application } from 'express';
+import appsRouter from './api/apps.route';
 import authRouter from './api/auth.route';
 
 class AppRouter {
@@ -9,6 +10,7 @@ class AppRouter {
       res.send('API Running');
     });
     this.app.use('/api/auth', authRouter);
+    this.app.use('/api/apps', appsRouter)
   }
 }
 
