@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 
 import { AuthService } from '../services/auth.service';
-import { IUser } from '../models/User';
 
 export class AuthController {
   constructor(private authService: AuthService) {}
