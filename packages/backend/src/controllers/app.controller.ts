@@ -8,9 +8,7 @@ export class AppsController {
 
   async create(req: Request, res: Response) {
     const app: IApp = req.body;
-
-    console.log('this', this)
-
+    
     await this.appsService.createApp({ app, res });
   }
 

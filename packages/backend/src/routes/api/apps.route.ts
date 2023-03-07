@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { tryCatchWrap } from "../../middlewares/try-catch.middleware";
 import appsController from "../../controllers/app.controller";
 
 const appsRouter: Router = Router();

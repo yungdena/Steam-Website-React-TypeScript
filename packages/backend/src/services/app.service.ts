@@ -35,7 +35,8 @@ class AppsService {
   }
 
   async createApp({ app, res }: ICreatePayload) {
-    const createdApp = await AppModel.create({ app })
+    console.log("App", app);
+    const createdApp = await AppModel.create(app)
 
     if (!createdApp) {
       res.status(400).send({ message: "Error while creating app" });

@@ -1,21 +1,26 @@
 import { Document } from "mongoose";
 
-interface ILanguage {
-  interface: boolean;
-  fullAudio: boolean;
-  Subtitles: boolean;
+export interface ILanguage {
+  interface: [string];
+  fullAudio: [string];
+  Subtitles: [string];
+}
+
+export interface IReview {
+  rate: boolean;
+  description: string;
 }
 
 export interface IApp extends Document {
-  id: string;
   title: string;
   description: string;
-  reviewsRate: string;
-  price: number;
-  releaseDate: Date;
+  reviews: IReview;
+  price: string;
+  releaseDate: string;
   publisher: string;
   developer: string;
   tags: string[];
+  genre: string[];
   imagesUrl: string[];
   languages: string;
   [key: string]: any;

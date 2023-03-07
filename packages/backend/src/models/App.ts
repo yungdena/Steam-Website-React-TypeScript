@@ -1,50 +1,66 @@
 import { Model, model, Schema } from "mongoose";
-import { IApp } from "../types/app.type";
+import { IApp, ILanguage } from "../types/app.type";
+import { IReview } from "../types/app.type";
+
+const reviewSchema = new Schema<IReview>({
+  rate: { type: Boolean, required: true },
+  description: { type: String, required: true },
+});
+
+const languageSchema = new Schema<ILanguage>({
+  interface: { type: [String], required: true },
+  fullAudio: { type: [String], required: true },
+  subtitles: { type: [String], required: true },
+});
 
 export const appSchema: Schema<IApp> = new Schema({
   title: {
     type: String,
-    required: true,
+    required: true
   },
   description: {
     type: String,
-    required: true,
+    required: true
   },
   developer: {
     type: String,
-    required: true,
+    required: true
   },
   publisher: {
     type: String,
-    required: true,
+    required: true
   },
-  reviewsRate: {
-    type: String,
-    required: true,
+  reviews: {
+    type: [reviewSchema],
+    required: true
   },
   releaseDate: {
-    type: Date,
-    required: true,
+    type: String,
+    required: true
   },
   tags: {
     type: [String],
-    required: true,
+    required: true
+  },
+  genre: {
+    type: [String],
+    required: true
   },
   price: {
-    type: Number,
-    required: true,
+    type: String,
+    required: true
+  },
+  titleImage: {
+    type: String,
+    required: true
   },
   imagesUrl: {
     type: [String],
-    required: true,
-  },
-  id: {
-    type: String,
-    required: true,
+    required: true
   },
   languages: {
-    type: [String],
-    required: true,
+    type: languageSchema,
+    required: true
   }
 });
 
