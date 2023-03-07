@@ -10,7 +10,7 @@
       <li>Sign In</li>
     </ul>
   </li>
-  <li>
+  <li>Store Page
      <ul>
       <li>Fetch service</li>
       <li>Simple list of games</li>
