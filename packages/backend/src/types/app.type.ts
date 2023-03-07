@@ -24,4 +24,5 @@ export interface IApp extends Document {
   imagesUrl: string[];
   languages: string;
   [key: string]: any;
+  bannerImage: string;
 }

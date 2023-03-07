@@ -61,6 +61,9 @@ export const appSchema: Schema<IApp> = new Schema({
   languages: {
     type: languageSchema,
     required: true
+  },
+  bannerImage: {
+    type: String,
   }
 });
 

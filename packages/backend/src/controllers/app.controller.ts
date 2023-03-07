@@ -21,6 +21,11 @@ export class AppsController {
     const app = await this.appsService.getAppByTitle(appTitle, res);
   }
 
+  async getById(req: Request, res: Response) {
+    const appId = req.params.id;
+    const app = await this.appsService.getAppById(appId, res);
+  }
+
   async update(req: Request, res: Response) {
     const app: IApp = req.body;
     const id = req.params.id;

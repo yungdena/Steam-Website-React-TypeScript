@@ -40,6 +40,18 @@ class AppsService {
     res.send(app);
   }
 
+  async getAppById(id: string, res: Response) {
+    const app = await AppModel.findById(id);
+
+    if (!app) {
+      res.status(404).send({ message: "cannot get app by id" });
+      return;
+    }
+
+    console.log("getAppById Service: ", app);
+    res.send(app);
+  }
+
   async createApp({ app, res }: ICreatePayload) {
     console.log("App", app);
     const createdApp = await AppModel.create(app);
@@ -58,13 +70,9 @@ class AppsService {
     console.log("App", app);
     console.log("id", id);
     try {
-      const updatedApp = await AppModel.findOneAndUpdate(
-        { _id: id },
-        app,
-        {
-          new: true,
-        }
-      );
+      const updatedApp = await AppModel.findOneAndUpdate({ _id: id }, app, {
+        new: true,
+      });
 
       console.log("updatedApp: ", updatedApp);
 
