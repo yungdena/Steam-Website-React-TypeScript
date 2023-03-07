@@ -10,6 +10,12 @@
       <li>Sign In</li>
     </ul>
   </li>
+  <li>
+     <ul>
+      <li>Fetch service</li>
+      <li>Simple list of games</li>
+    </ul>
+  </li>
 </ul>
 
 Will be Ready Soon:
