@@ -1,11 +1,17 @@
 import { Response } from "express";
+import { ObjectID } from "mongodb";
+
 import { AppModel } from "../models/App";
 import { IApp } from "../types/app.type";
 
-const API_URL = "http://localhost:4200/api/apps";
-
 interface ICreatePayload {
   app: IApp;
+  res: Response;
+}
+
+interface IUpdatePayload {
+  app: IApp;
+  id: string;
   res: Response;
 }
 
@@ -25,7 +31,7 @@ class AppsService {
   async getAppByTitle(title: string, res: Response) {
     const app = await AppModel.find({ title });
 
-    if(!app) {
+    if (!app) {
       res.status(404).send({ message: "cannot get app by title" });
       return;
     }
@@ -36,16 +42,36 @@ class AppsService {
 
   async createApp({ app, res }: ICreatePayload) {
     console.log("App", app);
-    const createdApp = await AppModel.create(app)
+    const createdApp = await AppModel.create(app);
 
     if (!createdApp) {
       res.status(400).send({ message: "Error while creating app" });
       return;
     }
 
-    console.log("createdApp: ", createdApp)
+    console.log("createdApp: ", createdApp);
 
     res.send(createdApp);
+  }
+
+  async updateApp({ app, res, id }: IUpdatePayload) {
+    console.log("App", app);
+    console.log("id", id);
+    try {
+      const updatedApp = await AppModel.findOneAndUpdate(
+        { _id: id },
+        app,
+        {
+          new: true,
+        }
+      );
+
+      console.log("updatedApp: ", updatedApp);
+
+      res.send(updatedApp);
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
 

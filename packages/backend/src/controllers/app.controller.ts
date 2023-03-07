@@ -8,7 +8,7 @@ export class AppsController {
 
   async create(req: Request, res: Response) {
     const app: IApp = req.body;
-    
+
     await this.appsService.createApp({ app, res });
   }
 
@@ -16,9 +16,15 @@ export class AppsController {
     const apps = await this.appsService.getAllApps(res);
   }
 
-  async getById(req: Request, res: Response) {
+  async getByTitle(req: Request, res: Response) {
     const appTitle = req.params.title;
     const app = await this.appsService.getAppByTitle(appTitle, res);
+  }
+
+  async update(req: Request, res: Response) {
+    const app: IApp = req.body;
+    const id = req.params.id;
+    const updatedApp = await this.appsService.updateApp({ app, id, res });
   }
 }
 
