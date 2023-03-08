@@ -26,7 +26,14 @@ export const AppContainer = styled.div`
   display: flex;
   width: 38.625rem;
   height: 2.75rem;
-  background-color: ${COLORS.darkBlueGrey};
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid ${COLORS.storeBlue}
+  cursor: pointer;
+
+  :hover {
+    border: 1px solid ${COLORS.grey}
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 `;
 
 export const AppImageContainer = styled.div`
@@ -56,4 +63,10 @@ export const AppTextContainer = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0 0.5rem;
+`
+
+export const AppLink = styled.button`
+  border: none;
+  background-color: transparent;
+  padding: 0;
 `

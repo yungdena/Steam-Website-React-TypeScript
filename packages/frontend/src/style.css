@@ -39,6 +39,16 @@ iframe {
 }
 
 .swiper {
-  left: 125px;
   overflow: visible;
+}
+
+.swiper-container {
+  margin: 0;
+  padding: 0;
+}
+
+.swiper-slide {
+  width: 100px;
+  margin: 0;
+  padding: 0;
 }

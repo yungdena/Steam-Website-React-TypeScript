@@ -28,5 +28,6 @@ export const ROUTER_KEYS = {
   SIGNIN: 'signin',
   SIGNUP: 'signup',
   HOME: 'home',
-  AUTHORIZED: 'authorized'
+  AUTHORIZED: 'authorized',
+  APPS: 'apps'
 };
