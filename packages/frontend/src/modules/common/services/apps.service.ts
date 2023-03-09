@@ -5,7 +5,7 @@ const BASE_URL = 'https://steam-api.onrender.com/api/';
 const DEV_URL = "http://localhost:4200/api";
 
 const getAllApps = async () => {
-  const response = await fetch(`${BASE_URL}/apps`, {
+  const response = await fetch(`${DEV_URL}/apps`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -19,7 +19,7 @@ const getAllApps = async () => {
 
 const getAppById = async (appId: string) => {
   console.log('getAppById', appId);
-  const response = await fetch(`${BASE_URL}/apps/${appId}`, {
+  const response = await fetch(`${DEV_URL}/apps/${appId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

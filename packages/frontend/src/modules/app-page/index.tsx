@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useGetAppById } from "../common/services/apps.service";
 import { IApp } from "../common/types/app.interface";
 import { Header } from "../header";
-import { AppTitle, BigInfoContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TitleImage } from "./index.styled";
+import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags } from "./index.styled";
 import { ImageSlider } from "./swiper";
 
 interface AppRouteParams {
@@ -31,21 +31,53 @@ export const AppPage = () => {
     <PageContainer>
       <Header />
       <InfoContainer>
-          <AppTitle>
-            {app?.title}
-          </AppTitle>
-          <InfoWrapper>
-            <BigInfoContainer>
-              <ImageSlider images={app?.imagesUrl} />
-            </BigInfoContainer>
-            <SmallInfoContainer>
-              <SmallInfoTextContainer>
-                <TitleImage src={app?.titleImage}/>
-                {app?.description}
-              </SmallInfoTextContainer>
-            </SmallInfoContainer>
-          </InfoWrapper>
+        <AppTitle>{app?.title}</AppTitle>
+        <InfoWrapper>
+          <BigInfoContainer>
+            <ImageSlider images={app?.imagesUrl} />
+          </BigInfoContainer>
+          <SmallInfoContainer>
+            <SmallInfoTextContainer>
+              <ImageContainer>
+                <TitleImage src={app?.titleImage} />
+              </ImageContainer>
+              {app?.description}
+            </SmallInfoTextContainer>
+            <AdditionalInfoContainer>
+              <AdditionalInfoTitleColumn>
+                <AdditionalInfoTitle>ALL REVIEWS</AdditionalInfoTitle>
+                <AdditionalInfoTitle>RELEASE DATE</AdditionalInfoTitle>
+                <AdditionalInfoTitle>DEVELOPER</AdditionalInfoTitle>
+                <AdditionalInfoTitle>PUBLISHER</AdditionalInfoTitle>
+              </AdditionalInfoTitleColumn>
+              <AdditionalInfoDescriptionColumn>
+                <AdditionalInfoDescription>
+                  See The reviews below
+                </AdditionalInfoDescription>
+                <AdditionalInfoDescription>
+                  {app?.releaseDate}
+                </AdditionalInfoDescription>
+                <AdditionalInfoDescription>
+                  {app?.developer}
+                </AdditionalInfoDescription>
+                <AdditionalInfoDescription>
+                  {app?.publisher}
+                </AdditionalInfoDescription>
+              </AdditionalInfoDescriptionColumn>
+            </AdditionalInfoContainer>
+            <TagsContainer>
+              <AdditionalInfoTitle>
+                Popular user-defined tags for this product:
+              </AdditionalInfoTitle>
+              <Tags>
+                {app?.tags.map(tag => (
+                  <Tag>{tag}</Tag>
+                ))}
+              </Tags>
+            </TagsContainer>
+          </SmallInfoContainer>
+        </InfoWrapper>
       </InfoContainer>
     </PageContainer>
-  )
+  );
 }
