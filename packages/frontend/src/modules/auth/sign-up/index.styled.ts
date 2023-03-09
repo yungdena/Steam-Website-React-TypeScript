@@ -117,7 +117,7 @@ export const Label = styled.label`
 `;
 
 export const Container = styled.div`
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   background: radial-gradient(
         30% 40% at 40% 30%,

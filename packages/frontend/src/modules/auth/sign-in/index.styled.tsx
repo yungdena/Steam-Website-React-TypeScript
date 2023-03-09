@@ -128,7 +128,7 @@ position: relative;
   justify-content: center;
   align-items: center;
   margin-top: 6.5rem;
-  width: 100vw;
+  width: 100%;
   height: 41.375rem;
   background: radial-gradient(rgba(24, 26, 33, 0) 0%, #181A21 100%) fixed no-repeat, url(https://community.akamai.steamstatic.com/public/shared/images/joinsteam/new_login_bg_strong_mask.jpg) center top no-repeat, #181A21;
 `;

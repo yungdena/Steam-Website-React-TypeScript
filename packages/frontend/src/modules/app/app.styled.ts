@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { COLORS } from '../theme';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -65,3 +65,8 @@ export const GlobalStyles = createGlobalStyle`
     font: inherit;
   }
   `;
+
+export const MainContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`

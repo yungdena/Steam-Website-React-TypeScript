@@ -44,6 +44,7 @@ export const SignUp: React.FC = () => {
   const formik = useFormik<{
     email: "";
     password: "";
+    confirmPassword: "";
     country: "";
     confirmEmail: "";
     name: "";
@@ -52,6 +53,7 @@ export const SignUp: React.FC = () => {
       email: "",
       confirmEmail: "",
       password: "",
+      confirmPassword: "",
       country: "",
       name: ""
     },
@@ -78,7 +80,9 @@ export const SignUp: React.FC = () => {
     !formik.errors.password &&
     formik.touched.password &&
     !formik.errors.name &&
-    formik.touched.name;
+    formik.touched.name &&
+    !formik.errors.confirmPassword &&
+    formik.touched.confirmPassword;
 
   useEffect(() => {
     fetchCountry()
@@ -119,6 +123,7 @@ export const SignUp: React.FC = () => {
       history.push(route);
     } else {
       console.log(formik.errors)
+      setIsLoading(false);
     }
   };
 

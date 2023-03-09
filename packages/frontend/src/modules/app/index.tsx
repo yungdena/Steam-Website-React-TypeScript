@@ -24,7 +24,9 @@ const AppContainer = () => (
   <ThemeProvider theme={theme}>
     <Styled.GlobalStyles />
     <QueryClientProvider client={queryClient}>
-      <MainRouter />
+      <Styled.MainContainer>
+        <MainRouter />
+      </Styled.MainContainer>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </ThemeProvider>

@@ -6,7 +6,7 @@ export const ContentContainer = styled.div`
   background-color: ${COLORS.darkBlueGrey};
   width: 100%;
   height: 100%;
-  background-color: ${COLORS.grey}
+  background-color: ${COLORS.storeBlue}
   margin-top: 6.5rem;
   color: ${COLORS.lightBlue};
   font-size: 3rem;
@@ -19,7 +19,6 @@ export const AppsList = styled.div`
   flex-direction: column;
   gap: 0.25rem;
   height: fix-content;
-  width: 100%;
 `;
 
 export const AppContainer = styled.div`
@@ -29,6 +28,7 @@ export const AppContainer = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
   border: 1px solid ${COLORS.storeBlue}
   cursor: pointer;
+  transition: 0.3s;
 
   :hover {
     border: 1px solid ${COLORS.grey}
