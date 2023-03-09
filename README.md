@@ -16,6 +16,12 @@
       <li>Simple list of games</li>
     </ul>
   </li>
+   <li>App Page
+     <ul>
+      <li>App images</li>
+      <li>App info</li>
+    </ul>
+  </li>
 </ul>
 
 Will be Ready Soon:
