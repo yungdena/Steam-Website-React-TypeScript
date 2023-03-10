@@ -38,4 +38,4 @@ Will be Ready Soon:
 
 
 P.S.
-Render servers is too slow, so if you want to give it a try, let me know in telegram: @science_in_action, or gmail: synytsyn.denys@gmail.com
+Render free servers is too slow, so if you want to give it a try, let me know in telegram: @science_in_action, or gmail: synytsyn.denys@gmail.com
