@@ -28,6 +28,8 @@ html,
 body {
   height: auto;
   overflow: hidden;
+
+  overflow-y: auto;
 }
 
 body {
