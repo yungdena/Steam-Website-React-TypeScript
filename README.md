@@ -3,6 +3,8 @@
 
 <em>Already implemented: </em>
 
+ONLY DESKTOP VERSION
+
 <ul>
   <li>Authentication
     <ul>
