@@ -1,7 +1,7 @@
 import { useMutation } from 'react-query';
 import { IApp } from '../types/app.interface';
 
-const BASE_URL = 'https://steam-api.onrender.com/api';
+const BASE_URL = "http://localhost:4200/api";
 const DEV_URL = "http://localhost:4200/api";
 
 const getAllApps = async () => {

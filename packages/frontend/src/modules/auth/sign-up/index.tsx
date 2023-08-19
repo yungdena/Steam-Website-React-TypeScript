@@ -127,7 +127,6 @@ export const SignUp: React.FC = () => {
     }
   };
 
-
   return (
     <Container>
       <Header />
