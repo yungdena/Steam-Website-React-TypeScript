@@ -3,6 +3,8 @@
 
 <em>Already implemented: </em>
 
+ONLY DESKTOP VERSION
+
 <ul>
   <li>Authentication
     <ul>
@@ -35,3 +37,10 @@ Will be Ready Soon:
     </ul>
   </li>
 </ul>
+
+
+P.S.
+Render free servers is too slow, so if you want to give it a try, let me know in telegram: @science_in_action, or gmail: synytsyn.denys@gmail.com
+
+P.P.S.
+App is still under development, bugs may appear
