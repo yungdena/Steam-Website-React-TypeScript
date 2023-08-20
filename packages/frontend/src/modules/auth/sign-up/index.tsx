@@ -22,7 +22,8 @@ import {
   Container,
   Select,
   CheckboxControl,
-  Checkbox
+  Checkbox,
+  ErrorMessage
 } from './index.styled';
 import AppContainer from '../../app';
 import { Loader } from '../../common/loader/loader';
@@ -33,9 +34,11 @@ export const SignUp: React.FC = () => {
   const history = useHistory();
   const signUpMutation = useSignUp();
   const [country, setCountry] = useState("");
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
   const [isSignedEmail, setIsSignedEmail] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
+  const [trueEmail, setTrueEmail] = useState(true);
+  const [privacyCheck, setPrivacyCheck] = useState(true);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -90,11 +93,15 @@ export const SignUp: React.FC = () => {
 
   const handleSigned = () => {
     const { email, confirmEmail } = formik.values;
-
     if (!formik.errors.email && !formik.errors.confirmEmail && formik.touched.email && formik.touched.confirmEmail) {
-      if (email === confirmEmail && isChecked) {
-        setIsSignedEmail(true);
+      if (email === confirmEmail) {
+        if (isChecked) {
+          setIsSignedEmail(true);
+        }
+      } else {
+        setTrueEmail(false);
       }
+      
     }
   };
 
@@ -135,6 +142,14 @@ export const SignUp: React.FC = () => {
           <TitleContainer>
             <Title>CREATE &nbsp;YOUR ACCOUNT</Title>
           </TitleContainer>
+          {formik.errors.name && formik.touched.name && (
+            <ErrorMessage>{formik.errors.name}</ErrorMessage>
+          )}
+          {formik.values.confirmPassword !== formik.values.password && (
+            <ErrorMessage>
+              Please make sure that your passwords are identical
+            </ErrorMessage>
+          )}
           {SIGNUP_INPUTS_2.map((input) => (
             <FormControl key={input.id}>
               <Label>{input.label}</Label>
@@ -154,15 +169,20 @@ export const SignUp: React.FC = () => {
               await handleAuthorized(APP_KEYS.ROUTER_KEYS.HOME);
             }}
           >
-            {isLoading 
-            ? <Loader />
-            : "Done"
-            }
-            
+            {isLoading ? <Loader /> : "Done"}
           </Button>
         </Form>
       ) : (
         <Form onSubmit={formik.handleSubmit}>
+          {(!trueEmail || !isChecked) && (
+            <ErrorMessage>
+              {!trueEmail &&
+                "Please enter the same address in both email address fields."}
+              <br />
+              {!isChecked &&
+                "You must agree to the Steam Subscriber Agreement to continue."}
+            </ErrorMessage>
+          )}
           <TitleContainer>
             <Title>CREATE &nbsp;YOUR ACCOUNT</Title>
           </TitleContainer>

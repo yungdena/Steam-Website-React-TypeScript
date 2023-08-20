@@ -18,7 +18,6 @@ const cld = new Cloudinary({
 
 const Logo = "https://res.cloudinary.com/didkbrlcz/image/upload/v1677489737/System/logo_steam_in6blq.svg";
 
-
 export const Header = () => {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const history = useHistory();
@@ -27,7 +26,8 @@ export const Header = () => {
     console.log('navigate')
     event.preventDefault();
 
-    history.push(route);
+    history.replace(route);
+    console.log('history replaced')
   };
 
   const storedAccount = localStorage.getItem('account');
@@ -71,7 +71,11 @@ export const Header = () => {
           })}
         </LinkGroup>
         <OptionalLinks>
-          <HeaderLink onClick={handleNavigate(APP_KEYS.ROUTER_KEYS.SIGNIN)}>
+          <HeaderLink
+            onClick={handleNavigate(
+              APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
+            )}
+          >
             login
           </HeaderLink>
           <HeaderLink>language</HeaderLink>

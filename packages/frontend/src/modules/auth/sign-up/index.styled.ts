@@ -136,7 +136,15 @@ export const Container = styled.div`
   }
 `;
 
-export const ErrorMessage = styled.div``
+export const ErrorMessage = styled.div`
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid ${COLORS.borderRed};
+  color: white;
+  font-size: {ms}
+`;
+
 export const SignInLink = styled.div``;
 
 export const CheckboxControl = styled.div`

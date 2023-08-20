@@ -11,4 +11,5 @@ export const COLORS = {
   storeBlue: "#1b2838",
   greyText: "#c7d5e0",
   urbanGrey: "#556772",
+  borderRed: "#b44040",
 };
