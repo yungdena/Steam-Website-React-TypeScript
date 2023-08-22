@@ -80,11 +80,17 @@ export const SignIn: React.FC = () => {
         formik.setFieldError("name", "error");
         return;
       }
-
+      if (isChecked) {
         localStorage.setItem(
           APP_KEYS.STORAGE_KEYS.ACCOUNT,
           JSON.stringify(user)
         );
+      } else {
+        sessionStorage.setItem(
+          APP_KEYS.STORAGE_KEYS.ACCOUNT,
+          JSON.stringify(user)
+        );
+      }
       console.log('data', user);
 
       console.log('user', JSON.stringify(user));

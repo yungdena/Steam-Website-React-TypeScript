@@ -13,8 +13,10 @@ export const ContentContainer = styled.div`
 `;
 
 export const AppsList = styled.div`
+  max-width: 1200px;
+  margin: 20rem auto;
   background-color: ${COLORS.storeBlue};
-  padding: 1rem;
+  padding: 0 20rem 0 0;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;

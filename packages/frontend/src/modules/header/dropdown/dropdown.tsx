@@ -11,14 +11,29 @@ export const Dropdown = ({ linkId, hoveredLink, content }: { linkId: string, hov
   }
 
   const handleNavigate = (route: string) => {
-    history.push(route)
+    history.push(route);
   }
 
-  return (
-    <DropdownContainer>
-      {content && content.map(link => 
-        <DropdownLink onClick={() => handleNavigate(link.linkTo)} key={link.title}>{link.title}</DropdownLink>
-        )}
-    </DropdownContainer>
-  );
+  const handleLogOut = (route: string) => {
+    localStorage.removeItem("account");
+    sessionStorage.removeItem("account");
+    history.push(route);
+  };
+
+    return (
+      <DropdownContainer>
+        {content && content.map((item) => (
+          <DropdownLink
+            key={item.title}
+            onClick={
+              item.title === "LOG OUT"
+                ? () => handleLogOut(item.linkTo)
+                : () => handleNavigate(item.linkTo)
+            }
+          >
+            {item.title}
+          </DropdownLink>
+        ))}
+      </DropdownContainer>
+    );
 };

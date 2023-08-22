@@ -1,41 +1,34 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { HeaderContainer, Link, ButtonGroup, Image, LinkGroup, HeaderLink, OptionalLinks, DropdownContainer} from './index.styled';
-import { fill } from "@cloudinary/url-gen/actions/resize";
-import { Cloudinary } from "@cloudinary/url-gen";
-import { AdvancedImage } from "@cloudinary/react";
 import { APP_KEYS } from '../common/consts';
-import { IAccount } from '../common/types/Account.interface';
-import { DROPDOWN_DATA, HEADER_LINKS } from '../common/consts/header-buttons';
+import { DROPDOWN_DATA, HEADER_LINKS, NAME_DROPDOWN_DATA } from '../common/consts/header-buttons';
 import { Dropdown } from './dropdown/dropdown';
-
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: "didkbrlcz",
-  },
-}); 
+import { handleNavigate } from '../common/utils/handleNavigate';
+import { getAccount } from '../common/utils/getAccount';
+import { IAccount } from '../common/types/Account.interface';
+import { Loader } from '../common/loader/loader';
 
 const Logo = "https://res.cloudinary.com/didkbrlcz/image/upload/v1677489737/System/logo_steam_in6blq.svg";
 
 export const Header = () => {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [hoveredName, setHoveredName] = useState<string | null>(null);
+  const [parsedAccount, setParsedAccount] = useState<IAccount | null>(null); // Use state for account
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchAccount = async () => {
+      const account = await getAccount();
+      setParsedAccount(account);
+      setIsLoading(false);
+    };
+    fetchAccount();
+  }, []);
+
   const history = useHistory();
 
-  const handleNavigate = (route: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log('navigate')
-    event.preventDefault();
-
-    history.replace(route);
-    console.log('history replaced')
-  };
-
-  const storedAccount = localStorage.getItem('account');
-  let parsedAccount: IAccount = { name: '', email: '', password: '' };
-
-  if (storedAccount) {
-    parsedAccount = JSON.parse(storedAccount);
-  }
   return (
     <HeaderContainer>
       <ButtonGroup>
@@ -70,16 +63,37 @@ export const Header = () => {
             );
           })}
         </LinkGroup>
-        <OptionalLinks>
-          <HeaderLink
-            onClick={handleNavigate(
-              APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
-            )}
+        {isLoading ? (
+          <Loader></Loader>
+        ) : parsedAccount ? (
+          <DropdownContainer
+            onMouseEnter={() => setHoveredName("name")}
+            onMouseLeave={() => setHoveredName(null)}
           >
-            login
-          </HeaderLink>
-          <HeaderLink>language</HeaderLink>
-        </OptionalLinks>
+            <Link>
+              {parsedAccount?.name}
+              {hoveredName && (
+                <Dropdown
+                  hoveredLink={hoveredName}
+                  linkId={"name"}
+                  content={NAME_DROPDOWN_DATA.content}
+                />
+              )}
+            </Link>
+          </DropdownContainer>
+        ) : (
+          <OptionalLinks>
+            <HeaderLink
+              onClick={handleNavigate(
+                history,
+                APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
+              )}
+            >
+              login
+            </HeaderLink>
+            <HeaderLink>language</HeaderLink>
+          </OptionalLinks>
+        )}
       </ButtonGroup>
     </HeaderContainer>
   );

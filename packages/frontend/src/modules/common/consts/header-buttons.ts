@@ -2,7 +2,7 @@ export const HEADER_LABELS = {
   STORE: 'store',
   COMMUNITY: 'community',
   ABOUT: 'about',
-  SUPPORT: 'support'
+  SUPPORT: 'support',
 }
 
 export const HEADER_LINKS = [
@@ -27,6 +27,10 @@ export const HEADER_LINKS = [
     label: HEADER_LABELS.SUPPORT,
     link: "/support",
   },
+  {
+    id: "name",
+    link: "/name",
+  }
 ];
 
 export const DROPDOWN_DATA = [
@@ -85,7 +89,21 @@ export const DROPDOWN_DATA = [
       {
         title: "BROADCASTS",
         linkTo: "/home",
-      }
+      },
     ],
   },
 ];
+
+export const NAME_DROPDOWN_DATA = {
+  id: "name",
+  content: [
+    {
+      title: "PROFILE",
+      linkTo: "/home",
+    },
+    {
+      title: "LOG OUT",
+      linkTo: "/signin",
+    },
+  ],
+};
