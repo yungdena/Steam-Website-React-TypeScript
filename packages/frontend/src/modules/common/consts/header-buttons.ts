@@ -39,31 +39,31 @@ export const DROPDOWN_DATA = [
     content: [
       {
         title: "HOME",
-        linkTo: "/home",
+        linkTo: "/store",
       },
       {
         title: "DISCOVERY QUEUE",
-        linkTo: "/home",
+        linkTo: "/store",
       },
       {
         title: "WISHLIST",
-        linkTo: "/home",
+        linkTo: "/store",
       },
       {
         title: "POINTS SHOP",
-        linkTo: "/home",
+        linkTo: "/store",
       },
       {
         title: "NEWS",
-        linkTo: "/home",
+        linkTo: "/store",
       },
       {
         title: "STATS",
-        linkTo: "/home",
+        linkTo: "/store",
       },
       {
         title: "ABOUT",
-        linkTo: "/home",
+        linkTo: "/store",
       },
     ],
   },
@@ -72,23 +72,23 @@ export const DROPDOWN_DATA = [
     content: [
       {
         title: "HOME",
-        linkTo: "/home",
+        linkTo: "/store",
       },
       {
         title: "DISCUSSIONS",
-        linkTo: "/home",
+        linkTo: "/store",
       },
       {
         title: "WORKSHOP",
-        linkTo: "/home",
+        linkTo: "/store",
       },
       {
         title: "MARKET",
-        linkTo: "/home",
+        linkTo: "/store",
       },
       {
         title: "BROADCASTS",
-        linkTo: "/home",
+        linkTo: "/store",
       },
     ],
   },
@@ -99,7 +99,7 @@ export const NAME_DROPDOWN_DATA = {
   content: [
     {
       title: "PROFILE",
-      linkTo: "/home",
+      linkTo: "/store",
     },
     {
       title: "LOG OUT",

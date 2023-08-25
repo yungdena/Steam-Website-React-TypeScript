@@ -42,7 +42,14 @@ export const Header = () => {
                 onMouseEnter={() => setHoveredLink(link.id)}
                 onMouseLeave={() => setHoveredLink(null)}
               >
-                <Link id={link.id} key={link.id}>
+                <Link
+                  onClick={handleNavigate(
+                    history,
+                    link.link
+                  )}
+                  id={link.id}
+                  key={link.id}
+                >
                   {link.label}
                 </Link>
                 {isHovered &&

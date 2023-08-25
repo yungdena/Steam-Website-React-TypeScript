@@ -1,14 +1,12 @@
 import { useMutation } from 'react-query';
-import { IApp } from '../types/app.interface';
 
 const BASE_URL = "http://localhost:4200/api";
-const DEV_URL = "http://localhost:4200/api";
 
 const getAllApps = async () => {
   const response = await fetch(`${BASE_URL}/apps`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
   });
   console.log('GetAllApps response', response);

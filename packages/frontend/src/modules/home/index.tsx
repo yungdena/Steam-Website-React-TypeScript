@@ -1,12 +1,11 @@
-import React from 'react';
 import { Header } from '../header';
-import { HomePageContent } from './container/home-page-container';
+import { AppList } from './app-list';
 import { Container } from './index.styled';
 
-export const HomePage = () => (
+export const StorePage = () => (
   <Container>
     <Header />
-    <HomePageContent />
+    <AppList />
   </Container>
 );
 
