@@ -1,8 +1,6 @@
-import React, { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { CSSTransition } from "react-transition-group";
-import type { Swiper as SwiperType } from "swiper";
-import "swiper/swiper-bundle.min.css";
 import { ImageBig, ImageSmall, SwiperContainer } from "./index.styled";
 
 type ImageType = {
@@ -10,10 +8,16 @@ type ImageType = {
 }
 
 export const ImageSlider: FC<ImageType> = ({ images }) => {
-    const [selectedImage, setSelectedImage] = useState<string>(
-      images && images.length > 0 ? images[0] : ""
-    );
-    const [selectedImageLoaded, setSelectedImageLoaded] = useState(false);
+  const swiperParams = {
+    className:"swiper-container",
+    slidesPerView: 5,
+    spaceBetween: 0,
+    direction:"horizontal"
+  };
+  const [selectedImage, setSelectedImage] = useState<string>(
+    images && images.length > 0 ? images[0] : ""
+  );
+  const [selectedImageLoaded, setSelectedImageLoaded] = useState(false);
 
   const handleImageClick = (image: string) => {
     setSelectedImageLoaded(false);
@@ -46,10 +50,7 @@ export const ImageSlider: FC<ImageType> = ({ images }) => {
       </div>
       <SwiperContainer>
         <Swiper
-          className="swiper-container"
-          slidesPerView={5}
-          spaceBetween={0}
-          direction="horizontal"
+          {...swiperParams}
         >
           {images?.map((image, index) => (
             <SwiperSlide
