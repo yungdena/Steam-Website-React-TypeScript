@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { SignUp } from '../auth/sign-up';
 import { SignIn } from '../auth/sign-in';
 import { APP_KEYS } from '../common/consts';
-import { StorePage } from '../home';
+import { StorePage } from '../store';
 import { AppPage } from '../app-page';
 import { AboutPage } from '../about';
+import { HomePage } from '../home';
 
 export const MainRouter = () => (
   <Router>
@@ -16,10 +17,26 @@ export const MainRouter = () => (
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNUP}
         exact
       />
-      <Route component={SignIn} path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN} />
-      <Route component={StorePage} path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.STORE} />
-      <Route component={AppPage} path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.APPS + '/:id'} />
-      <Route component={AboutPage} path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.ABOUT} />
+      <Route
+        component={SignIn}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN}
+      />
+      <Route
+        component={StorePage}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.STORE}
+      />
+      <Route
+        component={AppPage}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.APPS + "/:id"}
+      />
+      <Route
+        component={HomePage}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.HOME}
+      />
+      <Route
+        component={AboutPage}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.ABOUT}
+      />
     </Switch>
   </Router>
 );

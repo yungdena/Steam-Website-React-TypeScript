@@ -39,7 +39,7 @@ export const DROPDOWN_DATA = [
     content: [
       {
         title: "HOME",
-        linkTo: "/store",
+        linkTo: "/home",
       },
       {
         title: "DISCOVERY QUEUE",
@@ -107,3 +107,45 @@ export const NAME_DROPDOWN_DATA = {
     },
   ],
 };
+
+export const HOME_HEADER_LABELS = {
+  STORE: "Your Store",
+  NEW: "New & Noteworthy",
+  CATEGORIES: "Categories",
+  POINTS: "Points Shop",
+  NEWS: "News",
+  LABS: "Labs",
+};
+
+export const HOME_HEADER_LINKS = [
+  {
+    id: "store",
+    label: HOME_HEADER_LABELS.STORE,
+    link: "/store",
+  },
+  {
+    id: "community",
+    label: HOME_HEADER_LABELS.NEW,
+    link: "/community",
+  },
+  {
+    id: "about",
+    label: HOME_HEADER_LABELS.CATEGORIES,
+    link: "/about",
+  },
+  {
+    id: "support",
+    label: HOME_HEADER_LABELS.POINTS,
+    link: "/support",
+  },
+  {
+    id: "support",
+    label: HOME_HEADER_LABELS.NEWS,
+    link: "/support",
+  },
+  {
+    id: "support",
+    label: HOME_HEADER_LABELS.LABS,
+    link: "/support",
+  },
+];

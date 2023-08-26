@@ -9,7 +9,7 @@ export const HeaderContainer = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${COLORS.darkBlueGrey};
+  background-color: ${COLORS.headerBlue};
   width: 100%;
   padding: 0 2.25rem 0 3.125rem;
 `;

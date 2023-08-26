@@ -25,6 +25,7 @@ export const BACKEND_KEYS = {
 
 export const ROUTER_KEYS = {
   ROOT: '/',
+  HOME: 'home',
   SIGNIN: 'signin',
   SIGNUP: 'signup',
   STORE: 'store',

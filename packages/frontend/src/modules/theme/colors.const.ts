@@ -12,4 +12,8 @@ export const COLORS = {
   greyText: "#c7d5e0",
   urbanGrey: "#556772",
   borderRed: "#b44040",
+  headerBlue: "#171D25",
+  greyishWhite: "#e5e5e5",
+  searchBarBlue: "#316282",
+  searchBarBlack: "#0e1c25",
 };
