@@ -139,12 +139,12 @@ export const HOME_HEADER_LINKS = [
     link: "/support",
   },
   {
-    id: "support",
+    id: "news",
     label: HOME_HEADER_LABELS.NEWS,
     link: "/support",
   },
   {
-    id: "support",
+    id: "labs",
     label: HOME_HEADER_LABELS.LABS,
     link: "/support",
   },

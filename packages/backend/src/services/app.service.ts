@@ -1,5 +1,6 @@
 import { Response } from "express";
 import { ObjectID } from "mongodb";
+import axios from "axios";
 
 import { AppModel } from "../models/App";
 import { IApp } from "../types/app.type";
@@ -24,7 +25,6 @@ class AppsService {
       return;
     }
 
-    console.log("getAllApps Service: ", apps);
     res.send(apps);
   }
 
@@ -79,6 +79,35 @@ class AppsService {
       res.send(updatedApp);
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  async getAllAppsFromSteamAPI(res: Response) {
+    const steamApiUrl =
+      "http://api.steampowered.com/ISteamApps/GetAppList/v0002/?format=json";
+
+    try {
+      const response = await axios.get(steamApiUrl);
+      const appList = response.data.applist.apps;
+
+      if (!appList || !Array.isArray(appList)) {
+        res
+          .status(404)
+          .send({ message: "Cannot fetch app list from Steam API" });
+        return;
+      }
+
+      const savedApps = await AppModel.insertMany(appList);
+
+      console.log("Saved apps: ", savedApps);
+      res.send(savedApps);
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .send({
+          message: "An error occurred while fetching and saving app list",
+        });
     }
   }
 }
