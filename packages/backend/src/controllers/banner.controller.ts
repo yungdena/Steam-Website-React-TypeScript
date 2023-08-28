@@ -24,6 +24,7 @@ export class BannersController {
   async update(req: Request, res: Response) {
     const banner: IBanner = req.body;
     const id = req.params.id;
+    console.log("Updated", banner);
     const updatedBanner = await this.bannersService.updateBanner({ banner, id, res });
   }
 }

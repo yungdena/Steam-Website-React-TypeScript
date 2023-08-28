@@ -41,6 +41,7 @@ export const BannerMainImage = styled.img`
 `;
 
 export const BannerContent = styled.div`
+  position: relative;
   width: 324px;
   height: 353px;
 
@@ -48,14 +49,11 @@ export const BannerContent = styled.div`
 `
 
 export const AppTitle = styled.div`
-  display: flex;
-  align-items: center;
+  display: inline-block;
   width: 100%;
   font-size: 24px;
   color: white;
-  height: 69px;
-  padding-left: 1rem;
-  padding-right: 6px;
+  padding: 1rem 1rem 0 1rem;
 `;
 
 export const ImagesContainer = styled.div`
@@ -80,7 +78,7 @@ export const Image = styled.img`
 
 export const TagsContainer = styled.div`
   display: flex;
-  margin: 4rem 0 0 0.5rem;
+  margin: 0 0 0 1rem;
 `
 
 export const Tag = styled.div`
@@ -97,8 +95,45 @@ export const Tag = styled.div`
 `;
 
 export const Price = styled.div`
+  position: absolute;
   font-size: 11px;
   line-height: 12px;
   padding: 1rem 1rem;
   color: white;
+  left: 0;
+  bottom: 0;
+`;
+
+export const ReasonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+export const ReasonBig = styled.div`
+  color: ${COLORS.white}
+  font-size: 21px;
+  font-weight: 200;
+  padding: 1rem 0 0 1rem;
+`;
+
+export const ReasonSmall = styled.div`
+  color: ${COLORS.white}
+  font-size: 17px;
+  font-weight: 200;
+  min-height: auto;
+  height: 20px;
+  padding: 1rem;
+  margin-bottom: 2.5rem;
+`;
+
+interface RecommendedProps {
+  recommended: boolean;
+}
+
+export const Recommended = styled.span<RecommendedProps>`
+  font-size: 17px;
+  font-weight: 200;
+  min-height: auto;
+  height: 20px;
+  margin-right: 0.5rem;
+  color: ${({ recommended }) => (recommended ? COLORS.RecLime : "inherit")};
 `;

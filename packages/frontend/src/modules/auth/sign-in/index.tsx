@@ -132,7 +132,7 @@ export const SignIn: React.FC = () => {
                 />
                 <FieldText>Remember me</FieldText>
               </CheckboxControl>
-              <Button disabled={isLoading} onClick={handleAuthorized(APP_KEYS.ROUTER_KEYS.STORE)}>
+              <Button disabled={isLoading} onClick={handleAuthorized(APP_KEYS.ROUTER_KEYS.HOME)}>
                 {isLoading 
                 ? <Loader />
                 : "Sign In"

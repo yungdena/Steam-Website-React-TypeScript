@@ -16,4 +16,5 @@ export const COLORS = {
   greyishWhite: "#e5e5e5",
   searchBarBlue: "#316282",
   searchBarBlack: "#0e1c25",
+  RecLime: "#a3cf06"
 };

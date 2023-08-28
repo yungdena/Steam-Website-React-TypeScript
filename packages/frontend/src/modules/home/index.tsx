@@ -10,7 +10,6 @@ import "swiper/css/scrollbar";
 import { Navigation, Pagination, EffectFade, Autoplay } from "swiper/modules";
 
 import { IApp } from "../common/types/app.interface";
-import { useGetAllApps } from "../common/services/apps.service";
 import { Header } from "../header";
 import {
   ContentContainer,
@@ -19,15 +18,18 @@ import {
 } from "./index.styled";
 import { GameBannerComponent } from "./banner";
 import { HomepageHeader } from "./home-header";
+import { useGetAllBanners } from "../common/services/banners.service";
+import { Footer } from "./footer";
+import { Offers } from "./offers";
 
 export const HomePage = () => {
   const [apps, setApps] = useState<IApp[]>([]);
-  const getAllAppsMutation = useGetAllApps();
+  const getAllBannersMutation = useGetAllBanners();
   const history = useHistory();
 
   useEffect(() => {
     async function fetchAllApps() {
-      const data = await getAllAppsMutation.mutateAsync();
+      const data = await getAllBannersMutation.mutateAsync();
       console.log("response on HomePage: ", data);
       setApps(data);
     }
@@ -65,9 +67,9 @@ export const HomePage = () => {
         <ContentContainer>
           <HomepageHeader />
             <Swiper {...swiperParams}>
-              {apps.slice(0, 5).map((app) => (
+              {apps.map((app) => (
                 <SwiperSlide
-                  onClick={() => handleNavigate(app._id)}
+                  onClick={() => handleNavigate(app.appid)}
                   key={app._id}
                 >
                   <GameBannerComponent appInfo={app}></GameBannerComponent>
@@ -77,8 +79,10 @@ export const HomePage = () => {
                 <div className="swiper-pagination"></div>
               </StyledPagination>
             </Swiper>
+            <Offers appsArray={apps}/>
         </ContentContainer>
       </MainContainer>
+      <Footer />
     </>
   );
 };

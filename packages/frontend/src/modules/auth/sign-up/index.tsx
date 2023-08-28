@@ -166,7 +166,7 @@ export const SignUp: React.FC = () => {
             disabled={!isValid}
             onClick={async (event) => {
               event.preventDefault();
-              await handleAuthorized(APP_KEYS.ROUTER_KEYS.STORE);
+              await handleAuthorized(APP_KEYS.ROUTER_KEYS.HOME);
             }}
           >
             {isLoading ? <Loader /> : "Done"}
