@@ -4,7 +4,6 @@ import { COLORS } from "../theme";
 const backgroundURL = 'https://res.cloudinary.com/didkbrlcz/image/upload/v1693031862/System/colored_body_top_dl0m6y.png'
 
 export const MainContainer = styled.div`
-  height: 100vh;
   background-image: url(${backgroundURL});
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -36,7 +35,7 @@ export const FeaturedContainer = styled.div`
 export const StyledPagination = styled.div`
   z-index: 9999 !important;
   .swiper-pagination {
-    transform: translateX(50%);
+    transform: translateX(46%);
     bottom: 50px !important;
     display: flex;
     z-index: 9999 !important;

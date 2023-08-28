@@ -38,7 +38,7 @@ export const Offers = ({ appsArray }: { appsArray: IApp[] }) => {
               {appsArray
                 .slice(slideIndex * 6, (slideIndex + 1) * 6)
                 .map((app) => (
-                  <Offer key={app._id}>
+                  <Offer onClick={() => handleNavigate(app.appid)} key={app._id}>
                     <OfferImage src={app.titleImage} />
                     <PriceContainer>
                       <PricePercent>-60%</PricePercent>
