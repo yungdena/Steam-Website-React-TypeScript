@@ -5,8 +5,6 @@ const appsRouter: Router = Router();
 
 appsRouter.get("/", appsController.getAll.bind(appsController));
 
-appsRouter.get("/steamApi", appsController.getAllFromSteam.bind(appsController));
-
 appsRouter.get("/:id", appsController.getById.bind(appsController));
 
 appsRouter.post("/", appsController.create.bind(appsController));

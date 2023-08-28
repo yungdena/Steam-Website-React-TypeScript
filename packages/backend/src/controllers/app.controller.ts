@@ -16,10 +16,6 @@ export class AppsController {
     const apps = await this.appsService.getAllApps(res);
   }
 
-  async getAllFromSteam(req: Request, res: Response) {
-    const apps = await this.appsService.getAllAppsFromSteamAPI(res);
-  }
-
   async getByTitle(req: Request, res: Response) {
     const appTitle = req.params.title;
     const app = await this.appsService.getAppByTitle(appTitle, res);
