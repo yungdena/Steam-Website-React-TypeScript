@@ -19,21 +19,30 @@ import {
 import { GameBannerComponent } from "./banner";
 import { HomepageHeader } from "./home-header";
 import { useGetAllBanners } from "../common/services/banners.service";
+import { useGetAllApps } from "../common/services/apps.service";
 import { Footer } from "./footer";
 import { Offers } from "./offers";
 
 export const HomePage = () => {
+  const [banners, setBanners] = useState<IApp[]>([]);
   const [apps, setApps] = useState<IApp[]>([]);
   const getAllBannersMutation = useGetAllBanners();
+  const getAllAppsMutation = useGetAllApps();
   const history = useHistory();
 
   useEffect(() => {
-    async function fetchAllApps() {
+    async function fetchAllBanners() {
       const data = await getAllBannersMutation.mutateAsync();
+      console.log("response on HomePage: ", data);
+      setBanners(data);
+    }
+    async function fetchAllApps() {
+      const data = await getAllAppsMutation.mutateAsync();
       console.log("response on HomePage: ", data);
       setApps(data);
     }
     fetchAllApps();
+    fetchAllBanners();
   }, []);
 
   
@@ -67,12 +76,12 @@ export const HomePage = () => {
         <ContentContainer>
           <HomepageHeader />
             <Swiper {...swiperParams}>
-              {apps.map((app) => (
+              {banners.map((banner) => (
                 <SwiperSlide
-                  onClick={() => handleNavigate(app.appid)}
-                  key={app._id}
+                  onClick={() => handleNavigate(banner.appid)}
+                  key={banner._id}
                 >
-                  <GameBannerComponent appInfo={app}></GameBannerComponent>
+                  <GameBannerComponent appInfo={banner}></GameBannerComponent>
                 </SwiperSlide>
               ))}
               <StyledPagination>

@@ -50,6 +50,10 @@ export const appSchema: Schema<IApp> = new Schema({
     type: String,
     required: true
   },
+  newPrice: {
+    type: String,
+    required: false
+  },
   titleImage: {
     type: String,
     required: true

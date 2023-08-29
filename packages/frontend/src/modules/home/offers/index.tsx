@@ -6,6 +6,7 @@ import { IApp } from "../../common/types/app.interface";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { APP_KEYS } from "../../common/consts";
 import { Offer, OffersContainer, StyledPagination } from "./index.styled";
+import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
 
 export const Offers = ({ appsArray }: { appsArray: IApp[] }) => {
   const swiperParams = {
@@ -28,27 +29,36 @@ export const Offers = ({ appsArray }: { appsArray: IApp[] }) => {
       `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.APPS}/${appId}`
     );
   };
-
   return (
     <MainContainer>
       <Swiper {...swiperParams}>
         {[...Array(Math.ceil(appsArray.length / 6))].map((_, slideIndex) => (
           <SwiperSlide key={slideIndex}>
             <OffersContainer>
-              {appsArray
-                .slice(slideIndex * 6, (slideIndex + 1) * 6)
-                .map((app) => (
-                  <Offer onClick={() => handleNavigate(app.appid)} key={app._id}>
-                    <OfferImage src={app.titleImage} />
-                    <PriceContainer>
-                      <PricePercent>-60%</PricePercent>
-                      <PriceAmounts>
-                        <OriginalPrice>300$</OriginalPrice>
-                        <FinalPrice>100$</FinalPrice>
-                      </PriceAmounts>
-                    </PriceContainer>
-                  </Offer>
-                ))}
+              {appsArray.slice(slideIndex * 6, (slideIndex + 1) * 6).map(
+                (app) =>
+                  app.newPrice && (
+                    <Offer
+                      onClick={() => handleNavigate(app._id)}
+                      key={app._id}
+                    >
+                      <OfferImage src={app.titleImage} />
+                      <PriceContainer>
+                        <PricePercent>
+                          {calculatePercentageDecrease(
+                            Number(app.price),
+                            Number(app.newPrice),
+                            0
+                          )}%
+                        </PricePercent>
+                        <PriceAmounts>
+                          <OriginalPrice>{app.price}$</OriginalPrice>
+                          <FinalPrice>{app.newPrice}$</FinalPrice>
+                        </PriceAmounts>
+                      </PriceContainer>
+                    </Offer>
+                  )
+              )}
             </OffersContainer>
           </SwiperSlide>
         ))}
