@@ -56,6 +56,7 @@ export const AppTitle = styled.div`
 
 export const AppPrice = styled.div`
   font-size: 0.75rem;
+  padding: 0.25rem 1rem 0 0;
   color: ${COLORS.lightGrey};
 `
 

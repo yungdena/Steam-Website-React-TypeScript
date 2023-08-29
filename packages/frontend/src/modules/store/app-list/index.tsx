@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ContentContainer, AppsList, AppContainer, AppImage, AppImageContainer, AppTitle, AppTextContainer, AppPrice, AppLink } from './index.styled';
+import { PriceContainer, PriceAmounts, PricePercent, OriginalPrice, FinalPrice } from '../../home/offers/index.styled';
 import { useGetAllApps } from '../../common/services/apps.service';
 import { IApp } from '../../common/types/app.interface';
 import { APP_KEYS } from '../../common/consts';
+import { calculatePercentageDecrease } from '../../common/utils/countPercentage';
 
 export const AppList = () => {
   const [apps, setApps] = useState<IApp[]>([]);
@@ -39,10 +41,28 @@ export const AppList = () => {
               </AppImageContainer>
               <AppTextContainer>
                 <AppTitle>{app.title}</AppTitle>
-                <AppPrice>
-                  {app.price}
-                  {app.price === "Free to Play" ? "" : "$"}
-                </AppPrice>
+                {!app.newPrice && (
+                  <AppPrice>
+                    {app.price}
+                    {app.price === "Free to Play" ? "" : "$"}
+                  </AppPrice>
+                )}
+                {app.newPrice && (
+                  <PriceContainer>
+                    <PricePercent>
+                      {calculatePercentageDecrease(
+                        Number(app.price),
+                        Number(app.newPrice),
+                        0
+                      )}
+                      %
+                    </PricePercent>
+                    <PriceAmounts>
+                      <OriginalPrice>{app.price}$</OriginalPrice>
+                      <FinalPrice>{app.newPrice}$</FinalPrice>
+                    </PriceAmounts>
+                  </PriceContainer>
+                )}
               </AppTextContainer>
             </AppContainer>
           </AppLink>
