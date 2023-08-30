@@ -12,7 +12,8 @@
     "watch-deploy": "nodemon dist/server.js",
     "server": "concurrently \"npm run watch-tsc\" \"npm run watch-deploy\"",
     "start": "yarn build && yarn deploy",
-    "build": "tsc"
+    "build": "tsc",
+    "vercel-Build": "echo hello"
   },
   "dependencies": {
     "@types/cors": "^2.8.13",
