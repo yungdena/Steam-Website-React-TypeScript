@@ -20,6 +20,7 @@
     "@types/uuid": "^9.0.0",
     "axios": "^1.4.0",
     "react": "17.0.0",
+    "react-dom": "17.0.0",
     "classnames": "^2.3.2",
     "cors-anywhere": "^0.4.4",
     "data.js": "^0.12.11",
