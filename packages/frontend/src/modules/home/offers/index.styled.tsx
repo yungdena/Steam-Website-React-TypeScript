@@ -98,6 +98,7 @@ export const PriceAmounts = styled.div`
 
 export const OriginalPrice = styled.div`
   position: relative;
+  text-decoration: line-through;
   width: fit-content;
   color: #738895;
   font-size: 11px;

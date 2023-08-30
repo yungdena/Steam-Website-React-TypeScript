@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useHistory } from "react-router-dom";
 
@@ -9,6 +10,11 @@ import { Offer, OffersContainer, StyledPagination } from "./index.styled";
 import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
 
 export const Offers = ({ appsArray }: { appsArray: IApp[] }) => {
+  const appsWithNewPrice = useMemo(
+    () => appsArray.filter((app) => app.newPrice),
+    [appsArray]
+  );
+
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],
     effect: "fade",
@@ -22,50 +28,51 @@ export const Offers = ({ appsArray }: { appsArray: IApp[] }) => {
     className: "swiper",
   };
 
-  const history = useHistory();
+    const chunks = [];
+    for (let i = 0; i < appsWithNewPrice.length; i += 6) {
+      chunks.push(appsWithNewPrice.slice(i, i + 6));
+    }
 
-  const handleNavigate = (appId: string) => {
-    history.push(
-      `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.APPS}/${appId}`
+    const history = useHistory();
+
+    const handleNavigate = (appId: string) => {
+      history.push(
+        `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.APPS}/${appId}`
+      );
+    };
+
+    return (
+      <MainContainer>
+        <Swiper {...swiperParams}>
+          {chunks.map((appsChunk, slideIndex) => (
+            <SwiperSlide key={slideIndex}>
+              <OffersContainer>
+                {appsChunk.map((app) => (
+                  <Offer onClick={() => handleNavigate(app._id)} key={app._id}>
+                    <OfferImage src={app.titleImage} />
+                    <PriceContainer>
+                      <PricePercent>
+                        {calculatePercentageDecrease(
+                          Number(app.price),
+                          Number(app.newPrice),
+                          0
+                        )}
+                        %
+                      </PricePercent>
+                      <PriceAmounts>
+                        <OriginalPrice>{app.price}$</OriginalPrice>
+                        <FinalPrice>{app.newPrice}$</FinalPrice>
+                      </PriceAmounts>
+                    </PriceContainer>
+                  </Offer>
+                ))}
+              </OffersContainer>
+            </SwiperSlide>
+          ))}
+          <StyledPagination>
+            <div className="swiper-pagination"></div>
+          </StyledPagination>
+        </Swiper>
+      </MainContainer>
     );
-  };
-  return (
-    <MainContainer>
-      <Swiper {...swiperParams}>
-        {[...Array(Math.ceil(appsArray.length / 6))].map((_, slideIndex) => (
-          <SwiperSlide key={slideIndex}>
-            <OffersContainer>
-              {appsArray.slice(slideIndex * 6, (slideIndex + 1) * 6).map(
-                (app) =>
-                  app.newPrice && (
-                    <Offer
-                      onClick={() => handleNavigate(app._id)}
-                      key={app._id}
-                    >
-                      <OfferImage src={app.titleImage} />
-                      <PriceContainer>
-                        <PricePercent>
-                          {calculatePercentageDecrease(
-                            Number(app.price),
-                            Number(app.newPrice),
-                            0
-                          )}%
-                        </PricePercent>
-                        <PriceAmounts>
-                          <OriginalPrice>{app.price}$</OriginalPrice>
-                          <FinalPrice>{app.newPrice}$</FinalPrice>
-                        </PriceAmounts>
-                      </PriceContainer>
-                    </Offer>
-                  )
-              )}
-            </OffersContainer>
-          </SwiperSlide>
-        ))}
-        <StyledPagination>
-          <div className="swiper-pagination"></div>
-        </StyledPagination>
-      </Swiper>
-    </MainContainer>
-  );
 };

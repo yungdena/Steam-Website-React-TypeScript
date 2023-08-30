@@ -5,16 +5,15 @@ export const ContentContainer = styled.div`
   display: flex;
   background-color: ${COLORS.darkBlueGrey};
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   background-color: ${COLORS.storeBlue}
-  margin-top: 6.5rem;
   color: ${COLORS.lightBlue};
   font-size: 3rem;
 `;
 
 export const AppsList = styled.div`
   max-width: 1200px;
-  margin: 20rem auto;
+  margin: 10rem auto;
   background-color: ${COLORS.storeBlue};
   padding: 0 20rem 0 0;
   display: flex;
