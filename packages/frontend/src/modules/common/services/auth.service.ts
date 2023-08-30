@@ -12,7 +12,8 @@ type SignInFormValues = {
   password: string;
 };
 
-const BASE_URL = 'http://localhost:4200/api/auth';
+const BASE_URL = `${process.env.REACT_APP_API_URL}/auth` || "http://localhost:4200/api/auth";
+console.log(BASE_URL, "base url");
 
 const signUp = async (data: SignUpFormValues) => {
   console.log('sign up service');
