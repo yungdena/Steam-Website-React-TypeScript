@@ -12,7 +12,7 @@ type SignInFormValues = {
   password: string;
 };
 
-const BASE_URL = "http://localhost:4200/api/auth";
+const BASE_URL = "https://steam-api.onrender.com/api/auth";
 
 const signUp = async (data: SignUpFormValues) => {
   console.log('sign up service');

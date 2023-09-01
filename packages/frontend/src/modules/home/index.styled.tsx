@@ -7,6 +7,7 @@ export const MainContainer = styled.div`
   background-image: url(${backgroundURL});
   background-repeat: no-repeat;
   background-size: 100% 100%;
+  min-height: 100vh;
 `;
 
 export const ContentContainer = styled.div`
