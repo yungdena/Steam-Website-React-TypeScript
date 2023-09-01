@@ -12,8 +12,7 @@ type SignInFormValues = {
   password: string;
 };
 
-const BASE_URL = import.meta.env.REACT_APP_API_URL;
-console.log(process, "base url");console.log(BASE_URL, "base url");
+const BASE_URL = `${import.meta.env.VITE_REACT_APP_API_URL}/auth`;
 
 const signUp = async (data: SignUpFormValues) => {
   console.log('sign up service');

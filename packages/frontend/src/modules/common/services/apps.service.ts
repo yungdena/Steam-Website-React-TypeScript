@@ -1,8 +1,7 @@
 import { useMutation } from 'react-query';
 
-const BASE_URL = import.meta.env.REACT_APP_API_URL;
-console.log(process, "base url");
-console.log(BASE_URL, 'base url')
+const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL;
+console.log(URL)
 const getAllApps = async () => {
   const response = await fetch(`${BASE_URL}/apps`, {
     method: "GET",
