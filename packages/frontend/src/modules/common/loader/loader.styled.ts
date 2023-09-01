@@ -26,3 +26,31 @@ export const Spinner = styled.div`
     }
   }
 `;
+
+export const LoaderContainerBig = styled.div`
+  width: 100%;
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10rem;
+  margin-bottom: 20rem;
+`
+
+export const SpinnerBig = styled.div`
+  width: 5rem;
+  height: 5rem;
+  border: 2px solid;
+  border-color: ${COLORS.white} transparent ${COLORS.white} transparent;
+  border-radius: 50%;
+  animation: spin-anim 0.8s linear infinite;
+
+  @keyframes spin-anim {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;

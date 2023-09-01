@@ -22,10 +22,12 @@ import { useGetAllBanners } from "../common/services/banners.service";
 import { useGetAllApps } from "../common/services/apps.service";
 import { Footer } from "./footer";
 import { Offers } from "./offers";
+import { LoaderBig } from "../common/loader/loader";
 
 export const HomePage = () => {
   const [banners, setBanners] = useState<IApp[]>([]);
   const [apps, setApps] = useState<IApp[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const getAllBannersMutation = useGetAllBanners();
   const getAllAppsMutation = useGetAllApps();
   const history = useHistory();
@@ -35,17 +37,19 @@ export const HomePage = () => {
       const data = await getAllBannersMutation.mutateAsync();
       console.log("response on HomePage: ", data);
       setBanners(data);
+      setIsLoading(false);
     }
     async function fetchAllApps() {
       const data = await getAllAppsMutation.mutateAsync();
       console.log("response on HomePage: ", data);
       setApps(data);
+      setIsLoading(false);
     }
     fetchAllApps();
     fetchAllBanners();
   }, []);
 
-  console.log(apps)
+  console.log(banners, 'banners')
   
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],
@@ -76,6 +80,9 @@ export const HomePage = () => {
       <MainContainer>
         <ContentContainer>
           <HomepageHeader />
+          {isLoading ? (
+            <LoaderBig />
+          ) : (
             <Swiper {...swiperParams}>
               {banners.map((banner) => (
                 <SwiperSlide
@@ -89,7 +96,8 @@ export const HomePage = () => {
                 <div className="swiper-pagination"></div>
               </StyledPagination>
             </Swiper>
-            <Offers appsArray={apps}/>
+          )}
+          {isLoading ? <LoaderBig /> : <Offers appsArray={apps} />}
         </ContentContainer>
       </MainContainer>
       <Footer />

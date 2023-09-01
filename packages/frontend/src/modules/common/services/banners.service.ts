@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
-const BASE_URL = "https://steam-api.onrender.com/api/";
+const BASE_URL = "https://steam-api.onrender.com/api";
 
 const getAllBanners = async () => {
   const response = await fetch(`${BASE_URL}/banners`, {

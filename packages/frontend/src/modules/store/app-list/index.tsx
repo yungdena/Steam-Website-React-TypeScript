@@ -7,9 +7,11 @@ import { useGetAllApps } from '../../common/services/apps.service';
 import { IApp } from '../../common/types/app.interface';
 import { APP_KEYS } from '../../common/consts';
 import { calculatePercentageDecrease } from '../../common/utils/countPercentage';
+import { LoaderBig } from '../../common/loader/loader';
 
 export const AppList = () => {
   const [apps, setApps] = useState<IApp[]>([]);
+  const [isLoading, setIsLoading] = useState(true)
   const history = useHistory()
   const getAllAppsMutation = useGetAllApps();
 
@@ -24,6 +26,7 @@ export const AppList = () => {
       const data = await getAllAppsMutation.mutateAsync();
       console.log("response on front: ", data);
       setApps(data);
+      setIsLoading(false);
     }
     fetchAllApps();
   }, []);
@@ -32,42 +35,46 @@ export const AppList = () => {
 
   return (
     <ContentContainer>
-      <AppsList>
-        {apps.map((app) => (
-          <AppLink key={app._id} onClick={() => handleNavigate(app._id)}>
-            <AppContainer>
-              <AppImageContainer>
-                <AppImage src={app.bannerImage} />
-              </AppImageContainer>
-              <AppTextContainer>
-                <AppTitle>{app.title}</AppTitle>
-                {!app.newPrice && (
-                  <AppPrice>
-                    {app.price}
-                    {app.price === "Free to Play" ? "" : "$"}
-                  </AppPrice>
-                )}
-                {app.newPrice && (
-                  <PriceContainer>
-                    <PricePercent>
-                      {calculatePercentageDecrease(
-                        Number(app.price),
-                        Number(app.newPrice),
-                        0
-                      )}
-                      %
-                    </PricePercent>
-                    <PriceAmounts>
-                      <OriginalPrice>{app.price}$</OriginalPrice>
-                      <FinalPrice>{app.newPrice}$</FinalPrice>
-                    </PriceAmounts>
-                  </PriceContainer>
-                )}
-              </AppTextContainer>
-            </AppContainer>
-          </AppLink>
-        ))}
-      </AppsList>
+      {isLoading ? (
+        <LoaderBig />
+      ) : (
+        <AppsList>
+          {apps.map((app) => (
+            <AppLink key={app._id} onClick={() => handleNavigate(app._id)}>
+              <AppContainer>
+                <AppImageContainer>
+                  <AppImage src={app.bannerImage} />
+                </AppImageContainer>
+                <AppTextContainer>
+                  <AppTitle>{app.title}</AppTitle>
+                  {!app.newPrice && (
+                    <AppPrice>
+                      {app.price}
+                      {app.price === "Free to Play" ? "" : "$"}
+                    </AppPrice>
+                  )}
+                  {app.newPrice && (
+                    <PriceContainer>
+                      <PricePercent>
+                        {calculatePercentageDecrease(
+                          Number(app.price),
+                          Number(app.newPrice),
+                          0
+                        )}
+                        %
+                      </PricePercent>
+                      <PriceAmounts>
+                        <OriginalPrice>{app.price}$</OriginalPrice>
+                        <FinalPrice>{app.newPrice}$</FinalPrice>
+                      </PriceAmounts>
+                    </PriceContainer>
+                  )}
+                </AppTextContainer>
+              </AppContainer>
+            </AppLink>
+          ))}
+        </AppsList>
+      )}
     </ContentContainer>
   );
 };
