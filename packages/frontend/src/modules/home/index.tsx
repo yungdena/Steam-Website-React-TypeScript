@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_KEYS } from "../common/consts";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -45,6 +45,7 @@ export const HomePage = () => {
     fetchAllBanners();
   }, []);
 
+  console.log(apps)
   
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],

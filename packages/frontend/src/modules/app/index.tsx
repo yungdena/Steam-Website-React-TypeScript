@@ -1,6 +1,5 @@
 import React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'styled-components';
 
 import { MainRouter } from '../navigation';
@@ -27,7 +26,6 @@ const AppContainer = () => (
       <Styled.MainContainer>
         <MainRouter />
       </Styled.MainContainer>
-      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </ThemeProvider>
 );

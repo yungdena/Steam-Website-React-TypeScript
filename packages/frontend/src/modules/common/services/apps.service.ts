@@ -1,7 +1,7 @@
-import { useMutation } from 'react-query';
+import { useMutation } from "@tanstack/react-query";
 
-const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL;
-console.log(URL)
+const BASE_URL = "http://localhost:4200/api";
+
 const getAllApps = async () => {
   const response = await fetch(`${BASE_URL}/apps`, {
     method: "GET",

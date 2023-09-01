@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation } from "@tanstack/react-query";
 
 type SignUpFormValues = {
   name: string;
@@ -12,7 +12,7 @@ type SignInFormValues = {
   password: string;
 };
 
-const BASE_URL = `${import.meta.env.VITE_REACT_APP_API_URL}/auth`;
+const BASE_URL = "http://localhost:4200/api/auth";
 
 const signUp = async (data: SignUpFormValues) => {
   console.log('sign up service');
