@@ -29,7 +29,6 @@ export const AppContainer = styled.div`
   display: flex;
   width: 38.625rem;
   height: 2.75rem;
-  background-color: rgba(0, 0, 0, 0.2);
   border: 1px solid ${COLORS.storeBlue}
   cursor: pointer;
   transition: 0.3s;
