@@ -9,17 +9,17 @@ import { APP_KEYS } from '../../common/consts';
 import { calculatePercentageDecrease } from '../../common/utils/countPercentage';
 import { LoaderBig } from '../../common/loader/loader';
 
-export const AppList = () => {
+export const AppList = ({ sliceIndex, minHeight }: { sliceIndex: number | null, minHeight: string }) => {
   const [apps, setApps] = useState<IApp[]>([]);
-  const [isLoading, setIsLoading] = useState(true)
-  const history = useHistory()
+  const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory();
   const getAllAppsMutation = useGetAllApps();
 
   const handleNavigate = (appId: string) => {
     history.push(
       `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.APPS}/${appId}`
     );
-  }
+  };
 
   useEffect(() => {
     async function fetchAllApps() {
@@ -31,15 +31,15 @@ export const AppList = () => {
     fetchAllApps();
   }, []);
 
-  console.log('apps: ', apps)
+  console.log("apps: ", apps);
 
   return (
-    <ContentContainer>
+    <ContentContainer minHeight={minHeight}>
       {isLoading ? (
         <LoaderBig />
       ) : (
         <AppsList>
-          {apps.map((app) => (
+          {apps.slice(0, sliceIndex ? sliceIndex : apps.length).map((app) => (
             <AppLink key={app._id} onClick={() => handleNavigate(app._id)}>
               <AppContainer>
                 <AppImageContainer>

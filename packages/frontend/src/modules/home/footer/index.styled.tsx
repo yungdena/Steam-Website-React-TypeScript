@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { COLORS } from "../../theme";
 
 export const FooterContainer = styled.div`
+  position: sticky;
+  bottom: 0;
   width: 100%;
   height: 11.5rem;
   background-color: ${COLORS.darkBlueGrey};

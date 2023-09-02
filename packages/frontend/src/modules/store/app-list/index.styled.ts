@@ -1,11 +1,15 @@
 import styled from 'styled-components';
 import { COLORS } from '../../theme';
 
-export const ContentContainer = styled.div`
+interface CustomProps {
+  minHeight: string;
+}
+
+export const ContentContainer = styled.div<CustomProps>`
   display: flex;
   background-color: ${COLORS.darkBlueGrey};
+  min-height: ${(props) => (props.minHeight ? props.minHeight : "fit-content")};
   width: 100%;
-  min-height: 100vh;
   background-color: ${COLORS.storeBlue}
   color: ${COLORS.lightBlue};
   font-size: 3rem;

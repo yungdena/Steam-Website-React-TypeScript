@@ -23,6 +23,7 @@ import { useGetAllApps } from "../common/services/apps.service";
 import { Footer } from "./footer";
 import { Offers } from "./offers";
 import { LoaderBig } from "../common/loader/loader";
+import { AppList } from "../store/app-list/index";
 
 export const HomePage = () => {
   const [banners, setBanners] = useState<IApp[]>([]);
@@ -98,6 +99,7 @@ export const HomePage = () => {
             </Swiper>
           )}
           {isLoading ? <LoaderBig /> : <Offers appsArray={apps} />}
+          {isLoading ? <LoaderBig /> : <AppList sliceIndex={5} minHeight="fit-content" />}
         </ContentContainer>
       </MainContainer>
       <Footer />
