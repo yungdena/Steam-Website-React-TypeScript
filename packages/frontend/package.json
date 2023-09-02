@@ -16,6 +16,7 @@
     "@types/react-transition-group": "^4.4.5",
     "@types/uuid": "^9.0.0",
     "axios": "^1.4.0",
+    "babel-eslint": "^10.1.0",
     "classnames": "^2.3.2",
     "cors-anywhere": "^0.4.4",
     "data.js": "^0.12.11",
