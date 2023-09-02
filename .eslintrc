@@ -2,5 +2,6 @@
   "plugins": ["import"],
   "rules": {
     "import/prefer-default-export": "off"
-  }
+  },
+  "extends": ["@salesforce/eslint-config-lwc/recommended"]
 }

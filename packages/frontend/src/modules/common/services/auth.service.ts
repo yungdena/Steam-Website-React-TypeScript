@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { BASE_URL } from "./base-url";
 
 type SignUpFormValues = {
   name: string;
@@ -12,11 +13,10 @@ type SignInFormValues = {
   password: string;
 };
 
-const BASE_URL = "https://steam-api.onrender.com/api/auth";
 
 const signUp = async (data: SignUpFormValues) => {
   console.log('sign up service');
-  const response = await fetch(`${BASE_URL}/signup`, {
+  const response = await fetch(`${BASE_URL}/auth/signup`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ const signUp = async (data: SignUpFormValues) => {
 
 const signIn = async (data: SignInFormValues) => {
   console.log('sign in service');
-  const response = await fetch(`${BASE_URL}/signin`, {
+  const response = await fetch(`${BASE_URL}/auth/signin`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

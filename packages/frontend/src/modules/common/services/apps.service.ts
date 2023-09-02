@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-
-const BASE_URL = "https://steam-api.onrender.com/api";
+import { BASE_URL } from "./base-url";
 
 const getAllApps = async () => {
   const response = await fetch(`${BASE_URL}/apps`, {

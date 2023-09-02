@@ -3,16 +3,16 @@ import { LoaderContainer, LoaderContainerBig, Spinner, SpinnerBig } from './load
 
 export const Loader: React.FC = () => {
   return (
-    <LoaderContainer>
-      <Spinner />
+    <LoaderContainer className="loader">
+      <Spinner className="spinner" />
     </LoaderContainer>
   );
 };
 
 export const LoaderBig: React.FC = () => {
   return (
-    <LoaderContainerBig>
-      <SpinnerBig />
+    <LoaderContainerBig className="loader-big">
+      <SpinnerBig className="spinner-big" />
     </LoaderContainerBig>
   );
 };

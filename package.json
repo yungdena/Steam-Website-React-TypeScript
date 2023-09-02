@@ -1,7 +1,10 @@
 {
   "name": "water-vapour",
   "private": true,
-  "workspaces": ["packages/frontend", "packages/backend"],
+  "workspaces": [
+    "packages/frontend",
+    "packages/backend"
+  ],
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -10,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "babel-eslint": "^10.0.2",
     "react": "^17.0.0",
     "react-dom": "^17.0.0"
   },
