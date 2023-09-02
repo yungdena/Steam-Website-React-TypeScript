@@ -1,7 +1,6 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import { COLORS } from '../theme';
 
-// eslint-disable-next-line import/prefer-default-export
 export const GlobalStyles = createGlobalStyle`
   *,
   *::before,
