@@ -18,7 +18,6 @@ export const ContentContainer = styled.div<CustomProps>`
 export const AppsList = styled.div`
   max-width: 1200px;
   margin: 10rem auto;
-  background-color: ${COLORS.storeBlue};
   padding: 0 20rem 0 0;
   display: flex;
   flex-direction: column;
