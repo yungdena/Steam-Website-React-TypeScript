@@ -35,7 +35,7 @@ export const AppPage = () => {
       <Header />
       <InfoContainer>
         {isLoading ? (
-          <LoaderBig />
+          <LoaderBig marginTop="10rem" marginBottom="10rem" />
         ) : (
           <>
             <AppTitle>{app?.title}</AppTitle>

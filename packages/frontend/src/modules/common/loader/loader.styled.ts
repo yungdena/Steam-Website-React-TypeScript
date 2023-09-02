@@ -27,15 +27,20 @@ export const Spinner = styled.div`
   }
 `;
 
-export const LoaderContainerBig = styled.div`
+interface CustomProps {
+  marginTop?: string;
+  marginBottom?: string;
+}
+
+export const LoaderContainerBig = styled.div<CustomProps>`
   width: 100%;
   height: 5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10rem;
-  margin-bottom: 20rem;
-`
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : "0")};
+  margin-bottom: ${(props) => (props.marginBottom ? props.marginBottom : "0")};
+`;
 
 export const SpinnerBig = styled.div`
   width: 5rem;

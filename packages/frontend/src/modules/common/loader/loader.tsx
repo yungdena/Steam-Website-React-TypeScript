@@ -9,9 +9,18 @@ export const Loader: React.FC = () => {
   );
 };
 
-export const LoaderBig: React.FC = () => {
+interface ILoader {
+  marginTop?: string;
+  marginBottom?: string;
+}
+
+export const LoaderBig: React.FC<ILoader> = ({ marginTop, marginBottom }) => {
   return (
-    <LoaderContainerBig className="loader-big">
+    <LoaderContainerBig
+      marginBottom={marginBottom}
+      marginTop={marginTop}
+      className="loader-big"
+    >
       <SpinnerBig className="spinner-big" />
     </LoaderContainerBig>
   );

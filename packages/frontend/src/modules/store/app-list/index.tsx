@@ -36,7 +36,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   return (
     <ContentContainer minHeight={minHeight}>
       {isLoading ? (
-        <LoaderBig />
+        <LoaderBig marginTop='15rem' />
       ) : (
         <AppsList margin={margin}>
           {apps.slice(0, sliceIndex ? sliceIndex : apps.length).map((app) => (

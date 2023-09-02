@@ -29,7 +29,8 @@ import { AppList } from "../store/app-list/index";
 export const HomePage = () => {
   const [banners, setBanners] = useState<IApp[]>([]);
   const [apps, setApps] = useState<IApp[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingApps, setIsLoadingApps] = useState(true);
+  const [isLoadingBanners, setIsLoadingBanners] = useState(true);
   const getAllBannersMutation = useGetAllBanners();
   const getAllAppsMutation = useGetAllApps();
   const history = useHistory();
@@ -37,21 +38,20 @@ export const HomePage = () => {
   useEffect(() => {
     async function fetchAllBanners() {
       const data = await getAllBannersMutation.mutateAsync();
-      console.log("response on HomePage: ", data);
+      console.log("banners fetched: ", data);
       setBanners(data);
-      setIsLoading(false);
+      setIsLoadingBanners(false);
     }
     async function fetchAllApps() {
       const data = await getAllAppsMutation.mutateAsync();
-      console.log("response on HomePage: ", data);
+      console.log("apps fetched: ", data);
       setApps(data);
-      setIsLoading(false);
+      setIsLoadingApps(false);
     }
-    fetchAllApps();
     fetchAllBanners();
+    fetchAllApps();
   }, []);
 
-  console.log(banners, 'banners')
   
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],
@@ -82,8 +82,8 @@ export const HomePage = () => {
       <MainContainer>
         <ContentContainer>
           <HomepageHeader />
-          {isLoading ? (
-            <LoaderBig />
+          {isLoadingBanners ? (
+            <LoaderBig marginTop="10rem" />
           ) : (
             <Swiper {...swiperParams}>
               {banners.map((banner) => (
@@ -99,12 +99,19 @@ export const HomePage = () => {
               </StyledPagination>
             </Swiper>
           )}
-          {isLoading ? <LoaderBig /> : <Offers appsArray={apps} />}
-          <FeaturedTitle>Top Sellers</FeaturedTitle>
-          {isLoading ? (
-            <LoaderBig />
+          {isLoadingApps ? (
+            <LoaderBig marginTop="30rem" />
           ) : (
-            <AppList sliceIndex={5} minHeight="fit-content" margin="0.5rem" />
+            <Offers appsArray={apps} />
+          )}
+
+          {isLoadingApps ? (
+            <LoaderBig marginTop="20rem" marginBottom="10rem" />
+          ) : (
+            <>
+              <FeaturedTitle>Top Sellers</FeaturedTitle>
+              <AppList sliceIndex={8} minHeight="fit-content" margin="0.5rem" />
+            </>
           )}
         </ContentContainer>
       </MainContainer>
