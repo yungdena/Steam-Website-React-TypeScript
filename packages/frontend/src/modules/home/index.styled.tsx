@@ -58,3 +58,13 @@ export const StyledPagination = styled.div`
     }
   }
 `;
+
+export const FeaturedTitle = styled.div`
+  margin: 0 0 0 16rem;
+  align-self: start;
+  font-family: "Motiva Sans", Sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 0.03em;
+`;

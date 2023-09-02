@@ -13,6 +13,7 @@ import { IApp } from "../common/types/app.interface";
 import { Header } from "../header";
 import {
   ContentContainer,
+  FeaturedTitle,
   MainContainer,
   StyledPagination,
 } from "./index.styled";
@@ -99,7 +100,12 @@ export const HomePage = () => {
             </Swiper>
           )}
           {isLoading ? <LoaderBig /> : <Offers appsArray={apps} />}
-          {isLoading ? <LoaderBig /> : <AppList sliceIndex={5} minHeight="fit-content" />}
+          <FeaturedTitle>Top Sellers</FeaturedTitle>
+          {isLoading ? (
+            <LoaderBig />
+          ) : (
+            <AppList sliceIndex={5} minHeight="fit-content" margin="0.5rem" />
+          )}
         </ContentContainer>
       </MainContainer>
       <Footer />

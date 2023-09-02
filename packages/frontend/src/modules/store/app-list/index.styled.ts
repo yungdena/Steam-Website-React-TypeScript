@@ -2,22 +2,21 @@ import styled from 'styled-components';
 import { COLORS } from '../../theme';
 
 interface CustomProps {
-  minHeight: string;
+  minHeight?: string;
+  margin?: string;
 }
 
 export const ContentContainer = styled.div<CustomProps>`
   display: flex;
-  background-color: ${COLORS.darkBlueGrey};
   min-height: ${(props) => (props.minHeight ? props.minHeight : "fit-content")};
   width: 100%;
-  background-color: ${COLORS.storeBlue}
   color: ${COLORS.lightBlue};
   font-size: 3rem;
 `;
 
-export const AppsList = styled.div`
+export const AppsList = styled.div<CustomProps>`
   max-width: 1200px;
-  margin: 10rem auto;
+  margin: ${(props) => (props.margin ? props.margin : "0")} auto;
   padding: 0 20rem 0 0;
   display: flex;
   flex-direction: column;
@@ -29,6 +28,7 @@ export const AppContainer = styled.div`
   display: flex;
   width: 38.625rem;
   height: 2.75rem;
+  background-color: rgba(0, 0, 0, 0.2);
   border: 1px solid ${COLORS.storeBlue}
   cursor: pointer;
   transition: 0.3s;

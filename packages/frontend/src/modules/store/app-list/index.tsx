@@ -9,7 +9,7 @@ import { APP_KEYS } from '../../common/consts';
 import { calculatePercentageDecrease } from '../../common/utils/countPercentage';
 import { LoaderBig } from '../../common/loader/loader';
 
-export const AppList = ({ sliceIndex, minHeight }: { sliceIndex: number | null, minHeight: string }) => {
+export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number | null, minHeight?: string, margin?: string }) => {
   const [apps, setApps] = useState<IApp[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
@@ -38,7 +38,7 @@ export const AppList = ({ sliceIndex, minHeight }: { sliceIndex: number | null, 
       {isLoading ? (
         <LoaderBig />
       ) : (
-        <AppsList>
+        <AppsList margin={margin}>
           {apps.slice(0, sliceIndex ? sliceIndex : apps.length).map((app) => (
             <AppLink key={app._id} onClick={() => handleNavigate(app._id)}>
               <AppContainer>
