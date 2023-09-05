@@ -17,12 +17,10 @@ import {
   Button,
   FieldLink } from '../auth/sign-in/index.styled'
 import { Footer } from "../auth/sign-in/footer";
-import { Loader } from "../common/loader/loader";
 import { AdminContainer, PropertyContainer, PropertyInput, PropertyTitle } from "./index.styled";
-import { FeaturedButton } from "../home/index.styled";
 
 export const AdminPanel: React.FC = () => {
-  const [isLogged, setIsLogged] = useState(true);
+  const [isLogged, setIsLogged] = useState(false);
   const [postApp, setPostApp] = useState(false);
   const [updateApp, setUpdateApp] = useState(false);
 
