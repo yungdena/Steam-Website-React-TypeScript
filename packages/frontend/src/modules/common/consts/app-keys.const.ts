@@ -32,4 +32,5 @@ export const ROUTER_KEYS = {
   AUTHORIZED: 'authorized',
   APPS: 'apps',
   ABOUT: 'about',
+  ADMIN: 'admin',
 };

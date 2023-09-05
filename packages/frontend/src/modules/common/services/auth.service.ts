@@ -13,7 +13,6 @@ type SignInFormValues = {
   password: string;
 };
 
-
 const signUp = async (data: SignUpFormValues) => {
   console.log('sign up service');
   const response = await fetch(`${BASE_URL}/auth/signup`, {

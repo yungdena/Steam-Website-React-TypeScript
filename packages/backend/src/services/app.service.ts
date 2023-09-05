@@ -1,6 +1,4 @@
 import { Response } from "express";
-import { ObjectID } from "mongodb";
-import axios from "axios";
 
 import { AppModel } from "../models/App";
 import { IApp } from "../types/app.type";

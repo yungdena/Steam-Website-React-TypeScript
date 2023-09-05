@@ -7,11 +7,16 @@ import { StorePage } from '../store';
 import { AppPage } from '../app-page';
 import { AboutPage } from '../about';
 import { HomePage } from '../home';
+import { AdminPanel } from '../admin';
 
 export const MainRouter = () => (
   <Router>
     <Switch>
       <Route component={SignUp} path={APP_KEYS.ROUTER_KEYS.ROOT} exact />
+      <Route
+        component={AdminPanel}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.ADMIN}
+      />
       <Route
         component={SignUp}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNUP}
