@@ -18,9 +18,11 @@ import {
   FieldLink } from '../auth/sign-in/index.styled'
 import { Footer } from "../auth/sign-in/footer";
 import { AdminContainer, PropertyContainer, PropertyInput, PropertyTitle } from "./index.styled";
+import { Loader } from "../common/loader/loader";
 
 export const AdminPanel: React.FC = () => {
   const [isLogged, setIsLogged] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [postApp, setPostApp] = useState(false);
   const [updateApp, setUpdateApp] = useState(false);
 
@@ -41,6 +43,7 @@ export const AdminPanel: React.FC = () => {
   });
 
   const handleAuthorized = async (event: React.MouseEvent<HTMLButtonElement>) => {
+      setIsLoading(true);
       event.preventDefault();
       console.log('handler');
 
@@ -62,6 +65,7 @@ export const AdminPanel: React.FC = () => {
 
         console.log("user", JSON.stringify(user));
         setIsLogged(true);
+        setIsLoading(false);
       }
     };
 
@@ -237,7 +241,9 @@ export const AdminPanel: React.FC = () => {
                       error={formik.errors.password && formik.touched.password}
                     />
                   </FormControl>
-                  <Button onClick={handleAuthorized}>Sign in</Button>
+                  <Button disabled={isLoading} onClick={handleAuthorized}>
+                    {isLoading ? <Loader /> : <>Sign in</>}
+                  </Button>
                   <FieldLink>Help, I can't sign in</FieldLink>
                 </InputContainer>
               </Form>
