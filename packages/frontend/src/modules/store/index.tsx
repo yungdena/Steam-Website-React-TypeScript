@@ -6,7 +6,7 @@ import { Container } from './index.styled';
 export const StorePage = () => (
   <Container>
     <Header />
-      <AppList sliceIndex={null} minHeight="100vh" margin='10rem' />
+      <AppList sliceIndex={null} minHeight="100vh" margin='0' />
     <Footer />
   </Container>
 );

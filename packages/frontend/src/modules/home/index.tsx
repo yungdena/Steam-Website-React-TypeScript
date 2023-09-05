@@ -14,6 +14,7 @@ import { Header } from "../header";
 import {
   ContentContainer,
   FeaturedTitle,
+  HomeAppsContainer,
   MainContainer,
   StyledPagination,
 } from "./index.styled";
@@ -25,6 +26,11 @@ import { Footer } from "./footer";
 import { Offers } from "./offers";
 import { LoaderBig } from "../common/loader/loader";
 import { AppList } from "../store/app-list/index";
+import { AppContainer, AppImage, AppImageContainer, AppLink, AppPrice, AppReleaseDate, AppReviews, AppTextContainer, AppTitle } from "../store/app-list/index.styled";
+import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "./offers/index.styled";
+import { calculatePercentageDecrease } from "../common/utils/countPercentage";
+import { calculateReviewTitle, getReviewImageURL } from "../common/utils/calculateReviewRate";
+import { formatDate } from "../common/utils/formatDate";
 
 export const HomePage = () => {
   const [banners, setBanners] = useState<IApp[]>([]);
@@ -108,9 +114,46 @@ export const HomePage = () => {
           {isLoadingApps ? (
             <LoaderBig marginTop="20rem" marginBottom="10rem" />
           ) : (
-            <>
-              <FeaturedTitle>Top Sellers</FeaturedTitle>
-              <AppList sliceIndex={8} minHeight="fit-content" margin="0.5rem" />
+          <>
+            <FeaturedTitle>Top Sellers</FeaturedTitle>
+            <HomeAppsContainer>
+            {apps.slice(0, 5).map((app) => (
+                <AppLink key={app._id} onClick={() => handleNavigate(app._id)}>
+                  <AppContainer>
+                    <AppImageContainer>
+                      <AppImage src={app.bannerImage} />
+                    </AppImageContainer>
+                    <AppTextContainer>
+                      <AppTitle>{app.title}</AppTitle>
+                      <AppReleaseDate>{formatDate(app.releaseDate)}</AppReleaseDate>
+                      <AppReviews src={getReviewImageURL(calculateReviewTitle(app.reviews))} />
+                      {!app.newPrice && (
+                        <AppPrice>
+                          {app.price}
+                          {app.price === "Free to Play" ? "" : "$"}
+                        </AppPrice>
+                      )}
+                      {app.newPrice && (
+                        <PriceContainer className="New-Price">
+                          <PricePercent>
+                            {calculatePercentageDecrease(
+                              Number(app.price),
+                              Number(app.newPrice),
+                              0
+                            )}
+                            %
+                          </PricePercent>
+                          <PriceAmounts>
+                            <OriginalPrice>{app.price}$</OriginalPrice>
+                            <FinalPrice>{app.newPrice}$</FinalPrice>
+                          </PriceAmounts>
+                        </PriceContainer>
+                      )}
+                    </AppTextContainer>
+                  </AppContainer>
+                </AppLink>
+              ))}
+            </HomeAppsContainer>
             </>
           )}
         </ContentContainer>

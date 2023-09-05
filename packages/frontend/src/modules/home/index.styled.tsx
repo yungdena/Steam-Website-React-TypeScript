@@ -68,3 +68,12 @@ export const FeaturedTitle = styled.div`
   color: #fff;
   letter-spacing: 0.03em;
 `;
+
+export const HomeAppsContainer = styled.div`
+  align-self: start;
+  margin-left: 16rem;
+  margin-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+`

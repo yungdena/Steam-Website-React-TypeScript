@@ -4,6 +4,8 @@ import { LoaderBig } from "../common/loader/loader";
 
 import { useGetAppById } from "../common/services/apps.service";
 import { IApp } from "../common/types/app.interface";
+import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
+import { formatDate } from "../common/utils/formatDate";
 import { Header } from "../header";
 import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags } from "./index.styled";
 import { ImageSlider } from "./swiper";
@@ -59,10 +61,12 @@ export const AppPage = () => {
                   </AdditionalInfoTitleColumn>
                   <AdditionalInfoDescriptionColumn>
                     <AdditionalInfoDescription>
-                      See The reviews below
+                      {app?.reviews &&
+                        calculateReviewTitle(app?.reviews)
+                      } ({app?.reviews.length})
                     </AdditionalInfoDescription>
                     <AdditionalInfoDescription>
-                      {app?.releaseDate}
+                      {formatDate(app?.releaseDate)}
                     </AdditionalInfoDescription>
                     <AdditionalInfoDescription>
                       {app?.developer}

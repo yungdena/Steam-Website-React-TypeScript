@@ -6,7 +6,7 @@ export interface IReview {
 export interface IApp {
   title: string;
   description: string;
-  reviews: IReview;
+  reviews: IReview[];
   price: string;
   releaseDate: string;
   publisher: string;
