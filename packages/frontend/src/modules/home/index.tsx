@@ -12,7 +12,9 @@ import { Navigation, Pagination, EffectFade, Autoplay } from "swiper/modules";
 import { IApp } from "../common/types/app.interface";
 import { Header } from "../header";
 import {
+  AppsLine,
   ContentContainer,
+  FeaturedButton,
   FeaturedTitle,
   HomeAppsContainer,
   MainContainer,
@@ -82,6 +84,12 @@ export const HomePage = () => {
     );
   };
 
+  const handleNavigateToApps = () => {
+    history.push(
+      `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.STORE}`
+    );
+  };
+
   return (
     <>
       <Header />
@@ -114,46 +122,58 @@ export const HomePage = () => {
           {isLoadingApps ? (
             <LoaderBig marginTop="20rem" marginBottom="10rem" />
           ) : (
-          <>
-            <FeaturedTitle>Top Sellers</FeaturedTitle>
-            <HomeAppsContainer>
-            {apps.slice(0, 5).map((app) => (
-                <AppLink key={app._id} onClick={() => handleNavigate(app._id)}>
-                  <AppContainer>
-                    <AppImageContainer>
-                      <AppImage src={app.bannerImage} />
-                    </AppImageContainer>
-                    <AppTextContainer>
-                      <AppTitle>{app.title}</AppTitle>
-                      <AppReleaseDate>{formatDate(app.releaseDate)}</AppReleaseDate>
-                      <AppReviews src={getReviewImageURL(calculateReviewTitle(app.reviews))} />
-                      {!app.newPrice && (
-                        <AppPrice>
-                          {app.price}
-                          {app.price === "Free to Play" ? "" : "$"}
-                        </AppPrice>
-                      )}
-                      {app.newPrice && (
-                        <PriceContainer className="New-Price">
-                          <PricePercent>
-                            {calculatePercentageDecrease(
-                              Number(app.price),
-                              Number(app.newPrice),
-                              0
-                            )}
-                            %
-                          </PricePercent>
-                          <PriceAmounts>
-                            <OriginalPrice>{app.price}$</OriginalPrice>
-                            <FinalPrice>{app.newPrice}$</FinalPrice>
-                          </PriceAmounts>
-                        </PriceContainer>
-                      )}
-                    </AppTextContainer>
-                  </AppContainer>
-                </AppLink>
-              ))}
-            </HomeAppsContainer>
+            <>
+              <AppsLine>
+                <FeaturedTitle>Top Sellers</FeaturedTitle>
+                <FeaturedButton onClick={handleNavigateToApps}>To apps</FeaturedButton>
+              </AppsLine>
+              <HomeAppsContainer>
+                {apps.slice(0, 5).map((app) => (
+                  <AppLink
+                    key={app._id}
+                    onClick={() => handleNavigate(app._id)}
+                  >
+                    <AppContainer>
+                      <AppImageContainer>
+                        <AppImage src={app.bannerImage} />
+                      </AppImageContainer>
+                      <AppTextContainer>
+                        <AppTitle>{app.title}</AppTitle>
+                        <AppReleaseDate>
+                          {formatDate(app.releaseDate)}
+                        </AppReleaseDate>
+                        <AppReviews
+                          src={getReviewImageURL(
+                            calculateReviewTitle(app.reviews)
+                          )}
+                        />
+                        {!app.newPrice && (
+                          <AppPrice>
+                            {app.price}
+                            {app.price === "Free to Play" ? "" : "$"}
+                          </AppPrice>
+                        )}
+                        {app.newPrice && (
+                          <PriceContainer className="New-Price">
+                            <PricePercent>
+                              {calculatePercentageDecrease(
+                                Number(app.price),
+                                Number(app.newPrice),
+                                0
+                              )}
+                              %
+                            </PricePercent>
+                            <PriceAmounts>
+                              <OriginalPrice>{app.price}$</OriginalPrice>
+                              <FinalPrice>{app.newPrice}$</FinalPrice>
+                            </PriceAmounts>
+                          </PriceContainer>
+                        )}
+                      </AppTextContainer>
+                    </AppContainer>
+                  </AppLink>
+                ))}
+              </HomeAppsContainer>
             </>
           )}
         </ContentContainer>

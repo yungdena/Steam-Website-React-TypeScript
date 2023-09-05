@@ -59,8 +59,15 @@ export const StyledPagination = styled.div`
   }
 `;
 
-export const FeaturedTitle = styled.div`
+export const AppsLine = styled.div`
+  position: relative;
+  display: flex;
+  align-self: start;
   margin: 0 0 0 16rem;
+  width: 686px;
+`;
+
+export const FeaturedTitle = styled.div`
   align-self: start;
   font-family: "Motiva Sans", Sans-serif;
   font-size: 14px;
@@ -68,6 +75,29 @@ export const FeaturedTitle = styled.div`
   color: #fff;
   letter-spacing: 0.03em;
 `;
+
+export const FeaturedButton = styled.button`
+  all: unset;
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  padding: 0 1rem;
+  max-width: 122px;
+  height: 24px;
+  border: 1px solid ${COLORS.lightGrey};
+  border-radius: 2px;
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none !important;
+  color: #fff !important;
+  background: transparent;
+
+  &:hover {
+    border-color: white;
+  }
+`;
+
 
 export const HomeAppsContainer = styled.div`
   align-self: start;
