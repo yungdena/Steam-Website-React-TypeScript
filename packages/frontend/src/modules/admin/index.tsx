@@ -54,10 +54,12 @@ export const AdminPanel: React.FC = () => {
 
       if (user.message === "password") {
         formik.setFieldError("password", "error");
+        setIsLoading(false);
         return;
       }
       if (user.message === "User not found") {
         formik.setFieldError("name", "error");
+        setIsLoading(false);
         return;
       }
       if (user.hasOwnProperty("admin")) {
@@ -67,6 +69,7 @@ export const AdminPanel: React.FC = () => {
         setIsLogged(true);
         setIsLoading(false);
       }
+      setIsLoading(false);
     };
 
     console.log(isLogged);
