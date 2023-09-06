@@ -21,6 +21,7 @@ import { AdminContainer, PropertyContainer, PropertyInput, PropertyTitle, Styled
 import { Loader } from "../common/loader/loader";
 import { useGetAppById, usePostApp, useUpdateApp } from "../common/services/apps.service";
 import { IApp } from "../common/types/app.interface";
+import { handleAddReviewContainer, handleAuthorized, handleImageCountChange, handleImageInputChange, handleInputChange, handlePostApp, handleRemoveReview, handleReviewInputChange, handleUpdateApp, handleUpdateImageCountChange, handleUpdateImageInputChange, handleUpdateInputChange, handleUpdateSelectChange } from "./handlers";
 
 export const AdminPanel: React.FC = () => {
   const [formData, setFormData] = useState<IApp>({
@@ -73,230 +74,6 @@ export const AdminPanel: React.FC = () => {
   const updateAppMutation = useUpdateApp();
   const getAppByIdMutation = useGetAppById()
 
-  const handleAddReviewContainer = () => {
-    setReviewContainers((prevContainers) => [...prevContainers, Date.now()]);
-  };
-
-  const handleRemoveReview = (indexToRemove: any) => {
-    setFormData((prevFormData) => {
-      const updatedReviews = prevFormData.reviews.filter(
-        (_, index) => index !== indexToRemove
-      );
-      return {
-        ...prevFormData,
-        reviews: updatedReviews,
-      };
-    });
-  };
-
-  const handleReviewInputChange = (
-    index: number,
-    field: string,
-    value: string | boolean
-  ) => {
-    const newReviews = [...updateData.reviews];
-    newReviews[index] = {
-      ...newReviews[index],
-      [field]: value,
-    };
-    setUpdateData((prevData) => ({
-      ...prevData,
-      reviews: newReviews,
-    }));
-  };
-
-  const handlePostApp = async () => {
-    try {
-      const response = await postAppMutation.mutateAsync(formData);
-      console.log("App posted successfully:", response);
-    } catch (error) {
-      console.error("Error posting app:", error);
-    }
-  };
-
-  const handleUpdateApp = async (appId: string) => {
-    try {
-      const { data: existingApp } = await getAppByIdMutation.mutateAsync(appId);
-      console.log(existingApp);
-      const updatedData: Partial<IApp> = { ...existingApp };
-      console.log(updatedData);
-      for (const key in updateData) {
-        if (updateData.hasOwnProperty(key)) {
-          const value = updateData[key as keyof typeof updateData];
-
-          if (typeof value === "string") {
-            if (value.trim() !== "") {
-              updatedData[key as keyof typeof updateData] = value;
-            }
-          } else if (Array.isArray(value)) {
-            // Check if it's an array and has at least one non-empty element
-            const nonEmptyElements = value.filter((item) => {
-              if (Array.isArray(item)) {
-                return item.length > 0;
-              } else if (typeof item === "string") {
-                return item.trim() !== "";
-              }
-              return true;
-            });
-
-            if (nonEmptyElements.length > 0) {
-              updatedData[key as keyof typeof updateData] = nonEmptyElements;
-            }
-          } else if (typeof value === "object" && value !== null) {
-            if (Object.keys(value).length > 0) {
-              updatedData[key as keyof typeof updateData] = value;
-            }
-          } else {
-            updatedData[key as keyof typeof updateData] = value;
-          }
-        }
-      }
-
-      const response = await updateAppMutation.mutateAsync([updatedData, appId]);
-      console.log("App updated successfully:", response);
-    } catch (error) {
-      console.error("Error updating app:", error);
-    }
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-
-    setFormData((prevFormData) => {
-      if (name.startsWith("languages.")) {
-        const languageFieldName = name.split(".")[1];
-
-        return {
-          ...prevFormData,
-          languages: {
-            ...prevFormData.languages,
-            [languageFieldName]: value.split(",").map((item) => item.trim()),
-          },
-        };
-      } else if (name === "genre" || name === "tags") {
-        return {
-          ...prevFormData,
-          [name]: value.split(",").map((item) => item.trim()),
-        };
-      } else {
-        return {
-          ...prevFormData,
-          [name]: value,
-        };
-      }
-    });
-  };
-
-  const handleUpdateInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-
-    if (value.trim() !== "") {
-      setUpdateData((prevUpdateData) => ({
-        ...prevUpdateData,
-        [name]: value,
-      }));
-    }
-    setUpdateData((prevUpdateData) => {
-      if (name.startsWith("languages.")) {
-        const languageFieldName = name.split(".")[1];
-
-        return {
-          ...prevUpdateData,
-          languages: {
-            ...prevUpdateData.languages,
-            [languageFieldName]: value
-              .split(",")
-              .map((item) => item.trim()),
-          },
-        };
-      } else if (name === "genre" || name === "tags") {
-        return {
-          ...prevUpdateData,
-          [name]: value.split(",").map((item) => item.trim()),
-        };
-      } else {
-        return {
-          ...prevUpdateData,
-          [name]: value,
-        };
-      }
-    });
-  };
-
-  const handleUpdateSelectChange = (
-    index: number,
-    field: string,
-    value: string | boolean
-  ) => {
-    const newReviews = [...updateData.reviews];
-    if (field === "rate") {
-      newReviews[index] = {
-        ...newReviews[index],
-        rate: value === "true", // Convert the string value to boolean
-      };
-    } else {
-      newReviews[index] = {
-        ...newReviews[index],
-        [field]: value,
-      };
-    }
-    setUpdateData((prevData) => ({
-      ...prevData,
-      reviews: newReviews,
-    }));
-  };
-  const handleImageCountChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selectedCount = parseInt(event.target.value, 10);
-    const newImagesUrl = Array(selectedCount).fill("");
-
-    setFormData({
-      ...formData,
-      imagesUrl: newImagesUrl,
-    });
-  };
-
-  const handleImageInputChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    console.log('input change')
-    const newImagesUrl = [...formData.imagesUrl];
-    newImagesUrl[index] = event.target.value; 
-
-    setFormData({
-      ...formData,
-      imagesUrl: newImagesUrl,
-    });
-  };
-
-    const handleUpdateImageCountChange = (
-      event: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-      const selectedCount = parseInt(event.target.value, 10);
-      const newImagesUrl = Array(selectedCount).fill("");
-
-      setUpdateData({
-        ...updateData,
-        imagesUrl: newImagesUrl,
-      });
-    };
-
-    const handleUpdateImageInputChange = (
-      index: number,
-      event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-      console.log("input change");
-      const newImagesUrl = [...updateData.imagesUrl];
-      newImagesUrl[index] = event.target.value;
-
-      setUpdateData({
-        ...updateData,
-        imagesUrl: newImagesUrl,
-      });
-    };
-
   const formik = useFormik<{
     name: string;
     password: string;
@@ -311,37 +88,7 @@ export const AdminPanel: React.FC = () => {
     onSubmit: () => {},
   });
 
-  const handleAuthorized = async (event: React.MouseEvent<HTMLButtonElement>) => {
-      setIsLoading(true);
-      event.preventDefault();
-      console.log('handler');
-
-      const user = await signInMutation.mutateAsync({
-        name: formik.values.name,
-        password: formik.values.password,
-      });
-
-      if (user.message === "password") {
-        formik.setFieldError("password", "error");
-        setIsLoading(false);
-        return;
-      }
-      if (user.message === "User not found") {
-        formik.setFieldError("name", "error");
-        setIsLoading(false);
-        return;
-      }
-      if (user.hasOwnProperty("admin")) {
-        console.log("data", user);
-
-        console.log("user", JSON.stringify(user));
-        setIsLogged(true);
-        setIsLoading(false);
-      }
-      setIsLoading(false);
-  };
-
-  console.log(updateData);
+  console.log('app', updateData)
 
   return (
     <>
@@ -361,7 +108,7 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="title"
                   value={formData.title}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -369,7 +116,7 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="description"
                   value={formData.description}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -377,7 +124,7 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="tags"
                   value={formData.tags}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -385,7 +132,7 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="genre"
                   value={formData.genre}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -393,7 +140,7 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="developer"
                   value={formData.developer}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -401,7 +148,7 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="publisher"
                   value={formData.publisher}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -409,7 +156,7 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="releaseDate"
                   value={formData.releaseDate}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -417,12 +164,16 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="price"
                   value={formData.price}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
               <PropertyContainer>
                 <PropertyTitle>Images</PropertyTitle>
-                <StyledSelect onChange={handleImageCountChange}>
+                <StyledSelect
+                  onChange={(e) =>
+                    handleImageCountChange(e, setFormData, formData)
+                  }
+                >
                   <option value={1}>1</option>
                   <option value={2}>2</option>
                   <option value={3}>3</option>
@@ -440,7 +191,9 @@ export const AdminPanel: React.FC = () => {
                       key={index}
                       name={`imagesUrl[${index}]`}
                       value={imageUrl}
-                      onChange={(e) => handleImageInputChange(index, e)}
+                      onChange={(e) =>
+                        handleImageInputChange(index, e, formData, setFormData)
+                      }
                     />
                   ))}
                 </InputContainer>
@@ -450,7 +203,7 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="titleImage"
                   value={formData.titleImage}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -458,7 +211,7 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="bannerImage"
                   value={formData.bannerImage}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -467,22 +220,24 @@ export const AdminPanel: React.FC = () => {
                   name="languages.interface"
                   placeholder="interface"
                   value={formData.languages.interface}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
                 <PropertyInput
                   name="languages.fullAudio"
                   placeholder="full audio"
                   value={formData.languages.fullAudio}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
                 <PropertyInput
                   name="languages.subtitles"
                   placeholder="subtitles"
                   value={formData.languages.subtitles}
-                  onChange={handleInputChange}
+                  onChange={(e) => handleInputChange(e, setFormData)}
                 />
               </PropertyContainer>
-              <Button onClick={handlePostApp}>Post app</Button>
+              <Button onClick={() => handlePostApp(postAppMutation, formData)}>
+                Post app
+              </Button>
             </>
           )}
           <PropertyContainer
@@ -498,7 +253,9 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="appId"
                   value={updateData.appId}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -506,7 +263,9 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="title"
                   value={updateData.title}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -514,7 +273,9 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="description"
                   value={updateData.description}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -522,7 +283,9 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="tags"
                   value={updateData.tags}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -530,7 +293,9 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="genre"
                   value={updateData.genre}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -538,7 +303,9 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="developer"
                   value={updateData.developer}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -546,7 +313,9 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="publisher"
                   value={updateData.publisher}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -554,7 +323,9 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="releaseDate"
                   value={updateData.releaseDate}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -562,7 +333,9 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="price"
                   value={updateData.price}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -570,12 +343,22 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="newPrice"
                   value={updateData.newPrice}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
                 <PropertyTitle>Images</PropertyTitle>
-                <StyledSelect onChange={handleUpdateImageCountChange}>
+                <StyledSelect
+                  onChange={(event) =>
+                    handleUpdateImageCountChange(
+                      event,
+                      setUpdateData,
+                      updateData
+                    )
+                  }
+                >
                   <option value={1}>1</option>
                   <option value={2}>2</option>
                   <option value={3}>3</option>
@@ -593,7 +376,14 @@ export const AdminPanel: React.FC = () => {
                       key={index}
                       name={`imagesUrl[${index}]`}
                       value={imageUrl}
-                      onChange={(e) => handleUpdateImageInputChange(index, e)}
+                      onChange={(e) =>
+                        handleUpdateImageInputChange(
+                          index,
+                          e,
+                          updateData,
+                          setUpdateData
+                        )
+                      }
                     />
                   ))}
                 </InputContainer>
@@ -603,7 +393,9 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="titleImage"
                   value={updateData.titleImage}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
                 />
               </PropertyContainer>
               <PropertyContainer>
@@ -611,7 +403,30 @@ export const AdminPanel: React.FC = () => {
                 <PropertyInput
                   name="bannerImage"
                   value={updateData.bannerImage}
-                  onChange={handleUpdateInputChange}
+                  onChange={(event) =>
+                    handleUpdateInputChange(event, setUpdateData)
+                  }
+                />
+              </PropertyContainer>
+              <PropertyContainer>
+                <PropertyTitle>Languages</PropertyTitle>
+                <PropertyInput
+                  name="languages.interface"
+                  placeholder="interface"
+                  value={updateData.languages.interface}
+                  onChange={(e) => handleUpdateInputChange(e, setUpdateData)}
+                />
+                <PropertyInput
+                  name="languages.fullAudio"
+                  placeholder="full audio"
+                  value={updateData.languages.fullAudio}
+                  onChange={(e) => handleUpdateInputChange(e, setUpdateData)}
+                />
+                <PropertyInput
+                  name="languages.subtitles"
+                  placeholder="subtitles"
+                  value={updateData.languages.subtitles}
+                  onChange={(e) => handleUpdateInputChange(e, setUpdateData)}
                 />
               </PropertyContainer>
               <PropertyContainer className="column">
@@ -624,7 +439,13 @@ export const AdminPanel: React.FC = () => {
                         updateData.reviews[index]?.rate || "false"
                       )}
                       onChange={(e) =>
-                        handleUpdateSelectChange(index, "rate", e.target.value)
+                        handleUpdateSelectChange(
+                          index,
+                          "rate",
+                          e.target.value,
+                          updateData,
+                          setUpdateData
+                        )
                       }
                     >
                       <option value="true">True</option>
@@ -637,18 +458,35 @@ export const AdminPanel: React.FC = () => {
                         handleReviewInputChange(
                           index,
                           "description",
-                          e.target.value
+                          e.target.value,
+                          updateData,
+                          setUpdateData
                         )
                       }
                     />
-                    <Button onClick={() => handleRemoveReview(index)}>
+                    <Button
+                      onClick={() => handleRemoveReview(index, setFormData)}
+                    >
                       Remove
                     </Button>
                   </div>
                 ))}
-                <Button onClick={handleAddReviewContainer}>Add Review</Button>
+                <Button
+                  onClick={() => handleAddReviewContainer(setReviewContainers)}
+                >
+                  Add Review
+                </Button>
               </PropertyContainer>
-              <Button onClick={() => handleUpdateApp(updateData.appId)}>
+              <Button
+                onClick={() =>
+                  handleUpdateApp(
+                    updateData.appId,
+                    getAppByIdMutation,
+                    updateData,
+                    updateAppMutation
+                  )
+                }
+              >
                 Update app
               </Button>
             </>
@@ -680,7 +518,18 @@ export const AdminPanel: React.FC = () => {
                       error={formik.errors.password && formik.touched.password}
                     />
                   </FormControl>
-                  <Button disabled={isLoading} onClick={handleAuthorized}>
+                  <Button
+                    disabled={isLoading}
+                    onClick={(e) =>
+                      handleAuthorized(
+                        e,
+                        setIsLoading,
+                        formik,
+                        signInMutation,
+                        setIsLogged
+                      )
+                    }
+                  >
                     {isLoading ? <Loader /> : <>Sign in</>}
                   </Button>
                   <FieldLink>Help, I can't sign in</FieldLink>

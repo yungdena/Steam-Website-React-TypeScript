@@ -13,6 +13,8 @@ export const appSchema = Joi.object().keys({
   price: Joi.string().required(),
   newPrice: Joi.string(),
   imagesUrl: Joi.array().required(),
+  titleImage: Joi.string().required(),
+  reviews: Joi.array(),
   bannerImage: Joi.string().required(),
   languages: Joi.object().required(),
 });
