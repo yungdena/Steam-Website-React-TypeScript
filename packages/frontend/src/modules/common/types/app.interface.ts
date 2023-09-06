@@ -3,6 +3,12 @@ export interface IReview {
   description: string;
 }
 
+export interface ILanguage {
+  interface: string[];
+  fullAudio: string[];
+  subtitles: string[];
+}
+
 export interface IApp {
   title: string;
   description: string;
@@ -14,6 +20,6 @@ export interface IApp {
   tags: string[];
   genre: string[];
   imagesUrl: string[];
-  languages: string;
+  languages: ILanguage;
   [key: string]: any;
 }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isExist } from "../../middlewares/validate.middleware";
+import { appSchema, isExist, validate } from "../../middlewares/validate.middleware";
 import appsController from "../../controllers/app.controller";
 import { AppModel } from "../../models/App";
 
@@ -9,7 +9,7 @@ appsRouter.get("/", appsController.getAll.bind(appsController));
 
 appsRouter.get("/:id", isExist(AppModel), appsController.getById.bind(appsController));
 
-appsRouter.post("/", appsController.create.bind(appsController));
+appsRouter.post("/", validate(appSchema), appsController.create.bind(appsController));
 
 appsRouter.patch(
   "/:id",

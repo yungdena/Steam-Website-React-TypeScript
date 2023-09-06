@@ -17,6 +17,10 @@ export const AdminContainer = styled.div`
     background-color: ${COLORS.darkBlueGrey};
     border: 1px solid ${COLORS.tagBlue};
   }
+
+  .column {
+    flex-direction: column;
+  }
 `;
 
 export const PropertyContainer = styled.div`
@@ -29,8 +33,14 @@ export const PropertyContainer = styled.div`
   border: 1px solid ${COLORS.greyishWhite}
 `
 
+export const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 export const PropertyTitle = styled.div`
   color: ${COLORS.white};
+  width: 200px;
   font-size: 24px;
   padding: 1rem;
 `
@@ -44,6 +54,10 @@ export const PropertyInput = styled.input`
   height: 2rem;
   width: 420px;
   margin: 1rem 5rem;
+
+  &::placeholder {
+    color: ${COLORS.greyishWhite};
+  }
 `
 
 export const Button = styled.div`
@@ -66,3 +80,11 @@ export const Button = styled.div`
     background: linear-gradient(to right, #47bfff 1%, #1a44c2 70%);
   }
 `;
+
+export const StyledSelect = styled.select`
+  border: 1px solid white;
+  background-color: ${COLORS.storeBlue};
+  color: white;
+  padding: 1rem 2rem;
+  margin-left: 1rem;
+`

@@ -1,13 +1,23 @@
 import Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
-import { isValidObjectId, Model, Types } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 
-export const todoSchema = Joi.object().keys({
-  columnTitle: Joi.string().required(),
-  title: Joi.string().required()
+export const appSchema = Joi.object().keys({
+  title: Joi.string().required(),
+  description: Joi.string().required(),
+  tags: Joi.array().required(),
+  genre: Joi.array().required(),
+  developer: Joi.string().required(),
+  publisher: Joi.string().required(),
+  releaseDate: Joi.string().required(),
+  price: Joi.string().required(),
+  newPrice: Joi.string(),
+  imagesUrl: Joi.array().required(),
+  bannerImage: Joi.string().required(),
+  languages: Joi.object().required(),
 });
 
-export const todoCollectionSchema = Joi.object().keys({
+export const appCollectionSchema = Joi.object().keys({
   userName: Joi.string().required(),
   title: Joi.string().required()
 });
