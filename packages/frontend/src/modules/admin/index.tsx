@@ -63,7 +63,7 @@ export const AdminPanel: React.FC = () => {
     },
   });
   const [reviewContainers, setReviewContainers] = useState<number[]>([]);
-  const [isLogged, setIsLogged] = useState(true);
+  const [isLogged, setIsLogged] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [postApp, setPostApp] = useState(false);
   const [updateApp, setUpdateApp] = useState(false);
