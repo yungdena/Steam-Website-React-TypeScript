@@ -43,50 +43,6 @@ export const handlePostApp = async (postAppMutation: any, formData: any) => {
   }
 };
 
-// export const handleUpdateApp = async (appId: string, getAppByIdMutation: any, updateData: Partial<IApp>, updateAppMutation: any) => {
-//   try {
-//     const { data: existingApp } = await getAppByIdMutation.mutateAsync(appId);
-//     console.log(existingApp);
-//     const updatedData: Partial<IApp> = { ...existingApp };
-//     console.log(updatedData);
-//     for (const key in updateData) {
-//       if (updateData.hasOwnProperty(key)) {
-//         const value = updateData[key as keyof typeof updateData];
-
-//         if (typeof value === "string") {
-//           if (value.trim() !== "") {
-//             updatedData[key as keyof typeof updateData] = value;
-//           }
-//         } else if (Array.isArray(value)) {
-//           const nonEmptyElements = value.filter((item) => {
-//             if (Array.isArray(item)) {
-//               return item.length > 0;
-//             } else if (typeof item === "string") {
-//               return item.trim() !== "";
-//             }
-//             return true;
-//           });
-
-//           if (nonEmptyElements.length > 0) {
-//             updatedData[key as keyof typeof updateData] = nonEmptyElements;
-//           }
-//         } else if (typeof value === "object" && value !== null) {
-//           if (Object.keys(value).length > 0) {
-//             updatedData[key as keyof typeof updateData] = value;
-//           }
-//         } else {
-//           updatedData[key as keyof typeof updateData] = value;
-//         }
-//       }
-//     }
-
-//     const response = await updateAppMutation.mutateAsync([updatedData, appId]);
-//     console.log("App updated successfully:", response);
-//   } catch (error) {
-//     console.error("Error updating app:", error);
-//   }
-// };
-
 export const handleUpdateApp = async (
   appId: string,
   getAppByIdMutation: any,
@@ -222,7 +178,7 @@ export const handleUpdateSelectChange = (
   if (field === "rate") {
     newReviews[index] = {
       ...newReviews[index],
-      rate: value === "true", // Convert the string value to boolean
+      rate: value === "true",
     };
   } else {
     newReviews[index] = {
