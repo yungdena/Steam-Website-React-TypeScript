@@ -1,16 +1,23 @@
 import styled from "styled-components";
 import { COLORS } from "../theme";
 
-export const PageContainer = styled.div`
-  display: flex;
-  justify-content: center;
+export const Background = styled.div`
   background-color: ${COLORS.storeBlue};
   width: 100%;
+`;
+
+export const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: ${COLORS.storeBlue};
+  width: 58.75rem;
   height: 100vh;
+  margin: 0 auto;
 `;
 
 export const InfoContainer = styled.div`
-  width: 58.75rem;
+  
   height: fit-content;
   padding: 9.5rem 0 2rem;
   background: rgb(27, 40, 56);
@@ -128,5 +135,68 @@ export const Tag = styled.div`
   &:hover {
     background-color: ${COLORS.blue};
     color: ${COLORS.white};
+  }
+`;
+
+export const PurchaseMenu = styled.div`
+  align-self: start;
+  position: relative;
+  background: linear-gradient(
+    -60deg,
+    rgba(226, 244, 255, 0.3) 5%,
+    rgba(84, 107, 115, 0.3) 95%
+  );
+  margin-top: 1rem;
+  width: 616px;
+  padding: 16px;
+  padding-bottom: 26px;
+  border-radius: 4px;
+`;
+
+export const PurchaseTitle = styled.div`
+  font-size: 21px;
+  font-family: "Motiva Sans", Sans-serif;
+  font-weight: normal;
+  color: #ffffff;
+  font-weight: normal;
+`;
+
+export const PurchaseButton = styled.button`
+  border-radius: 2px;
+  border: none;
+  padding: 1px;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none !important;
+  color: #d2efa9;
+  background: -webkit-linear-gradient(top, #6fa720 5%, #588a1b 95%);
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+  padding: 0.25rem 0.75rem;
+
+  &:hover {
+    background: #6fa720;
+  }
+`;
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  background-color: black;
+  padding: 2px;
+  border-radius: 2px;
+  position: absolute;
+  right: 16px;
+  bottom: -17px;
+  white-space: nowrap;
+  text-align: right;
+
+  .New-Price {
+    padding: 0;
+  }
+
+  .appstore-prices {
+    padding-top: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    position: static;
   }
 `;

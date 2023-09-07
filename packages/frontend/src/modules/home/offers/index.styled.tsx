@@ -89,6 +89,7 @@ export const PricePercent = styled.div`
 `;
 
 export const PriceAmounts = styled.div`
+  width: 100px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
