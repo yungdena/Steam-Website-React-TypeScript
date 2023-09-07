@@ -17,7 +17,6 @@ import {
   Button,
   FieldLink } from '../auth/sign-in/index.styled'
 import { Footer } from "../auth/sign-in/footer";
-import { AdminContainer, PropertyContainer, PropertyInput, PropertyTitle, StyledSelect } from "./index.styled";
 import { Loader } from "../common/loader/loader";
 import { useGetAppById, usePostApp, useUpdateApp } from "../common/services/apps.service";
 import { IApp } from "../common/types/app.interface";

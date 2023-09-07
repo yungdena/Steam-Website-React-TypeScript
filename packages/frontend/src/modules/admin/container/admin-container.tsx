@@ -56,7 +56,6 @@ export const Admin = ({
       setReviewContainers,
   }: IAdmin) => {
 
-
   return (
     <AdminContainer>
       <PropertyContainer

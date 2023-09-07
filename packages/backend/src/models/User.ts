@@ -5,6 +5,8 @@ export interface IUser extends Document {
   email: string;
   password: string;
   country: string;
+  wishlist: string[];
+  apps: string[];
 }
 
 const userSchema: Schema<any, Model<IUser>> = new Schema({
@@ -24,6 +26,15 @@ const userSchema: Schema<any, Model<IUser>> = new Schema({
   country: {
     type: String,
     required: true
+  },
+  avatar: {
+    type: String,
+  },
+  wishlist: {
+    type: Array,
+  },
+  apps: {
+    type: Array,
   }
 });
 
