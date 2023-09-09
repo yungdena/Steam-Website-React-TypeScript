@@ -175,7 +175,7 @@ export const AppTextContainer = styled.div`
 
   .New-Price {
     position: absolute;
-    right: 0;
+    right: 10px;
   }
 `
 

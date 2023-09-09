@@ -78,12 +78,17 @@ export const PriceContainer = styled.div`
   line-height: 17px;
   font-size: 12px;
   width: 135px;
+
+  .wishlist-price-amounts {
+    background-color: transparent;
+  }
 `;
 
 export const PricePercent = styled.div`
   line-height: 34px;
   padding: 0 5px;
   font-size: 26px;
+  font-weight: 400;
   color: #beee11;
   background-color: #4c6b22;
 `;
@@ -95,6 +100,10 @@ export const PriceAmounts = styled.div`
   align-items: flex-end;
   padding: 0.25rem;
   background-color: rgba(20, 31, 44, 0.8);
+
+  .wishlist-price-final-price {
+    color: white;
+  }
 `;
 
 export const OriginalPrice = styled.div`

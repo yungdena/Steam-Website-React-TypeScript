@@ -106,7 +106,7 @@ useEffect(() => {
                       </AppReleaseDate>
                       <AppReviews
                         src={getReviewImageURL(
-                          calculateReviewTitle(app.reviews)
+                          calculateReviewTitle(app.reviews).title
                         )}
                       />
                       {!app.newPrice && (
@@ -118,7 +118,7 @@ useEffect(() => {
                       {app.newPrice && (
                         <PriceContainer className="New-Price">
                           <PricePercent>
-                            {calculatePercentageDecrease(
+                            -{calculatePercentageDecrease(
                               Number(app.price),
                               Number(app.newPrice),
                               0

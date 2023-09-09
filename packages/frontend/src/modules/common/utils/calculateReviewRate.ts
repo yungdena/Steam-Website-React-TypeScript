@@ -1,8 +1,22 @@
 import { IReview } from "../types/app.interface";
 
-export function calculateReviewTitle(reviews: IReview[]): string {
+const reviewTitleColors = {
+  "Overwhelmingly Positive": "#66C0F4",
+  "Very Positive": "#66C0F4",
+  "Mostly Positive": "#66C0F4",
+  "Mixed": "#B9A074",
+  "Mostly Negative": "#A34C25",
+  "Overwhelmingly Negative": "#A34C25",
+  "Very Negative": "#A34C25",
+  "No Reviews": "gray",
+};
+
+export function calculateReviewTitle(reviews: IReview[]): {title: string, color: string} {
   if (reviews.length === 0) {
-    return "No Reviews";
+    return {
+      title: "No reviews",
+      color: reviewTitleColors["Overwhelmingly Positive"],
+    };
   }
 
   const trueReviewsCount = reviews.filter(
@@ -12,19 +26,37 @@ export function calculateReviewTitle(reviews: IReview[]): string {
 
   switch (true) {
     case percentage >= 90:
-      return "Overwhelmingly Positive";
+      return {
+        title: "Overwhelmingly Positive",
+        color: reviewTitleColors["Overwhelmingly Positive"],
+      };
     case percentage >= 80:
-      return "Very Positive";
+      return {
+        title: "Very Positive",
+        color: reviewTitleColors["Very Positive"],
+      };
     case percentage >= 70:
-      return "Mostly Positive";
+      return {
+        title: "Mostly Positive",
+        color: reviewTitleColors["Mostly Positive"],
+      };
     case percentage >= 40:
-      return "Mixed";
+      return { title: "Mixed", color: reviewTitleColors["Mixed"] };
     case percentage >= 20:
-      return "Mostly Negative";
+      return {
+        title: "Mostly Negative",
+        color: reviewTitleColors["Mostly Negative"],
+      };
     case percentage >= 5:
-      return "Overwhelmingly Negative";
+      return {
+        title: "Overwhelmingly Negative",
+        color: reviewTitleColors["Overwhelmingly Negative"],
+      };
     default:
-      return "Very Negative";
+      return {
+        title: "Very Negative",
+        color: reviewTitleColors["Very Negative"],
+      };
   }
 }
 

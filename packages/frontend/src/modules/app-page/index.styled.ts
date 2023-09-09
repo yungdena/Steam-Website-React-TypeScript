@@ -199,6 +199,18 @@ export const ButtonWrapper = styled.div`
     padding-right: 12px;
     position: static;
   }
+
+  .wishlist-price {
+    padding: 6px;
+    width: 5rem;
+    font-size: 14px;
+    position: static;
+    color: white;
+  }
+
+  .to-cart-button {
+    height: 32px;
+  }
 `;
 
 export const QueueContainer = styled.div`

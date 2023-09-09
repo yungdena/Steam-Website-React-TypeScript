@@ -72,59 +72,75 @@ export const AppPage = () => {
             <LoaderBig marginTop="10rem" marginBottom="10rem" />
           ) : (
             <>
-              <AppTitle>{app?.title}</AppTitle>
-              <InfoWrapper>
-                <BigInfoContainer>
-                  <ImageSlider images={app?.imagesUrl} />
-                </BigInfoContainer>
-                <SmallInfoContainer>
-                  <SmallInfoTextContainer>
-                    <ImageContainer>
-                      <TitleImage src={app?.titleImage} />
-                    </ImageContainer>
-                    {app?.description}
-                  </SmallInfoTextContainer>
-                  <AdditionalInfoContainer>
-                    <AdditionalInfoTitleColumn>
-                      <AdditionalInfoTitle>ALL REVIEWS</AdditionalInfoTitle>
-                      <AdditionalInfoTitle>RELEASE DATE</AdditionalInfoTitle>
-                      <AdditionalInfoTitle>DEVELOPER</AdditionalInfoTitle>
-                      <AdditionalInfoTitle>PUBLISHER</AdditionalInfoTitle>
-                    </AdditionalInfoTitleColumn>
-                    <AdditionalInfoDescriptionColumn>
-                      <AdditionalInfoDescription>
-                        {app?.reviews && calculateReviewTitle(app?.reviews)} (
-                        {app?.reviews.length})
-                      </AdditionalInfoDescription>
-                      <AdditionalInfoDescription>
-                        {formatDate(app?.releaseDate)}
-                      </AdditionalInfoDescription>
-                      <AdditionalInfoDescription>
-                        {app?.developer}
-                      </AdditionalInfoDescription>
-                      <AdditionalInfoDescription>
-                        {app?.publisher}
-                      </AdditionalInfoDescription>
-                    </AdditionalInfoDescriptionColumn>
-                  </AdditionalInfoContainer>
-                  <TagsContainer>
-                    <AdditionalInfoTitle>
-                      Popular user-defined tags for this product:
-                    </AdditionalInfoTitle>
-                    <Tags>
-                      {app?.tags.map((tag) => (
-                        <Tag key={tag}>{tag}</Tag>
-                      ))}
-                    </Tags>
-                  </TagsContainer>
-                </SmallInfoContainer>
-              </InfoWrapper>
+              {app && (
+                  <><AppTitle>{app?.title}</AppTitle><InfoWrapper>
+                    <BigInfoContainer>
+                      <ImageSlider images={app?.imagesUrl} />
+                    </BigInfoContainer>
+                    <SmallInfoContainer>
+                      <SmallInfoTextContainer>
+                        <ImageContainer>
+                          <TitleImage src={app?.titleImage} />
+                        </ImageContainer>
+                        {app?.description}
+                      </SmallInfoTextContainer>
+                      <AdditionalInfoContainer>
+                        <AdditionalInfoTitleColumn>
+                          <AdditionalInfoTitle>ALL REVIEWS</AdditionalInfoTitle>
+                          <AdditionalInfoTitle>RELEASE DATE</AdditionalInfoTitle>
+                          <AdditionalInfoTitle>DEVELOPER</AdditionalInfoTitle>
+                          <AdditionalInfoTitle>PUBLISHER</AdditionalInfoTitle>
+                        </AdditionalInfoTitleColumn>
+                        <AdditionalInfoDescriptionColumn>
+                          <AdditionalInfoDescription
+                            style={{
+                              color: calculateReviewTitle(app?.reviews).color,
+                            }}
+                          >
+                            {app?.reviews &&
+                              calculateReviewTitle(app?.reviews).title}
+                            ({app?.reviews.length})
+                          </AdditionalInfoDescription>
+                          <AdditionalInfoDescription>
+                            {formatDate(app?.releaseDate)}
+                          </AdditionalInfoDescription>
+                          <AdditionalInfoDescription>
+                            {app?.developer}
+                          </AdditionalInfoDescription>
+                          <AdditionalInfoDescription>
+                            {app?.publisher}
+                          </AdditionalInfoDescription>
+                        </AdditionalInfoDescriptionColumn>
+                      </AdditionalInfoContainer>
+                      <TagsContainer>
+                        <AdditionalInfoTitle>
+                          Popular user-defined tags for this product:
+                        </AdditionalInfoTitle>
+                        <Tags>
+                          {app?.tags.map((tag) => (
+                            <Tag key={tag}>{tag}</Tag>
+                          ))}
+                        </Tags>
+                      </TagsContainer>
+                    </SmallInfoContainer>
+                  </InfoWrapper></>
+              )}
+              
             </>
           )}
         </InfoContainer>
         <QueueContainer>
-          <QueueButton onClick={handleAddToWishlist}>Add to your wishlist</QueueButton>
-          <QueueButton onClick={handleNavigate(history, APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.STORE)}>Back to Store</QueueButton>
+          <QueueButton onClick={handleAddToWishlist}>
+            Add to your wishlist
+          </QueueButton>
+          <QueueButton
+            onClick={handleNavigate(
+              history,
+              APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.STORE
+            )}
+          >
+            Back to Store
+          </QueueButton>
         </QueueContainer>
         <PurchaseMenu>
           <PurchaseTitle>
@@ -136,7 +152,7 @@ export const AppPage = () => {
             {app?.newPrice ? (
               <PriceContainer className="New-Price">
                 <PricePercent>
-                  {calculatePercentageDecrease(
+                  -{calculatePercentageDecrease(
                     Number(app?.price),
                     Number(app?.newPrice),
                     0

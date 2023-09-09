@@ -20,6 +20,7 @@
     "classnames": "^2.3.2",
     "cors-anywhere": "^0.4.4",
     "data.js": "^0.12.11",
+    "downshift": "^8.1.0",
     "eslint-plugin-import": "^2.27.5",
     "formik": "^2.2.9",
     "http-proxy-middleware": "^2.0.6",

@@ -52,7 +52,7 @@ export const Offers = ({ appsArray }: { appsArray: IApp[] }) => {
                     <OfferImage src={app.titleImage} />
                     <PriceContainer>
                       <PricePercent>
-                        {calculatePercentageDecrease(
+                        -{calculatePercentageDecrease(
                           Number(app.price),
                           Number(app.newPrice),
                           0

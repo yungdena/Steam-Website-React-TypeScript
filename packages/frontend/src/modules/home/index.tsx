@@ -165,7 +165,7 @@ export const HomePage = () => {
                         </AppReleaseDate>
                         <AppReviews
                           src={getReviewImageURL(
-                            calculateReviewTitle(app.reviews)
+                            calculateReviewTitle(app.reviews).title
                           )}
                         />
                         {!app.newPrice && (
@@ -177,7 +177,7 @@ export const HomePage = () => {
                         {app.newPrice && (
                           <PriceContainer className="New-Price">
                             <PricePercent>
-                              {calculatePercentageDecrease(
+                              -{calculatePercentageDecrease(
                                 Number(app.price),
                                 Number(app.newPrice),
                                 0
