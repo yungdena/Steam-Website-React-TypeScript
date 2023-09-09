@@ -33,4 +33,6 @@ export const ROUTER_KEYS = {
   APPS: 'apps',
   ABOUT: 'about',
   ADMIN: 'admin',
+  WISHLIST: 'wishlist',
+  LIBRARY: 'library'
 };

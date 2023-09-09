@@ -41,4 +41,31 @@ export class UserService {
       res.status(500).send({ message: "Internal server error" });
     }
   }
+  async getWishlist(userId: string, res: Response) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        res.status(404).send({ message: "User not found" });
+        return;
+      }
+
+      res.send({ wishlist: user.wishlist });
+    } catch (error) {
+      res.status(500).send({ message: "Internal server error" });
+    }
+  }
+
+  async getLibrary(userId: string, res: Response) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        res.status(404).send({ message: "User not found" });
+        return;
+      }
+
+      res.send({ library: user.apps });
+    } catch (error) {
+      res.status(500).send({ message: "Internal server error" });
+    }
+  }
 }

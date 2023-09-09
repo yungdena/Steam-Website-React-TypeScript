@@ -11,16 +11,17 @@ export const MainContainer = styled.div`
 `;
 
 export const ContentContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 1440px;
+  max-width: 1050px;
   width: 100%;
   height: 100%;
   margin: 0 auto;
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  padding-top: 2rem;
+  margin-top: 4rem;
 
   .swiper {
     width: 1050px;
@@ -63,7 +64,7 @@ export const AppsLine = styled.div`
   position: relative;
   display: flex;
   align-self: start;
-  margin: 0 0 0 16rem;
+  margin: 0 auto;
   width: 686px;
 `;
 
@@ -101,9 +102,34 @@ export const FeaturedButton = styled.button`
 
 export const HomeAppsContainer = styled.div`
   align-self: start;
-  margin-left: 16rem;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 5rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-`
+`;
+
+const wishlistUrl = 'https://res.cloudinary.com/didkbrlcz/image/upload/v1694246344/System/background_wishlist_rz7wjf.jpg'
+
+export const WishlistButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  color: #ffffff;
+  display: inline-block;
+  position: absolute;
+  top: 80px;
+  right: 55px;
+  padding: 0 25px;
+  margin: 0 1px;
+  line-height: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 11px;
+  background: url(${wishlistUrl});
+
+  &:hover {
+    color: black;
+    background: linear-gradient(135deg, #ffffff 0%,#919aa3 100%);
+  }
+`;

@@ -7,7 +7,6 @@ export const GameBannerComponent = ({appInfo}: Partial<IApp>) => {
   const { titleImage, title, imagesUrl, tags, price, reason } = appInfo;
   const [hoveredImage, setHoveredImage] = useState(titleImage);
   const reasonRecommended = reason[0] === 'R'
-  console.log(reasonRecommended)
 
   return (
     <GlobalContainer>

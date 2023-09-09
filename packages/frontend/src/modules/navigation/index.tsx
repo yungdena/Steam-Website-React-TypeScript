@@ -8,6 +8,7 @@ import { AppPage } from '../app-page';
 import { AboutPage } from '../about';
 import { HomePage } from '../home';
 import { AdminPanel } from '../admin';
+import { Wishlist } from '../wishlist';
 
 export const MainRouter = () => (
   <Router>
@@ -41,6 +42,14 @@ export const MainRouter = () => (
       <Route
         component={AboutPage}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.ABOUT}
+      />
+      <Route
+        component={Wishlist}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.WISHLIST}
+      />
+      <Route
+        component={AboutPage}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY}
       />
     </Switch>
   </Router>

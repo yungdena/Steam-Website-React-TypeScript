@@ -17,7 +17,7 @@ export const PageContainer = styled.div`
 `;
 
 export const InfoContainer = styled.div`
-  
+  width: 58.75rem;
   height: fit-content;
   padding: 9.5rem 0 2rem;
   background: rgb(27, 40, 56);
@@ -198,5 +198,33 @@ export const ButtonWrapper = styled.div`
     padding-left: 12px;
     padding-right: 12px;
     position: static;
+  }
+`;
+
+export const QueueContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  width: 100%;
+  height: 68px;
+  background-color: rgba(0, 0, 0, 0.2)
+`
+
+export const QueueButton = styled.button`
+  border-radius: 2px;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none;
+  color: #67c1f5;
+  background: rgba(103, 193, 245, 0.2);
+  padding: 2px 15px;
+  font-size: 15px;
+  line-height: 30px;
+
+  &:hover {
+    color: white;
+    background: linear-gradient( -60deg, #417a9b 5%,#67c1f5 95%);
   }
 `;

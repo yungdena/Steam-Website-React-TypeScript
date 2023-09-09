@@ -19,6 +19,7 @@ import {
   HomeAppsContainer,
   MainContainer,
   StyledPagination,
+  WishlistButton,
 } from "./index.styled";
 import { GameBannerComponent } from "./banner";
 import { HomepageHeader } from "./home-header";
@@ -33,34 +34,45 @@ import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent }
 import { calculatePercentageDecrease } from "../common/utils/countPercentage";
 import { calculateReviewTitle, getReviewImageURL } from "../common/utils/calculateReviewRate";
 import { formatDate } from "../common/utils/formatDate";
+import { useGetWishlist } from "../common/services/user.service";
 
 export const HomePage = () => {
   const [banners, setBanners] = useState<IApp[]>([]);
   const [apps, setApps] = useState<IApp[]>([]);
   const [isLoadingApps, setIsLoadingApps] = useState(true);
   const [isLoadingBanners, setIsLoadingBanners] = useState(true);
+  const [wishlishLength, setWishlishLength] = useState(0);
   const getAllBannersMutation = useGetAllBanners();
   const getAllAppsMutation = useGetAllApps();
   const history = useHistory();
+  const getWishlistMutation = useGetWishlist();
+
+  const user = localStorage.getItem('account');
 
   useEffect(() => {
     async function fetchAllBanners() {
       const data = await getAllBannersMutation.mutateAsync();
-      console.log("banners fetched: ", data);
       setBanners(data);
       setIsLoadingBanners(false);
     }
     async function fetchAllApps() {
       const data = await getAllAppsMutation.mutateAsync();
-      console.log("apps fetched: ", data);
       setApps(data);
       setIsLoadingApps(false);
     }
+    async function getUsersWishlistLength() {  
+      if (user) {
+        const id = JSON.parse(user)._id;
+        const wishlistResponse = await getWishlistMutation.mutateAsync(id);
+        const wishlist = wishlistResponse.wishlist;
+        setWishlishLength(wishlist.length)
+      }
+    };
+    getUsersWishlistLength();
     fetchAllBanners();
     fetchAllApps();
   }, []);
 
-  
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],
     effect: "fade",
@@ -95,6 +107,13 @@ export const HomePage = () => {
       <Header />
       <MainContainer>
         <ContentContainer>
+          <WishlistButton
+            onClick={() => history.push(
+              `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.WISHLIST}`
+            )}
+          >
+            Wishlist ({wishlishLength})
+          </WishlistButton>
           <HomepageHeader />
           {isLoadingBanners ? (
             <LoaderBig marginTop="10rem" />
@@ -125,7 +144,9 @@ export const HomePage = () => {
             <>
               <AppsLine>
                 <FeaturedTitle>Top Sellers</FeaturedTitle>
-                <FeaturedButton onClick={handleNavigateToApps}>To apps</FeaturedButton>
+                <FeaturedButton onClick={handleNavigateToApps}>
+                  To apps
+                </FeaturedButton>
               </AppsLine>
               <HomeAppsContainer>
                 {apps.slice(0, 5).map((app) => (

@@ -13,7 +13,7 @@ import { handleNavigate } from "../common/utils/handleNavigate";
 import { Header } from "../header";
 import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "../home/offers/index.styled";
 import { AppPrice } from "../store/app-list/index.styled";
-import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background } from "./index.styled";
+import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton } from "./index.styled";
 import { ImageSlider } from "./swiper";
 
 interface AppRouteParams {
@@ -113,7 +113,7 @@ export const AppPage = () => {
                     </AdditionalInfoTitle>
                     <Tags>
                       {app?.tags.map((tag) => (
-                        <Tag>{tag}</Tag>
+                        <Tag key={tag}>{tag}</Tag>
                       ))}
                     </Tags>
                   </TagsContainer>
@@ -122,6 +122,10 @@ export const AppPage = () => {
             </>
           )}
         </InfoContainer>
+        <QueueContainer>
+          <QueueButton onClick={handleAddToWishlist}>Add to your wishlist</QueueButton>
+          <QueueButton onClick={handleNavigate(history, APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.STORE)}>Back to Store</QueueButton>
+        </QueueContainer>
         <PurchaseMenu>
           <PurchaseTitle>
             {app?.price === "Free to Play"
@@ -150,7 +154,9 @@ export const AppPage = () => {
                 {app?.price === "Free to Play" ? "" : "$"}
               </AppPrice>
             )}
-            <PurchaseButton onClick={handleAddToLibrary}>Add to Cart</PurchaseButton>
+            <PurchaseButton onClick={handleAddToLibrary}>
+              Add to Cart
+            </PurchaseButton>
           </ButtonWrapper>
         </PurchaseMenu>
       </PageContainer>
