@@ -1,59 +1,58 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
+import {
+  CustomSelectContainer,
+  Option,
+  OptionsContainer,
+  SelectHeader,
+  SortBySpan,
+} from "./index.styled";
 
-export const CustomSelect = ({ defaultText, optionsList }: any) => {
-  const [showOptionList, setShowOptionList] = useState(false);
-  const [selectedText, setSelectedText] = useState(defaultText);
-  const selectRef = useRef<any>(null);
+const options = [
+  { id: 1, name: "Your Rank" },
+  { id: 2, name: "Name" },
+  { id: 3, name: "Price" },
+  { id: 4, name: "Discount" },
+  { id: 5, name: "Date Added" },
+  { id: 6, name: "Top Selling" },
+  { id: 7, name: "Release Date" },
+  { id: 8, name: "Review Score" },
+];
 
-  useEffect(() => {
-    const handleClickOutside = (e: any) => {
-      if (
-        selectRef.current &&
-        !selectRef.current.contains(e.target) &&
-        !e.target.classList.contains("selected-text")
-      ) {
-        setShowOptionList(false);
-      }
-    };
+interface CustomSelectProps {
+  onChange: (selectedOption: string) => void;
+  value: string;
+}
 
-    document.addEventListener("mousedown", handleClickOutside);
+export const CustomSelect: React.FC<CustomSelectProps> = ({
+  onChange,
+  value,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(value);
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  const handleOptionClick = (option: string) => {
+    setSelectedOption(option);
+    setIsOpen(false);
 
-  const handleListDisplay = () => {
-    setShowOptionList((prevShowOptionList) => !prevShowOptionList);
-  };
-
-  const handleOptionClick = (e: any) => {
-    setSelectedText(e.target.getAttribute("data-name"));
-    setShowOptionList(false);
+    onChange(option);
   };
 
   return (
-    <div className="custom-select-container" ref={selectRef}>
-      <div
-        className={`selected-text ${showOptionList ? "active" : ""}`}
-        onClick={handleListDisplay}
-      >
-        {selectedText}
-      </div>
-      {showOptionList && (
-        <ul className="select-options">
-          {optionsList.map((option: any) => (
-            <li
-              className="custom-select-option"
-              data-name={option.name}
-              key={option.id}
-              onClick={handleOptionClick}
-            >
-              {option.name}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <CustomSelectContainer>
+      <SelectHeader onClick={() => setIsOpen(!isOpen)}>
+        <SortBySpan>Sort By:</SortBySpan> {selectedOption}
+      </SelectHeader>
+      <OptionsContainer isOpen={isOpen}>
+        {options.map((option) => (
+          <Option
+            key={option.id}
+            className={selectedOption === option.name ? "selected" : ""}
+            onClick={() => handleOptionClick(option.name)}
+          >
+            {option.name}
+          </Option>
+        ))}
+      </OptionsContainer>
+    </CustomSelectContainer>
   );
 };

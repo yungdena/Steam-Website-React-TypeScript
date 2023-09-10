@@ -1,4 +1,5 @@
 import { IApp } from "../../../common/types/app.interface";
+import { calculatePercentageDecrease } from "../../../common/utils/countPercentage";
 
 function getPriceValue(app: IApp): number {
   if (app.price === "Free to Play") {
@@ -48,13 +49,38 @@ export function sortAppsByName(apps: IApp[]) {
 export function sortAppsByReviews(apps: IApp[]) {
   apps.sort((a, b) => {
     const positiveReviewPercentageA =
-      a.reviews.filter((review) => review.rate === true).length /
-      a.reviews.length;
+      (a.reviews.filter((review) => review.rate === true).length /
+        a.reviews.length) *
+      100;
 
     const positiveReviewPercentageB =
-      b.reviews.filter((review) => review.rate === false).length /
-      b.reviews.length;
+      (b.reviews.filter((review) => review.rate === true).length /
+        b.reviews.length) *
+      100;
 
     return positiveReviewPercentageB - positiveReviewPercentageA;
+  });
+}
+
+export function sortAppsByDiscount(apps: IApp[]) {
+  apps.sort((a, b) => {
+    // Parse the newPrice values as numbers
+    const newPriceA = Number(a.newPrice);
+    const newPriceB = Number(b.newPrice);
+
+    // Calculate the percentage decrease
+    const discountA = calculatePercentageDecrease(
+      Number(a.price),
+      newPriceA,
+      0
+    );
+    const discountB = calculatePercentageDecrease(
+      Number(b.price),
+      newPriceB,
+      0
+    );
+
+    // Sort in descending order (highest discount first)
+    return discountB - discountA;
   });
 }

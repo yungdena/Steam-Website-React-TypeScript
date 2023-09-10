@@ -18,12 +18,13 @@ export const handleSearchInputChange = (
 };
 
 export const handleSearch = (searchInput: string, setSortedApps: any, apps: IApp[]) => {
-  if (searchInput === "") {
+  console.log('search input', searchInput)
+  if (searchInput.trim() === "") {
     setSortedApps(apps);
   } else {
-    const filteredApps = apps.filter((app) =>
-      app.title.toLowerCase().includes(searchInput.toLowerCase())
-    );
+    const filteredApps = apps.filter((app) => {
+      return app.title.toLowerCase().includes(searchInput.toLowerCase());
+    });
     setSortedApps(filteredApps);
   }
 };

@@ -47,7 +47,7 @@ export const DROPDOWN_DATA = [
       },
       {
         title: "WISHLIST",
-        linkTo: "/store",
+        linkTo: "/wishlist",
       },
       {
         title: "POINTS SHOP",
@@ -63,7 +63,7 @@ export const DROPDOWN_DATA = [
       },
       {
         title: "ABOUT",
-        linkTo: "/store",
+        linkTo: "/about",
       },
     ],
   },
@@ -100,6 +100,10 @@ export const NAME_DROPDOWN_DATA = {
     {
       title: "PROFILE",
       linkTo: "/store",
+    },
+    {
+      title: "LIBRARY",
+      linkTo: "/library",
     },
     {
       title: "LOG OUT",

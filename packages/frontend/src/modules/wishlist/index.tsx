@@ -14,7 +14,9 @@ import { Header } from "../header"
 import { Footer } from "../home/footer"
 import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "../home/offers/index.styled";
 import { AppPrice } from "../store/app-list/index.styled";
-import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NoItems, SearchBar, SearchContainer, Stats, StatsLabel, Tag, TagsContainer, WishlistContainer, WishlistItem, WishlistTitle } from "./index.styled"
+import { handleSearch, handleSearchInputChange } from "../store/app-list/utils/handlers";
+import { sortAppsByDiscount, sortAppsByHighestPrice, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from "../store/app-list/utils/sort-apps";
+import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NoItems, SearchBar, SearchContainer, Select, SortBy, Stats, StatsLabel, Tag, TagsContainer, WishlistContainer, WishlistItem, WishlistTitle } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
 
 interface AppRouteParams {
@@ -24,6 +26,9 @@ interface AppRouteParams {
 export const Wishlist = () => {
   const [wishlistIds, setWishlistIds] = useState([]);
   const [apps, setApps] = useState<IApp[]>([]);
+  const [sortedApps, setSortedApps] = useState<IApp[]>([]);
+  const [sortBy, setSortBy] = useState("Your Rank");
+  const [searchInput, setSearchInput] = useState<string>("");
   const getWishlistMutation = useGetWishlist();
   const getAppByIdMutation = useGetAppById();
   const user = localStorage.getItem("account");
@@ -74,16 +79,50 @@ export const Wishlist = () => {
       );
     }
   };
-  const options = [
-    { id: 1, name: "Your Rank" },
-    { id: 2, name: "Name" },
-    { id: 3, name: "Price" },
-    { id: 4, name: "Discount" },
-    { id: 5, name: "Date Added" },
-    { id: 6, name: "Top Selling" },
-    { id: 7, name: "Release Date" },
-    { id: 8, name: "Review Score" }
-  ];
+  useEffect(() => {
+    const appsCopy = [...apps];
+
+    switch (sortBy) {
+      case "Your Rank":
+        break;
+      case "Release Date":
+        sortAppsByReleaseDate(appsCopy);
+        break;
+      case "Name":
+        sortAppsByName(appsCopy);
+        break;
+      case "Price":
+        sortAppsByLowestPrice(appsCopy);
+        break;
+      case "Review Score":
+        sortAppsByReviews(appsCopy);
+        break;
+      case "Discount":
+        sortAppsByDiscount(appsCopy);
+        break;
+      default:
+        break;
+    }
+
+    if (searchInput) {
+      const filteredApps = appsCopy.filter((app) =>
+        app.title.toLowerCase().includes(searchInput.toLowerCase())
+      );
+
+      setSortedApps(filteredApps);
+    } else {
+      setSortedApps(appsCopy);
+    }
+  }, [apps, sortBy]);
+
+  const handleSortChange = (selectedOption: string, setSortBy: any) => {
+    setSortBy(selectedOption);
+  };
+
+  const handleInputChange = (inputValue: string) => {
+    setSearchInput(inputValue);
+    handleSearch(inputValue, setSortedApps, apps);
+  };
 
   return (
     <>
@@ -94,15 +133,22 @@ export const Wishlist = () => {
             {user && JSON.parse(user).name}'s wishlist
           </WishlistTitle>
           <SearchContainer>
-            <SearchBar placeholder="Search by name" />
+            <SearchBar
+              onChange={(event) => {
+                handleInputChange(event.target.value)
+              }}
+              placeholder="Search by name"
+            />
             <CustomSelect
-              defaultText={'Sort by: '}
-              optionsList={options}
+              onChange={(selectedOption) =>
+                handleSortChange(selectedOption, setSortBy)
+              }
+              value={sortBy}
             />
           </SearchContainer>
           <WishlistContainer>
             {apps.length > 0 ? (
-              apps.map((item) => (
+              sortedApps.map((item) => (
                 <WishlistItem key={item._id}>
                   <ItemImage src={item.titleImage} />
                   <Capsule>
@@ -157,7 +203,7 @@ export const Wishlist = () => {
                     </MidContainer>
                     <TagsContainer>
                       {item.tags.map((tag) => (
-                        <Tag>{tag}</Tag>
+                        <Tag key={tag}>{tag}</Tag>
                       ))}
                     </TagsContainer>
                   </Capsule>
@@ -173,5 +219,3 @@ export const Wishlist = () => {
     </>
   );
 };
-
-export default Wishlist;

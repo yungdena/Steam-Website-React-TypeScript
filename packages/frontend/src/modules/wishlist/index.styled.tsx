@@ -17,6 +17,7 @@ export const WishlistTitle = styled.div`
   color: #fff;
   font-size: 26px;
   text-transform: uppercase;
+  margin-bottom: 5rem;
 `;
 
 export const WishlistItem = styled.div`
@@ -124,68 +125,6 @@ export const SearchContainer = styled.div`
   gap: 1rem;
   margin: 0.5rem 0;
   z-index: 9999;
-
-  .App {
-    z-index: 9999;
-    height: 40px;
-  }
-
-  .title {
-    text-align: center;
-  }
-
-  .custom-select-container {
-    display: inline-block;
-    min-width: 160px;
-    text-align: center;
-    position: relative;
-  }
-
-  .selected-text {
-    background-color: #3d4450;
-    color: white;
-    padding: 8px 20px;
-    height: 40px;
-    border-radius: 2px;
-  }
-
-  .selected-text::after {
-    content: "";
-    position: absolute;
-    right: 10px;
-    top: 16px;
-    border: 7px solid transparent;
-    border-color: #fff transparent transparent transparent;
-  }
-
-  .selected-text.active::after {
-    top: 8px;
-    border-color: transparent transparent #fff transparent;
-  }
-
-  ul {
-    margin: 0;
-    padding: 0;
-    text-align: center;
-  }
-
-  .select-options {
-    position: absolute;
-    width: 100%;
-  }
-
-  li {
-    list-style-type: none;
-    padding: 6px 20px;
-    background: #3d4450;
-    cursor: pointer;
-    color: white;
-  }
-
-  li:hover {
-    background-color: ${COLORS.greyishWhite};
-    color: black;
-  }
 `;
 
 export const SearchBar = styled.input`
@@ -204,3 +143,23 @@ export const SearchBar = styled.input`
     font-size: 14px;
   }
 `;
+
+export const Select = styled.select`
+  transition: background-color 300ms;
+  border: none;
+  border-radius: 2px;
+  font-size: 13px;
+  padding: 0 1rem;
+  background: #3d4450;
+  color: white;
+
+  option::before {
+    content: "Sort By: ";
+    color: ${COLORS.blue};
+  }
+`;
+
+export const SortBy = styled.div`
+  color: ${COLORS.blue};
+  font-size: 13px;
+`

@@ -9,7 +9,7 @@ export const DropdownContainer = styled.div`
   width: 9rem;
   position: absolute;
   top: 100%;
-  z-index: 10;
+  z-index: 9999;
   background-color: ${COLORS.darkBlueGrey};
   padding: 5px 15px;
 `;
