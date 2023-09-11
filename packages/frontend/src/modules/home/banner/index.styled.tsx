@@ -21,7 +21,7 @@ export const GlobalContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  z-index: 10;
+  z-index: 9999;
 `
 
 export const GameBannerContainer = styled.div`

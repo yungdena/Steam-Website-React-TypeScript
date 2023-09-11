@@ -28,7 +28,6 @@ import { useGetAllApps } from "../common/services/apps.service";
 import { Footer } from "./footer";
 import { Offers } from "./offers";
 import { LoaderBig } from "../common/loader/loader";
-import { AppList } from "../store/app-list/index";
 import { AppContainer, AppImage, AppImageContainer, AppLink, AppPrice, AppReleaseDate, AppReviews, AppTextContainer, AppTitle } from "../store/app-list/index.styled";
 import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "./offers/index.styled";
 import { calculatePercentageDecrease } from "../common/utils/countPercentage";
@@ -91,6 +90,7 @@ export const HomePage = () => {
   };
 
   const handleNavigate = (appId: string) => {
+    console.log('handleNavigate', appId);
     history.push(
       `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.APPS}/${appId}`
     );
@@ -126,12 +126,11 @@ export const HomePage = () => {
               </FeaturedTitle>
               <Swiper {...swiperParams}>
                 {banners.map((banner) => (
-                  <SwiperSlide
-                    onClick={() => handleNavigate(banner.appid)}
-                    key={banner._id}
-                    className="banner-slide"
-                  >
-                    <GameBannerComponent appInfo={banner}></GameBannerComponent>
+                  <SwiperSlide key={banner._id} className="banner-slide">
+                      <GameBannerComponent
+                        onClick={handleNavigateToApps}
+                        appInfo={banner}
+                      />
                   </SwiperSlide>
                 ))}
                 <StyledPagination>

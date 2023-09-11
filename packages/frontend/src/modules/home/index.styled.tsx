@@ -27,6 +27,7 @@ export const ContentContainer = styled.div`
     width: 1050px;
     overflow: hidden;
     position: relative;
+    z-index: 10 !important;
 
     .banner-slide {
       z-index: 1;
