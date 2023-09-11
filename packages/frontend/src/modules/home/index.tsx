@@ -108,9 +108,11 @@ export const HomePage = () => {
       <MainContainer>
         <ContentContainer>
           <WishlistButton
-            onClick={() => history.push(
-              `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.WISHLIST}`
-            )}
+            onClick={() =>
+              history.push(
+                `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.WISHLIST}`
+              )
+            }
           >
             Wishlist ({wishlishLength})
           </WishlistButton>
@@ -118,19 +120,25 @@ export const HomePage = () => {
           {isLoadingBanners ? (
             <LoaderBig marginTop="10rem" />
           ) : (
-            <Swiper {...swiperParams}>
-              {banners.map((banner) => (
-                <SwiperSlide
-                  onClick={() => handleNavigate(banner.appid)}
-                  key={banner._id}
-                >
-                  <GameBannerComponent appInfo={banner}></GameBannerComponent>
-                </SwiperSlide>
-              ))}
-              <StyledPagination>
-                <div className="swiper-pagination"></div>
-              </StyledPagination>
-            </Swiper>
+            <>
+              <FeaturedTitle left="60px" top="190px">
+                FEATURED & RECOMMENDED
+              </FeaturedTitle>
+              <Swiper {...swiperParams}>
+                {banners.map((banner) => (
+                  <SwiperSlide
+                    onClick={() => handleNavigate(banner.appid)}
+                    key={banner._id}
+                    className="banner-slide"
+                  >
+                    <GameBannerComponent appInfo={banner}></GameBannerComponent>
+                  </SwiperSlide>
+                ))}
+                <StyledPagination>
+                  <div className="swiper-pagination"></div>
+                </StyledPagination>
+              </Swiper>
+            </>
           )}
           {isLoadingApps ? (
             <LoaderBig marginTop="30rem" />
@@ -143,7 +151,9 @@ export const HomePage = () => {
           ) : (
             <>
               <AppsLine>
-                <FeaturedTitle>Top Sellers</FeaturedTitle>
+                <FeaturedTitle left="0" top="-20px">
+                  Top Sellers
+                </FeaturedTitle>
                 <FeaturedButton onClick={handleNavigateToApps}>
                   To apps
                 </FeaturedButton>
@@ -177,7 +187,8 @@ export const HomePage = () => {
                         {app.newPrice && (
                           <PriceContainer className="New-Price">
                             <PricePercent>
-                              -{calculatePercentageDecrease(
+                              -
+                              {calculatePercentageDecrease(
                                 Number(app.price),
                                 Number(app.newPrice),
                                 0

@@ -27,6 +27,10 @@ export const ContentContainer = styled.div`
     width: 1050px;
     overflow: hidden;
     position: relative;
+
+    .banner-slide {
+      z-index: 1;
+    }
   }
 `;
 
@@ -68,7 +72,15 @@ export const AppsLine = styled.div`
   width: 686px;
 `;
 
-export const FeaturedTitle = styled.div`
+interface TitleProps {
+  top: string;
+  left: string;
+}
+
+export const FeaturedTitle = styled.div<TitleProps>`
+  position: absolute;
+  top: ${(props) => (props.top ? props.top : "0")}
+  left: ${(props) => (props.left ? props.left : "0")}
   align-self: start;
   font-family: "Motiva Sans", Sans-serif;
   font-size: 14px;

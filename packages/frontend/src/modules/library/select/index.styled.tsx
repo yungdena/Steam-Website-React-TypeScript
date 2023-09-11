@@ -13,6 +13,10 @@ export const SelectHeader = styled.div`
   color: white;
   cursor: pointer;
   font-size: 13px;
+
+  &:hover {
+    filter: brightness(110%);
+  }
 `;
 
 export const SortBySpan = styled.span`
@@ -24,7 +28,7 @@ export const SortBySpan = styled.span`
 export const OptionsContainer = styled.div<{ isOpen: boolean }>`
   position: absolute;
   background-color: #3d4450;
-  top: 100%;
+  top: 90%;
   left: 0;
   right: 0;
   display: ${(props) => (props.isOpen ? "block" : "none")};
@@ -38,7 +42,7 @@ export const Option = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: #f0f0f0;
+    filter: brightness(110%);
   }
 
   &.selected {

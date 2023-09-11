@@ -1,20 +1,21 @@
 import { useState } from "react";
 
 import { IApp } from "../../common/types/app.interface";
-import { AppTitle, BannerContent, BannerMainImage, FeaturedTitle, GameBannerContainer, GlobalContainer, Image, ImagesContainer, Price, ReasonBig, ReasonContainer, ReasonSmall, Recommended, Tag, TagsContainer } from "./index.styled";
+import { AppTitle, BannerContent, BannerMainImage, GameBannerContainer, GlobalContainer, Image, ImagesContainer, Price, ReasonBig, ReasonContainer, ReasonSmall, Recommended, Tag, TagsContainer } from "./index.styled";
 
 export const GameBannerComponent = ({appInfo}: Partial<IApp>) => {
-  const { titleImage, title, imagesUrl, tags, price, reason } = appInfo;
+  const { titleImage, title, imagesUrl, tags, price, reason, _id } = appInfo;
   const [hoveredImage, setHoveredImage] = useState(titleImage);
-  const reasonRecommended = reason[0] === 'R'
+  const reasonRecommended = reason[0] === 'R';
 
   return (
     <GlobalContainer>
-      <FeaturedTitle>FEATURED & RECOMMENDED</FeaturedTitle>
       <GameBannerContainer>
         <BannerMainImage src={hoveredImage} />
         <BannerContent>
-          <AppTitle>{title}</AppTitle>
+          <AppTitle>
+            {title}
+          </AppTitle>
           <ImagesContainer>
             {imagesUrl.map((imageUrl: string, index: number) => (
               <Image

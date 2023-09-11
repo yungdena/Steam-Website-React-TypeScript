@@ -37,6 +37,7 @@ export const Offer = styled.div`
   background-image: url(${offerBackground});
   background-repeat: no-repeat;
   background-size: cover;
+  cursor: pointer;
 `
 
 export const OfferImage = styled.img`

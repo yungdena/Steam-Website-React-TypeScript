@@ -19,14 +19,14 @@ export class UserController {
 
   async getWishlist(req: Request, res: Response) {
     const { id } = req.params;
-    console.log("userId", id);
+
     await this.userService.getWishlist(id, res);
   }
 
   async getLibrary(req: Request, res: Response) {
-    const { userId } = req.params;
+    const { id } = req.params;
 
-    await this.userService.getLibrary(userId, res);
+    await this.userService.getLibrary(id, res);
   }
 }
 

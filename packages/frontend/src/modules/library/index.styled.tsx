@@ -4,7 +4,7 @@ import { COLORS } from "../theme";
 export const Background = styled.div`
   min-height: 100vh;
   background-color: ${COLORS.storeBlue};
-  padding-top: 10rem;
+  padding-top: 6.5rem;
 `
 
 export const MainContainer = styled.div`
@@ -13,20 +13,31 @@ export const MainContainer = styled.div`
   min-height: 10rem;
 `
 
-export const WishlistTitle = styled.div`
+export const LibraryTitle = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 2rem;
   color: #fff;
   font-size: 26px;
-  text-transform: uppercase;
-  margin-bottom: 5rem;
+  height: 102px;
+  background-color: rgba(58, 62, 71, 0.5);
 `;
 
-export const WishlistItem = styled.div`
+export const NicknameSpan = styled.span`
+  font-size: 14px;
+  margin-left: 0.5rem;
+  text-transform: capitalize;
+  margin-top: 0.25rem;
+`;
+
+export const LibraryItem = styled.div`
   color: ${COLORS.greyishWhite};
   will-change: transform, top;
   overflow: hidden;
   display: flex;
   padding: 1rem;
-  background-color: rgba(64, 81, 99, 0.9);
+  background-color: rgba(0, 0, 0, 0.2);
   color: #b2b8bd;
   margin-bottom: 10px;
   width: 100%;
@@ -44,6 +55,7 @@ export const ItemImage = styled.img`
 `;
 
 export const ItemTitle = styled.div`
+  cursor: pointer;
   color: #fff;
   font-size: 22px;
   font-weight: 400;
@@ -51,7 +63,6 @@ export const ItemTitle = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  cursor: pointer;
 `;
 
 export const Stats = styled.div`
@@ -88,7 +99,7 @@ export const MidContainer = styled.div`
   }
 `;
 
-export const WishlistContainer = styled.div`
+export const LibraryContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -125,7 +136,7 @@ export const SearchContainer = styled.div`
   display: flex;
   gap: 1rem;
   margin: 0.5rem 0;
-  z-index: 9999;
+  z-index: 1;
 `;
 
 export const SearchBar = styled.input`

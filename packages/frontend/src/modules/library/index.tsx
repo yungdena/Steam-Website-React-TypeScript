@@ -5,7 +5,7 @@ import { ButtonWrapper, PurchaseButton } from "../app-page/index.styled";
 import { APP_KEYS } from "../common/consts";
 import { LoaderBig } from "../common/loader/loader";
 import { useGetAppById } from "../common/services/apps.service";
-import { useAddToLibrary, useGetWishlist } from "../common/services/user.service";
+import { useAddToLibrary, useGetLibrary } from "../common/services/user.service";
 import { IApp } from "../common/types/app.interface";
 import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
 import { calculatePercentageDecrease } from "../common/utils/countPercentage";
@@ -17,57 +17,53 @@ import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent }
 import { AppPrice } from "../store/app-list/index.styled";
 import { handleSearch } from "../store/app-list/utils/handlers";
 import { sortAppsByDiscount, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from "../store/app-list/utils/sort-apps";
-import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NoItems, SearchBar, SearchContainer, Select, SortBy, Stats, StatsLabel, Tag, TagsContainer, WishlistContainer, WishlistItem, WishlistTitle } from "./index.styled"
+import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NicknameSpan, NoItems, SearchBar, SearchContainer, Select, SortBy, Stats, StatsLabel, Tag, TagsContainer, LibraryContainer, LibraryItem, LibraryTitle } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
 
 interface AppRouteParams {
   id: string;
 }
 
-export const Wishlist = () => {
-  const [wishlistIds, setWishlistIds] = useState([]);
+export const Library = () => {
+  const [libraryIds, setLibraryIds] = useState<string[]>([]);
   const [apps, setApps] = useState<IApp[]>([]);
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
-  const [sortBy, setSortBy] = useState("Your Rank");
+  const [sortBy, setSortBy] = useState<string>("Your Rank");
   const [searchInput, setSearchInput] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const history = useHistory()
-  const getWishlistMutation = useGetWishlist();
+  const getLibraryMutation = useGetLibrary();
   const getAppByIdMutation = useGetAppById();
-  const addToLibraryMutation = useAddToLibrary();
   const user = localStorage.getItem("account");
 
   useEffect(() => {
-    async function getUsersWishlist() {
-      const user = localStorage.getItem('account');
-      if (user && wishlistIds.length === 0) {
+    async function getUserLibrary() {
+      if (user) {
         const id = JSON.parse(user)._id;
-        const wishlistResponse = await getWishlistMutation.mutateAsync(id);
-        setWishlistIds(wishlistResponse.wishlist);
+        const libraryResponse = await getLibraryMutation.mutateAsync(id);
+        setLibraryIds(libraryResponse.library);
       }
     }
 
-    getUsersWishlist();
+    getUserLibrary();
   }, []);
 
-  useEffect(() => {
-    async function getAppsFromWishlist() {
-      try {
-        if (wishlistIds.length > 0 && apps.length === 0) {
+    useEffect(() => {
+      async function getAppsFromLibrary() {
+        try {
           const appsResponse = await Promise.all(
-            wishlistIds.map((id) => getAppByIdMutation.mutateAsync(id))
+            libraryIds.map((id) => getAppByIdMutation.mutateAsync(id))
           );
           setApps(appsResponse);
-          setIsLoading(false);
+          setIsLoading(false); 
+        } catch (error) {
+          console.error("Error fetching apps from library:", error);
         }
-      } catch (error) {
-        console.error("Error fetching apps from wishlist:", error);
       }
-    }
 
-    getAppsFromWishlist();
-  }, [wishlistIds]);
+      getAppsFromLibrary();
+    }, [libraryIds]);
 
   useEffect(() => {
     const appsCopy = [...apps];
@@ -108,22 +104,6 @@ export const Wishlist = () => {
   const handleSortChange = (selectedOption: string, setSortBy: any) => {
     setSortBy(selectedOption);
   };
-
-  const handleAddToLibrary = async () => {
-    const user = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT);
-    if (user) {
-      const { id } = useParams<AppRouteParams>();
-      const appId = id;
-      const userId = JSON.parse(user)._id;
-      await addToLibraryMutation.mutateAsync({ userId, appId });
-      console.log("App added successfully");
-    } else {
-      handleNavigate(
-        history,
-        APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
-      );
-    }
-  };
   
   const handleInputChange = (inputValue: string) => {
     setSearchInput(inputValue);
@@ -135,9 +115,13 @@ export const Wishlist = () => {
       <Header />
       <Background>
         <MainContainer>
-          <WishlistTitle>
-            {user && JSON.parse(user).name}'s wishlist
-          </WishlistTitle>
+          <LibraryTitle>
+            {user && JSON.parse(user).name}
+            <NicknameSpan>
+              {">"}
+              {">"} games
+            </NicknameSpan>
+          </LibraryTitle>
           <SearchContainer>
             <SearchBar
               onChange={(event) => {
@@ -152,16 +136,18 @@ export const Wishlist = () => {
               value={sortBy}
             />
           </SearchContainer>
-          <WishlistContainer>
+          <LibraryContainer>
             {isLoading ? (
               <LoaderBig marginTop="5rem" />
-            ) : apps.length > 0 ? (
+            ) : sortedApps.length > 0 ? (
               sortedApps.map((item) => (
-                <WishlistItem key={item._id}>
+                <LibraryItem key={item._id}>
                   <ItemImage src={item.titleImage} />
                   <Capsule>
                     <ItemTitle
-                      onClick={() => history.push(APP_KEYS.ROUTER_KEYS.APPS + `/${item._id}`)}
+                      onClick={() =>
+                        history.push(APP_KEYS.ROUTER_KEYS.APPS + `/${item._id}`)
+                      }
                     >
                       {item.title}
                     </ItemTitle>
@@ -180,38 +166,6 @@ export const Wishlist = () => {
                         <StatsLabel>Release Date:</StatsLabel>
                         <StatsLabel>{formatDate(item.releaseDate)}</StatsLabel>
                       </Stats>
-                      <ButtonWrapper className="wishlist-wrap">
-                        {item.newPrice ? (
-                          <PriceContainer className="New-Price">
-                            <PricePercent>
-                              -
-                              {calculatePercentageDecrease(
-                                Number(item.price),
-                                Number(item.newPrice),
-                                0
-                              )}
-                              %
-                            </PricePercent>
-                            <PriceAmounts className="wishlist-price-amounts">
-                              <OriginalPrice>{item.price}$</OriginalPrice>
-                              <FinalPrice className="wishlist-price-final-price">
-                                {item.newPrice}$
-                              </FinalPrice>
-                            </PriceAmounts>
-                          </PriceContainer>
-                        ) : (
-                          <AppPrice className="wishlist-price">
-                            {item.price}
-                            {item.price === "Free to Play" ? "" : "$"}
-                          </AppPrice>
-                        )}
-                        <PurchaseButton
-                          className="to-cart-button"
-                          onClick={handleAddToLibrary}
-                        >
-                          Add to Cart
-                        </PurchaseButton>
-                      </ButtonWrapper>
                     </MidContainer>
                     <TagsContainer>
                       {item.tags.map((tag) => (
@@ -219,12 +173,12 @@ export const Wishlist = () => {
                       ))}
                     </TagsContainer>
                   </Capsule>
-                </WishlistItem>
+                </LibraryItem>
               ))
             ) : (
-              <NoItems>No apps in your wishlist.</NoItems>
+              <NoItems>No apps in your Library.</NoItems>
             )}
-          </WishlistContainer>
+          </LibraryContainer>
         </MainContainer>
       </Background>
       <Footer />

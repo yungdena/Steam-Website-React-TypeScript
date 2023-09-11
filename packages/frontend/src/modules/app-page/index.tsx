@@ -4,7 +4,7 @@ import { APP_KEYS } from "../common/consts";
 import { LoaderBig } from "../common/loader/loader";
 
 import { useGetAppById } from "../common/services/apps.service";
-import { useAddToLibrary, useAddToWishlist } from "../common/services/user.service";
+import { useAddToLibrary, useAddToWishlist, useGetLibrary, useGetWishlist } from "../common/services/user.service";
 import { IApp } from "../common/types/app.interface";
 import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
 import { calculatePercentageDecrease } from "../common/utils/countPercentage";
@@ -21,9 +21,16 @@ interface AppRouteParams {
 }
 
 export const AppPage = () => {
-  const [app, setApp] = useState<IApp>()
+  const [app, setApp] = useState<IApp | null>(null)
   const [isLoading, setIsLoading] = useState(true);
+  const [addedToLibrary, setAddedToLibrary] = useState(false);
+  const [addedToWishlist, setAddedToWishlist] = useState(false);
+  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
+  const [libraryIds, setLibraryIds] = useState<string[]>([]);
+
   const getAppByIdMutation = useGetAppById();
+  const getWishlistMutation = useGetWishlist();
+  const getLibraryMutation = useGetLibrary();
   const addToWishlistMutation = useAddToWishlist();
   const addToLibraryMutation = useAddToLibrary();
   const history = useHistory();
@@ -37,8 +44,41 @@ export const AppPage = () => {
       setApp(data);
       setIsLoading(false);
     }
+
     fetchById();
   }, []);
+
+  useEffect(() => {
+    async function getUsersLibrary() {
+      const user = localStorage.getItem("account");
+      if (user && libraryIds.length === 0) {
+        const id = JSON.parse(user)._id;
+        const libraryResponse = await getLibraryMutation.mutateAsync(id);
+        setLibraryIds(libraryResponse.library);
+      }
+      if (libraryIds.includes(id)) {
+        setAddedToLibrary(true);
+      }
+    }
+
+    getUsersLibrary();
+  }, [libraryIds])
+
+  useEffect(() => {
+    async function getUsersWishlist() {
+      const user = localStorage.getItem("account");
+      if (user && wishlistIds.length === 0) {
+        const id = JSON.parse(user)._id;
+        const wishlistResponse = await getWishlistMutation.mutateAsync(id);
+        setWishlistIds(wishlistResponse.wishlist);
+      }
+      if (wishlistIds.includes(id)) {
+        setAddedToWishlist(true);
+      }
+    }
+
+    getUsersWishlist();
+  }, [wishlistIds]);
 
   const handleAddToWishlist = async () => {
     const user = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT)
@@ -46,6 +86,7 @@ export const AppPage = () => {
       const appId = id;
       const userId = JSON.parse(user)._id;
       await addToWishlistMutation.mutateAsync({ userId, appId });
+      setAddedToWishlist(true);
     } else {
       handleNavigate(history, APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN);
     }
@@ -57,7 +98,7 @@ export const AppPage = () => {
       const appId = id;
       const userId = JSON.parse(user)._id;
       await addToLibraryMutation.mutateAsync({ userId, appId });
-      console.log('App added successfully')
+      setAddedToLibrary(true);
     } else {
       handleNavigate(history, APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN);
     }
@@ -73,7 +114,9 @@ export const AppPage = () => {
           ) : (
             <>
               {app && (
-                  <><AppTitle>{app?.title}</AppTitle><InfoWrapper>
+                <>
+                  <AppTitle>{app?.title}</AppTitle>
+                  <InfoWrapper>
                     <BigInfoContainer>
                       <ImageSlider images={app?.imagesUrl} />
                     </BigInfoContainer>
@@ -87,7 +130,9 @@ export const AppPage = () => {
                       <AdditionalInfoContainer>
                         <AdditionalInfoTitleColumn>
                           <AdditionalInfoTitle>ALL REVIEWS</AdditionalInfoTitle>
-                          <AdditionalInfoTitle>RELEASE DATE</AdditionalInfoTitle>
+                          <AdditionalInfoTitle>
+                            RELEASE DATE
+                          </AdditionalInfoTitle>
                           <AdditionalInfoTitle>DEVELOPER</AdditionalInfoTitle>
                           <AdditionalInfoTitle>PUBLISHER</AdditionalInfoTitle>
                         </AdditionalInfoTitleColumn>
@@ -123,16 +168,27 @@ export const AppPage = () => {
                         </Tags>
                       </TagsContainer>
                     </SmallInfoContainer>
-                  </InfoWrapper></>
+                  </InfoWrapper>
+                </>
               )}
-              
             </>
           )}
         </InfoContainer>
         <QueueContainer>
-          <QueueButton onClick={handleAddToWishlist}>
-            Add to your wishlist
-          </QueueButton>
+          {addedToWishlist ? (
+            <QueueButton
+              onClick={handleNavigate(
+                history,
+                APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.WISHLIST
+              )}
+            >
+              ✔ In Wishlist
+            </QueueButton>
+          ) : (
+            <QueueButton onClick={handleAddToWishlist}>
+              Add to your wishlist
+            </QueueButton>
+          )}
           <QueueButton
             onClick={handleNavigate(
               history,
@@ -152,7 +208,8 @@ export const AppPage = () => {
             {app?.newPrice ? (
               <PriceContainer className="New-Price">
                 <PricePercent>
-                  -{calculatePercentageDecrease(
+                  -
+                  {calculatePercentageDecrease(
                     Number(app?.price),
                     Number(app?.newPrice),
                     0
@@ -170,9 +227,20 @@ export const AppPage = () => {
                 {app?.price === "Free to Play" ? "" : "$"}
               </AppPrice>
             )}
-            <PurchaseButton onClick={handleAddToLibrary}>
-              Add to Cart
-            </PurchaseButton>
+            {addedToLibrary ? (
+              <PurchaseButton
+                onClick={handleNavigate(
+                  history,
+                  APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY
+                )}
+              >
+                ✔ In Library
+              </PurchaseButton>
+            ) : (
+              <PurchaseButton onClick={handleAddToLibrary}>
+                Add to Library
+              </PurchaseButton>
+            )}
           </ButtonWrapper>
         </PurchaseMenu>
       </PageContainer>

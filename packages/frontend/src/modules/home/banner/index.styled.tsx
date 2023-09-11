@@ -21,6 +21,7 @@ export const GlobalContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  z-index: 10;
 `
 
 export const GameBannerContainer = styled.div`
@@ -30,6 +31,7 @@ export const GameBannerContainer = styled.div`
   margin: 5rem auto;
   box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.75);
   cursor: pointer;
+  z-index: 10;
 `;
 
 export const BannerMainImage = styled.img`

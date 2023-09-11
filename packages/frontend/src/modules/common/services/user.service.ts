@@ -35,15 +35,14 @@ const addToWishlist = async (data: addAppToUser) => {
 
 const getLibrary = async (userId: string) => {
   console.log("mutation start");
-  const response = await fetch(`${BASE_URL}/user/library`, {
+  const response = await fetch(`${BASE_URL}/user/library/${userId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
   });
-  console.log("mutation response", response);
   const responseData = await response.json();
-  console.log("mutation response Json", responseData);
+  console.log("response: ", responseData);
   return responseData;
 };
 
