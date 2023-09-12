@@ -24,7 +24,6 @@ import {
 import { GameBannerComponent } from "./banner";
 import { HomepageHeader } from "./home-header";
 import { useGetAllBanners } from "../common/services/banners.service";
-import { useGetAllApps } from "../common/services/apps.service";
 import { Footer } from "./footer";
 import { Offers } from "./offers";
 import { LoaderBig } from "../common/loader/loader";
@@ -34,18 +33,18 @@ import { calculatePercentageDecrease } from "../common/utils/countPercentage";
 import { calculateReviewTitle, getReviewImageURL } from "../common/utils/calculateReviewRate";
 import { formatDate } from "../common/utils/formatDate";
 import { useGetWishlist } from "../common/services/user.service";
+import { useAppsData } from "../common/context/apps-context";
 
 export const HomePage = () => {
   const [banners, setBanners] = useState<IApp[]>([]);
-  const [apps, setApps] = useState<IApp[]>([]);
-  const [isLoadingApps, setIsLoadingApps] = useState(true);
   const [isLoadingBanners, setIsLoadingBanners] = useState(true);
   const [wishlishLength, setWishlishLength] = useState(0);
+  const { isLoadingApps, appsData } = useAppsData();
   const getAllBannersMutation = useGetAllBanners();
-  const getAllAppsMutation = useGetAllApps();
   const history = useHistory();
   const getWishlistMutation = useGetWishlist();
 
+  const apps = appsData;
   const user = localStorage.getItem('account');
 
   useEffect(() => {
@@ -53,11 +52,6 @@ export const HomePage = () => {
       const data = await getAllBannersMutation.mutateAsync();
       setBanners(data);
       setIsLoadingBanners(false);
-    }
-    async function fetchAllApps() {
-      const data = await getAllAppsMutation.mutateAsync();
-      setApps(data);
-      setIsLoadingApps(false);
     }
     async function getUsersWishlistLength() {  
       if (user) {
@@ -67,10 +61,13 @@ export const HomePage = () => {
         setWishlishLength(wishlist.length)
       }
     };
+
     getUsersWishlistLength();
     fetchAllBanners();
-    fetchAllApps();
   }, []);
+
+  console.log('apps: ', apps)
+  const renderApps = !isLoadingApps && apps.length > 0;
 
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],

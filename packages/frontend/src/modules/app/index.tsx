@@ -1,4 +1,3 @@
-import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'styled-components';
 
@@ -26,8 +25,14 @@ const AppContainer = () => (
       <Styled.MainContainer>
         <MainRouter />
       </Styled.MainContainer>
-    </QueryClientProvider>
-  </ThemeProvider>
-);
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
 
 export default AppContainer;
+
+
+
+
+
+

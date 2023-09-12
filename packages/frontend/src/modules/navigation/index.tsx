@@ -10,6 +10,7 @@ import { HomePage } from '../home';
 import { AdminPanel } from '../admin';
 import { Wishlist } from '../wishlist';
 import { Library } from '../library';
+import { AppsDataProvider } from '../common/context/apps-context';
 
 export const MainRouter = () => (
   <Router>
@@ -29,7 +30,11 @@ export const MainRouter = () => (
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN}
       />
       <Route
-        component={StorePage}
+        component={() => (
+          <AppsDataProvider>
+            <StorePage />
+          </AppsDataProvider>
+        )}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.STORE}
       />
       <Route
@@ -37,7 +42,11 @@ export const MainRouter = () => (
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.APPS + "/:id"}
       />
       <Route
-        component={HomePage}
+        component={() => (
+          <AppsDataProvider>
+            <HomePage />
+          </AppsDataProvider>
+        )}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.HOME}
       />
       <Route
