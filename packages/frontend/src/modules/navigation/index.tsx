@@ -11,6 +11,7 @@ import { AdminPanel } from '../admin';
 import { Wishlist } from '../wishlist';
 import { Library } from '../library';
 import { AppsDataProvider } from '../common/context/apps-context';
+import { BannersDataProvider } from '../common/context/banners-context';
 
 export const MainRouter = () => (
   <Router>
@@ -44,7 +45,9 @@ export const MainRouter = () => (
       <Route
         component={() => (
           <AppsDataProvider>
-            <HomePage />
+            <BannersDataProvider>
+              <HomePage />
+            </BannersDataProvider>
           </AppsDataProvider>
         )}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.HOME}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_KEYS } from "../common/consts";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,7 +9,6 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { Navigation, Pagination, EffectFade, Autoplay } from "swiper/modules";
 
-import { IApp } from "../common/types/app.interface";
 import { Header } from "../header";
 import {
   AppsLine,
@@ -23,7 +22,6 @@ import {
 } from "./index.styled";
 import { GameBannerComponent } from "./banner";
 import { HomepageHeader } from "./home-header";
-import { useGetAllBanners } from "../common/services/banners.service";
 import { Footer } from "./footer";
 import { Offers } from "./offers";
 import { LoaderBig } from "../common/loader/loader";
@@ -34,25 +32,17 @@ import { calculateReviewTitle, getReviewImageURL } from "../common/utils/calcula
 import { formatDate } from "../common/utils/formatDate";
 import { useGetWishlist } from "../common/services/user.service";
 import { useAppsData } from "../common/context/apps-context";
+import { useBannersData } from "../common/context/banners-context";
 
 export const HomePage = () => {
-  const [banners, setBanners] = useState<IApp[]>([]);
-  const [isLoadingBanners, setIsLoadingBanners] = useState(true);
   const [wishlishLength, setWishlishLength] = useState(0);
   const { isLoadingApps, appsData } = useAppsData();
-  const getAllBannersMutation = useGetAllBanners();
+  const { isLoadingBanners, bannersData } = useBannersData();
   const history = useHistory();
   const getWishlistMutation = useGetWishlist();
-
-  const apps = appsData;
   const user = localStorage.getItem('account');
 
   useEffect(() => {
-    async function fetchAllBanners() {
-      const data = await getAllBannersMutation.mutateAsync();
-      setBanners(data);
-      setIsLoadingBanners(false);
-    }
     async function getUsersWishlistLength() {  
       if (user) {
         const id = JSON.parse(user)._id;
@@ -63,11 +53,7 @@ export const HomePage = () => {
     };
 
     getUsersWishlistLength();
-    fetchAllBanners();
   }, []);
-
-  console.log('apps: ', apps)
-  const renderApps = !isLoadingApps && apps.length > 0;
 
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],
@@ -115,14 +101,14 @@ export const HomePage = () => {
           </WishlistButton>
           <HomepageHeader />
           {isLoadingBanners ? (
-            <LoaderBig marginTop="10rem" />
+            <LoaderBig marginTop="10rem" marginBottom="10rem" />
           ) : (
             <>
               <FeaturedTitle left="60px" top="190px">
                 FEATURED & RECOMMENDED
               </FeaturedTitle>
               <Swiper {...swiperParams}>
-                {banners.map((banner) => (
+                {bannersData.map((banner) => (
                   <SwiperSlide key={banner._id} className="banner-slide">
                       <GameBannerComponent
                         onClick={handleNavigateToApps}
@@ -139,7 +125,7 @@ export const HomePage = () => {
           {isLoadingApps ? (
             <LoaderBig marginTop="30rem" />
           ) : (
-            <Offers appsArray={apps} />
+            <Offers appsArray={appsData} />
           )}
 
           {isLoadingApps ? (
@@ -155,7 +141,7 @@ export const HomePage = () => {
                 </FeaturedButton>
               </AppsLine>
               <HomeAppsContainer>
-                {apps.slice(0, 5).map((app) => (
+                {appsData.slice(0, 5).map((app) => (
                   <AppLink
                     key={app._id}
                     onClick={() => handleNavigate(app._id)}

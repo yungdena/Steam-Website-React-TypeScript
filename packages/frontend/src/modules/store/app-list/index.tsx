@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ContentContainer, AppsList, AppContainer, AppImage, AppImageContainer, AppTitle, AppTextContainer, AppPrice, AppLink, AppReleaseDate, AppReviews, SearchBarContainer, SearchBarInput, SearchBarButton, SearchBarSortByTitle, SearchBarSortBySelect, SearchBarOption, Dropdown } from './index.styled';
 import { PriceContainer, PriceAmounts, PricePercent, OriginalPrice, FinalPrice } from '../../home/offers/index.styled';
 import { useGetAllApps } from '../../common/services/apps.service';
 import { IApp } from '../../common/types/app.interface';
-import { APP_KEYS } from '../../common/consts';
 import { calculatePercentageDecrease } from '../../common/utils/countPercentage';
 import { LoaderBig } from '../../common/loader/loader';
 import { formatDate } from '../../common/utils/formatDate';

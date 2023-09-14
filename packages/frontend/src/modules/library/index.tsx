@@ -1,28 +1,19 @@
 import { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-import { ButtonWrapper, PurchaseButton } from "../app-page/index.styled";
 import { APP_KEYS } from "../common/consts";
 import { LoaderBig } from "../common/loader/loader";
 import { useGetAppById } from "../common/services/apps.service";
-import { useAddToLibrary, useGetLibrary } from "../common/services/user.service";
+import { useGetLibrary } from "../common/services/user.service";
 import { IApp } from "../common/types/app.interface";
 import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
-import { calculatePercentageDecrease } from "../common/utils/countPercentage";
 import { formatDate } from "../common/utils/formatDate";
-import { handleNavigate } from "../common/utils/handleNavigate";
 import { Header } from "../header"
 import { Footer } from "../home/footer"
-import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "../home/offers/index.styled";
-import { AppPrice } from "../store/app-list/index.styled";
 import { handleSearch } from "../store/app-list/utils/handlers";
 import { sortAppsByDiscount, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from "../store/app-list/utils/sort-apps";
-import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NicknameSpan, NoItems, SearchBar, SearchContainer, Select, SortBy, Stats, StatsLabel, Tag, TagsContainer, LibraryContainer, LibraryItem, LibraryTitle } from "./index.styled"
+import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NicknameSpan, NoItems, SearchBar, SearchContainer, Stats, StatsLabel, Tag, TagsContainer, LibraryContainer, LibraryItem, LibraryTitle } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
-
-interface AppRouteParams {
-  id: string;
-}
 
 export const Library = () => {
   const [libraryIds, setLibraryIds] = useState<string[]>([]);

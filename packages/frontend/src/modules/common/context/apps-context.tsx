@@ -14,6 +14,7 @@ const AppsDataContext = createContext<AppsDataContextType>({
 
 export const AppsDataProvider = ({ children }: any) => {
   const [appsData, setAppsData] = useState([]);
+  const [fetchCounter, setFetchCounter] = useState(0);
   const [isLoadingApps, setIsLoadingApps] = useState(true);
   const getAllAppsMutation = useGetAllApps()
 
@@ -22,9 +23,12 @@ export const AppsDataProvider = ({ children }: any) => {
         const data = await getAllAppsMutation.mutateAsync();
         setAppsData(data);
         setIsLoadingApps(false);
+        setFetchCounter(fetchCounter + 1)
       }
       fetchAllApps();
     }, []);
+
+  console.log("Fetch Counter - Apps: ", fetchCounter);
 
   return (
     <AppsDataContext.Provider value={{ appsData, isLoadingApps }}>
