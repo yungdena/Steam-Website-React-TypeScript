@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { APP_KEYS } from "../common/consts";
+import { useUserData } from "../common/context/user-context";
 import { LoaderBig } from "../common/loader/loader";
 
 import { useGetAppById } from "../common/services/apps.service";
-import { useAddToLibrary, useAddToWishlist, useGetLibrary, useGetWishlist } from "../common/services/user.service";
+import { useAddToLibrary, useAddToWishlist } from "../common/services/user.service";
 import { IApp } from "../common/types/app.interface";
 import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
 import { calculatePercentageDecrease } from "../common/utils/countPercentage";
@@ -28,9 +29,8 @@ export const AppPage = () => {
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [libraryIds, setLibraryIds] = useState<string[]>([]);
 
+  const userData = useUserData()
   const getAppByIdMutation = useGetAppById();
-  const getWishlistMutation = useGetWishlist();
-  const getLibraryMutation = useGetLibrary();
   const addToWishlistMutation = useAddToWishlist();
   const addToLibraryMutation = useAddToLibrary();
   const history = useHistory();
@@ -50,13 +50,7 @@ export const AppPage = () => {
 
   useEffect(() => {
     async function getUsersLibrary() {
-      const user = localStorage.getItem("account");
-      if (user && libraryIds.length === 0) {
-        const id = JSON.parse(user)._id;
-        const libraryResponse = await getLibraryMutation.mutateAsync(id);
-        setLibraryIds(libraryResponse.library);
-      }
-      if (libraryIds.includes(id)) {
+      if (userData?.library.includes(id)) {
         setAddedToLibrary(true);
       }
     }
@@ -66,13 +60,7 @@ export const AppPage = () => {
 
   useEffect(() => {
     async function getUsersWishlist() {
-      const user = localStorage.getItem("account");
-      if (user && wishlistIds.length === 0) {
-        const id = JSON.parse(user)._id;
-        const wishlistResponse = await getWishlistMutation.mutateAsync(id);
-        setWishlistIds(wishlistResponse.wishlist);
-      }
-      if (wishlistIds.includes(id)) {
+      if (userData?.wishlist.includes(id)) {
         setAddedToWishlist(true);
       }
     }
@@ -81,10 +69,9 @@ export const AppPage = () => {
   }, [wishlistIds]);
 
   const handleAddToWishlist = async () => {
-    const user = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT)
-    if (user) {
+    if (userData) {
       const appId = id;
-      const userId = JSON.parse(user)._id;
+      const userId = userData._id;
       await addToWishlistMutation.mutateAsync({ userId, appId });
       setAddedToWishlist(true);
     } else {
@@ -93,10 +80,9 @@ export const AppPage = () => {
   }
 
   const handleAddToLibrary = async () => {
-    const user = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT);
-    if (user) {
+    if (userData) {
       const appId = id;
-      const userId = JSON.parse(user)._id;
+      const userId = userData._id;
       await addToLibraryMutation.mutateAsync({ userId, appId });
       setAddedToLibrary(true);
     } else {

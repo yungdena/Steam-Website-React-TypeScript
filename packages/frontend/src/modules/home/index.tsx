@@ -30,30 +30,15 @@ import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent }
 import { calculatePercentageDecrease } from "../common/utils/countPercentage";
 import { calculateReviewTitle, getReviewImageURL } from "../common/utils/calculateReviewRate";
 import { formatDate } from "../common/utils/formatDate";
-import { useGetWishlist } from "../common/services/user.service";
 import { useAppsData } from "../common/context/apps-context";
 import { useBannersData } from "../common/context/banners-context";
+import { useUserData } from "../common/context/user-context";
 
 export const HomePage = () => {
-  const [wishlishLength, setWishlishLength] = useState(0);
   const { isLoadingApps, appsData } = useAppsData();
   const { isLoadingBanners, bannersData } = useBannersData();
   const history = useHistory();
-  const getWishlistMutation = useGetWishlist();
-  const user = localStorage.getItem('account');
-
-  useEffect(() => {
-    async function getUsersWishlistLength() {  
-      if (user) {
-        const id = JSON.parse(user)._id;
-        const wishlistResponse = await getWishlistMutation.mutateAsync(id);
-        const wishlist = wishlistResponse.wishlist;
-        setWishlishLength(wishlist.length)
-      }
-    };
-
-    getUsersWishlistLength();
-  }, []);
+  const userData = useUserData();
 
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],
@@ -97,7 +82,7 @@ export const HomePage = () => {
               )
             }
           >
-            Wishlist ({wishlishLength})
+            Wishlist ({userData?.wishlist.length})
           </WishlistButton>
           <HomepageHeader />
           {isLoadingBanners ? (

@@ -5,6 +5,7 @@ import { MainRouter } from '../navigation';
 import * as theme from '../theme';
 import * as Styled from './app.styled';
 import '../../style.css';
+import { UserDataProvider } from '../common/context/user-context';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,11 +24,13 @@ const AppContainer = () => (
     <Styled.GlobalStyles />
     <QueryClientProvider client={queryClient}>
       <Styled.MainContainer>
-        <MainRouter />
+        <UserDataProvider>
+          <MainRouter />
+        </UserDataProvider>
       </Styled.MainContainer>
-      </QueryClientProvider>
-    </ThemeProvider>
-  );
+    </QueryClientProvider>
+  </ThemeProvider>
+);
 
 export default AppContainer;
 

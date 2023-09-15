@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Response } from 'express';
 
-import { IUser, User } from '../models/User';
+import { IUser, UserModel } from '../models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS || '10', 10);
@@ -25,7 +25,7 @@ export class AuthService {
     console.log('signUp');
     console.log('userdata', userData);
     const password = await this.hashPassword(userData.password);
-    const user = await User.create({ ...userData, password });
+    const user = await UserModel.create({ ...userData, password });
     console.log('signUp', user);
     if (!user) {
       res.status(400).send({ message: 'sign up failed' });
@@ -36,7 +36,7 @@ export class AuthService {
   }
 
   async signIn(userData: IUser, res: Response) {
-    const user = await User.findOne({ name: userData.name });
+    const user = await UserModel.findOne({ name: userData.name });
     console.log("signIn", user);
     if (!user) {
       res.status(404).send({ message: 'User not found' });

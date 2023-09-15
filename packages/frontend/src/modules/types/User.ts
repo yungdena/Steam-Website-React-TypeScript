@@ -3,6 +3,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   country: string;
+  library: string[];
   wishlist: string[];
   apps: string[];
   _id: string;

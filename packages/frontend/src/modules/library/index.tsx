@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { APP_KEYS } from "../common/consts";
+import { useUserData } from "../common/context/user-context";
 import { LoaderBig } from "../common/loader/loader";
 import { useGetAppById } from "../common/services/apps.service";
-import { useDeleteFromLibrary, useGetLibrary } from "../common/services/user.service";
+import { useDeleteFromLibrary } from "../common/services/user.service";
 import { IApp } from "../common/types/app.interface";
 import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
 import { formatDate } from "../common/utils/formatDate";
@@ -16,36 +17,25 @@ import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer,
 import { CustomSelect } from "./select/custom-select";
 
 export const Library = () => {
-  const [libraryIds, setLibraryIds] = useState<string[]>([]);
   const [apps, setApps] = useState<IApp[]>([]);
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
   const [sortBy, setSortBy] = useState<string>("Your Rank");
   const [searchInput, setSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const userData = useUserData();
+  console.log("userData in library", userData);
   const history = useHistory()
-  const getLibraryMutation = useGetLibrary();
   const deleteFromLibraryMutation = useDeleteFromLibrary();
   const getAppByIdMutation = useGetAppById();
-  const user = localStorage.getItem("account");
 
   useEffect(() => {
-    async function getUserLibrary() {
-      if (user) {
-        const id = JSON.parse(user)._id;
-        const libraryResponse = await getLibraryMutation.mutateAsync(id);
-        setLibraryIds(libraryResponse.library);
-      }
-    }
-
-    getUserLibrary();
-  }, []);
-
-    useEffect(() => {
-      async function getAppsFromLibrary() {
+    async function getAppsFromLibrary() {
+      if(userData) {
         try {
+          
           const appsResponse = await Promise.all(
-            libraryIds.map((id) => getAppByIdMutation.mutateAsync(id))
+            userData.library.map((id: string) => getAppByIdMutation.mutateAsync(id))
           );
           setApps(appsResponse);
           setIsLoading(false); 
@@ -53,9 +43,10 @@ export const Library = () => {
           console.error("Error fetching apps from library:", error);
         }
       }
+    }
 
-      getAppsFromLibrary();
-    }, [libraryIds]);
+    getAppsFromLibrary();
+  }, []);
 
   useEffect(() => {
     const appsCopy = [...apps];
@@ -94,10 +85,8 @@ export const Library = () => {
   }, [apps, sortBy]);
 
   const handleDeleteFromLibrary = (appId: string) => {
-    const user = localStorage.getItem("account");
-    if (user) {
-      const userId = JSON.parse(user)._id;
-
+    if (userData) {
+      const userId = userData._id
       deleteFromLibraryMutation.mutateAsync({ userId, appId });
       setApps(sortedApps.filter((app) => app._id !== appId));
     }
@@ -112,13 +101,15 @@ export const Library = () => {
     handleSearch(inputValue, setSortedApps, apps);
   };
 
+  console.log('apps', apps)
+
   return (
     <>
       <Header />
       <Background>
         <MainContainer>
           <LibraryTitle>
-            {user && JSON.parse(user).name}
+            {userData && userData.name}
             <NicknameSpan>
               {">"}
               {">"} games

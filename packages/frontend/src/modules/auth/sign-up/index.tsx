@@ -120,7 +120,7 @@ export const SignUp: React.FC = () => {
       console.log("user", user);
       localStorage.setItem(
         APP_KEYS.STORAGE_KEYS.ACCOUNT,
-        JSON.stringify(user)
+        JSON.stringify(user._id)
       );
     }
 

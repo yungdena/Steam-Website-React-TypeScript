@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { ButtonWrapper, PurchaseButton } from "../app-page/index.styled";
 import { APP_KEYS } from "../common/consts";
+import { useUserData } from "../common/context/user-context";
 import { LoaderBig } from "../common/loader/loader";
 import { useGetAppById } from "../common/services/apps.service";
-import { useAddToLibrary, useDeleteFromWishlist, useGetWishlist } from "../common/services/user.service";
+import { useAddToLibrary, useDeleteFromWishlist } from "../common/services/user.service";
 import { IApp } from "../common/types/app.interface";
 import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
 import { calculatePercentageDecrease } from "../common/utils/countPercentage";
@@ -17,46 +18,31 @@ import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent }
 import { AppPrice } from "../store/app-list/index.styled";
 import { handleSearch } from "../store/app-list/utils/handlers";
 import { sortAppsByDiscount, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from "../store/app-list/utils/sort-apps";
-import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NoItems, RemoveButton, SearchBar, SearchContainer, Select, SortBy, Stats, StatsLabel, Tag, TagsContainer, WishlistContainer, WishlistItem, WishlistTitle } from "./index.styled"
+import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NoItems, RemoveButton, SearchBar, SearchContainer,  Stats, StatsLabel, Tag, TagsContainer, WishlistContainer, WishlistItem, WishlistTitle } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
 import Toast from "./toast";
 
 export const Wishlist = () => {
-  const [wishlistIds, setWishlistIds] = useState([]);
   const [apps, setApps] = useState<IApp[]>([]);
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
   const [sortBy, setSortBy] = useState("Your Rank");
   const [searchInput, setSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
+  const userData = useUserData();
+  console.log("userData wishlist: ", userData?.wishlist);
 
   const history = useHistory()
-  const getWishlistMutation = useGetWishlist();
   const getAppByIdMutation = useGetAppById();
   const deleteAppFromWishlistMutation = useDeleteFromWishlist()
   const addToLibraryMutation = useAddToLibrary();
-  const user = localStorage.getItem("account");
-
-  useEffect(() => {
-    async function getUsersWishlist() {
-      const user = localStorage.getItem('account');
-      if (user && wishlistIds.length === 0) {
-        const id = JSON.parse(user)._id;
-        const wishlistResponse = await getWishlistMutation.mutateAsync(id);
-        setWishlistIds(wishlistResponse.wishlist);
-        setIsLoading(false);
-      }
-    }
-
-    getUsersWishlist();
-  }, []);
 
   useEffect(() => {
     async function getAppsFromWishlist() {
       try {
-        if (wishlistIds.length > 0 && apps.length === 0) {
+        if (userData && apps.length === 0) {
           const appsResponse = await Promise.all(
-            wishlistIds.map((id) => getAppByIdMutation.mutateAsync(id))
+            userData.wishlist.map((id) => getAppByIdMutation.mutateAsync(id))
           );
           setApps(appsResponse);
           setIsLoading(false);
@@ -67,13 +53,11 @@ export const Wishlist = () => {
     }
 
     getAppsFromWishlist();
-  }, [wishlistIds]);
+  }, []);
 
   const handleDeleteFromWishlist = (appId: string) => {
-    const user = localStorage.getItem('account');
-    if (user) {
-      const userId = JSON.parse(user)._id;
-
+    if (userData) {
+      const userId = userData._id
       deleteAppFromWishlistMutation.mutateAsync({ userId, appId });
       setApps(sortedApps.filter((app) => app._id !== appId))
     }
@@ -145,7 +129,7 @@ export const Wishlist = () => {
       <Background>
         <MainContainer>
           <WishlistTitle>
-            {user && JSON.parse(user).name}'s wishlist
+            {userData && userData.name}'s wishlist
           </WishlistTitle>
           <SearchContainer>
             <SearchBar

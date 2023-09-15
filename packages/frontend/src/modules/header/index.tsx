@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { HeaderContainer, Link, ButtonGroup, Image, LinkGroup, HeaderLink, OptionalLinks, DropdownContainer} from './index.styled';
@@ -6,28 +6,17 @@ import { APP_KEYS } from '../common/consts';
 import { DROPDOWN_DATA, HEADER_LINKS, NAME_DROPDOWN_DATA } from '../common/consts/header-buttons';
 import { Dropdown } from './dropdown/dropdown';
 import { handleNavigate } from '../common/utils/handleNavigate';
-import { getAccount } from '../common/utils/getAccount';
-import { IAccount } from '../common/types/Account.interface';
-import { Loader } from '../common/loader/loader';
+import { useUserData } from '../common/context/user-context';
 
 const Logo = "https://res.cloudinary.com/didkbrlcz/image/upload/v1677489737/System/logo_steam_in6blq.svg";
 
 export const Header = () => {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [hoveredName, setHoveredName] = useState<string | null>(null);
-  const [parsedAccount, setParsedAccount] = useState<IAccount | null>(null); // Use state for account
-  const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    const fetchAccount = async () => {
-      const account = await getAccount();
-      setParsedAccount(account);
-      setIsLoading(false);
-    };
-    fetchAccount();
-  }, []);
-
+  const userData = useUserData()
   const history = useHistory();
+
+  console.log('header user Data: ', userData)
 
   return (
     <HeaderContainer>
@@ -70,15 +59,13 @@ export const Header = () => {
             );
           })}
         </LinkGroup>
-        {isLoading ? (
-          <Loader></Loader>
-        ) : parsedAccount ? (
+        {userData ? (
           <DropdownContainer
             onMouseEnter={() => setHoveredName("name")}
             onMouseLeave={() => setHoveredName(null)}
           >
             <Link>
-              {parsedAccount?.name}
+              {userData.name}
               {hoveredName && (
                 <Dropdown
                   hoveredLink={hoveredName}

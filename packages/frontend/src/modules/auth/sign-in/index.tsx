@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
 
-import { SIGNIN_INPUTS, LABELS } from '../../common/consts/authInfo';
 import { APP_KEYS } from '../../common/consts';
 import { signInValidationSchema } from '../../common/utils/validation';
 import { IAccount } from '../../common/types/Account.interface';
@@ -13,7 +12,6 @@ import {
   Form,
   Container,
   LoginContainer,
-  QRCodeText, 
   FormControl, 
   QRCodeField, 
   Input, 
@@ -38,12 +36,6 @@ export const SignIn: React.FC = () => {
 
   const history = useHistory();
   const signInMutation = useSignIn();
-
-  const handleNavigate = (route: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-
-    history.push(route);
-  };
 
   const formik = useFormik<{
     name: string;
@@ -83,12 +75,12 @@ export const SignIn: React.FC = () => {
       if (isChecked) {
         localStorage.setItem(
           APP_KEYS.STORAGE_KEYS.ACCOUNT,
-          JSON.stringify(user)
+          JSON.stringify(user._id)
         );
       } else {
         sessionStorage.setItem(
           APP_KEYS.STORAGE_KEYS.ACCOUNT,
-          JSON.stringify(user)
+          JSON.stringify(user._id)
         );
       }
       console.log('data', user);

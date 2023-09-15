@@ -1,10 +1,20 @@
 import { Response } from "express";
-import { User } from "../models/User";
+import { UserModel } from "../models/User";
 
 export class UserService {
+  async getUserById(userId: string,  res: Response) {
+    try {
+      const user = await UserModel.findById(userId);
+      
+      res.send(user);
+    } catch (error) {
+      res.status(404).send({ message: "User not found" });
+    }
+  }
+
   async addToWishlist(userId: string, appId: string, res: Response) {
     try {
-      const user = await User.findById(userId);
+      const user = await UserModel.findById(userId);
       if (!user) {
         res.status(404).send({ message: "User not found" });
         return;
@@ -26,7 +36,7 @@ export class UserService {
 
   async addToLibrary(userId: string, appId: string, res: Response) {
     try {
-      const user = await User.findById(userId);
+      const user = await UserModel.findById(userId);
       if (!user) {
         res.status(404).send({ message: "User not found" });
         return;
@@ -44,7 +54,7 @@ export class UserService {
 
   async deleteFromWishlist(userId: string, appId: string, res: Response) {
     try {
-      const user = await User.findById(userId);
+      const user = await UserModel.findById(userId);
       if (!user) {
         res.status(404).send({ message: "User not found" });
         return;
@@ -66,7 +76,7 @@ export class UserService {
 
   async deleteFromLibrary(userId: string, appId: string, res: Response) {
     try {
-      const user = await User.findById(userId);
+      const user = await UserModel.findById(userId);
       if (!user) {
         res.status(404).send({ message: "User not found" });
         return;
@@ -88,7 +98,7 @@ export class UserService {
 
   async getWishlist(userId: string, res: Response) {
     try {
-      const user = await User.findById(userId);
+      const user = await UserModel.findById(userId);
       if (!user) {
         res.status(404).send({ message: "User not found" });
         return;
@@ -102,7 +112,7 @@ export class UserService {
 
   async getLibrary(userId: string, res: Response) {
     try {
-      const user = await User.findById(userId);
+      const user = await UserModel.findById(userId);
       if (!user) {
         res.status(404).send({ message: "User not found" });
         return;

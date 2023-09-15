@@ -5,6 +5,12 @@ import { UserService } from "../services/user.service";
 export class UserController {
   constructor(private userService: UserService) {}
 
+  async getUserById(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await this.userService.getUserById(id, res);
+  }
+
   async addToWishlist(req: Request, res: Response) {
     const { userId, appId } = req.body;
 

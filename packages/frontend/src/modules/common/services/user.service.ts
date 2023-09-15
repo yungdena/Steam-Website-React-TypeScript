@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { BASE_URL } from "./base-url";
 
-type addAppToUser = {
+type IBody = {
   userId: string,
   appId: string
 };
 
-const addToLibrary = async (data: addAppToUser) => {
+const addToLibrary = async (data: IBody) => {
   console.log('mutation start')
   const response = await fetch(`${BASE_URL}/user/library`, {
     method: "POST",
@@ -21,7 +21,7 @@ const addToLibrary = async (data: addAppToUser) => {
   return responseData;
 };
 
-const addToWishlist = async (data: addAppToUser) => {
+const addToWishlist = async (data: IBody) => {
   const response = await fetch(`${BASE_URL}/user/wishlist`, {
     method: "POST",
     headers: {
@@ -33,7 +33,7 @@ const addToWishlist = async (data: addAppToUser) => {
   return responseData;
 };
 
-const deleteFromLibrary = async (data: addAppToUser) => {
+const deleteFromLibrary = async (data: IBody) => {
   console.log("mutation start");
   const response = await fetch(`${BASE_URL}/user/library`, {
     method: "DELETE",
@@ -48,7 +48,7 @@ const deleteFromLibrary = async (data: addAppToUser) => {
   return responseData;
 };
 
-const deleteFromWishlist = async (data: addAppToUser) => {
+const deleteFromWishlist = async (data: IBody) => {
   const response = await fetch(`${BASE_URL}/user/wishlist`, {
     method: "DELETE",
     headers: {
@@ -60,9 +60,9 @@ const deleteFromWishlist = async (data: addAppToUser) => {
   return responseData;
 };
 
-const getLibrary = async (userId: string) => {
+const getUserById = async (userId: string) => {
   console.log("mutation start");
-  const response = await fetch(`${BASE_URL}/user/library/${userId}`, {
+  const response = await fetch(`${BASE_URL}/user/${userId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -73,23 +73,8 @@ const getLibrary = async (userId: string) => {
   return responseData;
 };
 
-const getWishlist = async (userId: string) => {
-  console.log('userId', userId);
-  const response = await fetch(`${BASE_URL}/user/wishlist/${userId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const responseData = await response.json();
-  return responseData;
-};
-
 export const useAddToLibrary = () => useMutation(addToLibrary);
 export const useAddToWishlist = () => useMutation(addToWishlist);
-
 export const useDeleteFromLibrary = () => useMutation(deleteFromLibrary);
 export const useDeleteFromWishlist = () => useMutation(deleteFromWishlist);
-
-export const useGetLibrary = () => useMutation(getLibrary);
-export const useGetWishlist = () => useMutation(getWishlist);
+export const useGetUserById = () => useMutation(getUserById);
