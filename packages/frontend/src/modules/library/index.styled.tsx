@@ -113,6 +113,7 @@ export const NoItems = styled.div`
 export const TagsContainer = styled.div`
   display: flex;
   margin-top: 1rem;
+  justify-content: space-between;
 `
 
 export const Tag = styled.div`
@@ -175,3 +176,15 @@ export const SortBy = styled.div`
   color: ${COLORS.blue};
   font-size: 13px;
 `
+
+export const RemoveButton = styled.button`
+  all: unset;
+  color: ${COLORS.lightGrey};
+  text-decoration: underline;
+  font-size: 12px;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(110%);
+  }
+`;

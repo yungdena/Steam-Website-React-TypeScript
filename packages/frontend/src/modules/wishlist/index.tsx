@@ -5,7 +5,7 @@ import { ButtonWrapper, PurchaseButton } from "../app-page/index.styled";
 import { APP_KEYS } from "../common/consts";
 import { LoaderBig } from "../common/loader/loader";
 import { useGetAppById } from "../common/services/apps.service";
-import { useAddToLibrary, useGetWishlist } from "../common/services/user.service";
+import { useAddToLibrary, useDeleteFromWishlist, useGetWishlist } from "../common/services/user.service";
 import { IApp } from "../common/types/app.interface";
 import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
 import { calculatePercentageDecrease } from "../common/utils/countPercentage";
@@ -17,12 +17,9 @@ import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent }
 import { AppPrice } from "../store/app-list/index.styled";
 import { handleSearch } from "../store/app-list/utils/handlers";
 import { sortAppsByDiscount, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from "../store/app-list/utils/sort-apps";
-import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NoItems, SearchBar, SearchContainer, Select, SortBy, Stats, StatsLabel, Tag, TagsContainer, WishlistContainer, WishlistItem, WishlistTitle } from "./index.styled"
+import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NoItems, RemoveButton, SearchBar, SearchContainer, Select, SortBy, Stats, StatsLabel, Tag, TagsContainer, WishlistContainer, WishlistItem, WishlistTitle } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
-
-interface AppRouteParams {
-  id: string;
-}
+import Toast from "./toast";
 
 export const Wishlist = () => {
   const [wishlistIds, setWishlistIds] = useState([]);
@@ -31,10 +28,12 @@ export const Wishlist = () => {
   const [sortBy, setSortBy] = useState("Your Rank");
   const [searchInput, setSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
+  const [showToast, setShowToast] = useState(false);
 
   const history = useHistory()
   const getWishlistMutation = useGetWishlist();
   const getAppByIdMutation = useGetAppById();
+  const deleteAppFromWishlistMutation = useDeleteFromWishlist()
   const addToLibraryMutation = useAddToLibrary();
   const user = localStorage.getItem("account");
 
@@ -45,6 +44,7 @@ export const Wishlist = () => {
         const id = JSON.parse(user)._id;
         const wishlistResponse = await getWishlistMutation.mutateAsync(id);
         setWishlistIds(wishlistResponse.wishlist);
+        setIsLoading(false);
       }
     }
 
@@ -68,6 +68,16 @@ export const Wishlist = () => {
 
     getAppsFromWishlist();
   }, [wishlistIds]);
+
+  const handleDeleteFromWishlist = (appId: string) => {
+    const user = localStorage.getItem('account');
+    if (user) {
+      const userId = JSON.parse(user)._id;
+
+      deleteAppFromWishlistMutation.mutateAsync({ userId, appId });
+      setApps(sortedApps.filter((app) => app._id !== appId))
+    }
+  }
 
   useEffect(() => {
     const appsCopy = [...apps];
@@ -109,14 +119,13 @@ export const Wishlist = () => {
     setSortBy(selectedOption);
   };
 
-  const handleAddToLibrary = async () => {
+  const handleAddToLibrary = async (appId: string) => {
     const user = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT);
     if (user) {
-      const { id } = useParams<AppRouteParams>();
-      const appId = id;
-      const userId = JSON.parse(user)._id;
+      const userId: string = JSON.parse(user)._id;
       await addToLibraryMutation.mutateAsync({ userId, appId });
-      console.log("App added successfully");
+      handleDeleteFromWishlist(appId);
+      setShowToast(true);
     } else {
       handleNavigate(
         history,
@@ -161,7 +170,9 @@ export const Wishlist = () => {
                   <ItemImage src={item.titleImage} />
                   <Capsule>
                     <ItemTitle
-                      onClick={() => history.push(APP_KEYS.ROUTER_KEYS.APPS + `/${item._id}`)}
+                      onClick={() =>
+                        history.push(APP_KEYS.ROUTER_KEYS.APPS + `/${item._id}`)
+                      }
                     >
                       {item.title}
                     </ItemTitle>
@@ -207,16 +218,23 @@ export const Wishlist = () => {
                         )}
                         <PurchaseButton
                           className="to-cart-button"
-                          onClick={handleAddToLibrary}
+                          onClick={() => handleAddToLibrary(item._id)}
                         >
                           Add to Cart
                         </PurchaseButton>
                       </ButtonWrapper>
                     </MidContainer>
                     <TagsContainer>
-                      {item.tags.map((tag) => (
-                        <Tag key={tag}>{tag}</Tag>
-                      ))}
+                      <div>
+                        {item.tags.map((tag) => (
+                          <Tag key={tag}>{tag}</Tag>
+                        ))}
+                      </div>
+                      <RemoveButton
+                        onClick={() => handleDeleteFromWishlist(item._id)}
+                      >
+                        Remove
+                      </RemoveButton>
                     </TagsContainer>
                   </Capsule>
                 </WishlistItem>
@@ -226,6 +244,9 @@ export const Wishlist = () => {
             )}
           </WishlistContainer>
         </MainContainer>
+        {showToast && (
+          <Toast message='Successfully added to Library' onClose={() => setShowToast(false)} />
+        )}
       </Background>
       <Footer />
     </>

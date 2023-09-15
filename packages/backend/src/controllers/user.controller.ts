@@ -17,6 +17,18 @@ export class UserController {
     await this.userService.addToLibrary(userId, appId, res);
   }
 
+  async deleteFromWishlist(req: Request, res: Response) {
+    const { userId, appId } = req.body;
+
+    await this.userService.deleteFromWishlist(userId, appId, res);
+  }
+
+  async deleteFromLibrary(req: Request, res: Response) {
+    const { userId, appId } = req.body;
+
+    await this.userService.deleteFromLibrary(userId, appId, res);
+  }
+
   async getWishlist(req: Request, res: Response) {
     const { id } = req.params;
 

@@ -101,8 +101,9 @@ export const NoItems = styled.div`
 
 export const TagsContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   margin-top: 1rem;
-`
+`;
 
 export const Tag = styled.div`
   display: inline-block;
@@ -159,6 +160,18 @@ export const Select = styled.select`
     color: ${COLORS.blue};
   }
 `;
+
+export const RemoveButton = styled.button`
+  all: unset;
+  color: ${COLORS.lightGrey};
+  text-decoration: underline;
+  font-size: 12px;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(110%);
+  }
+`
 
 export const SortBy = styled.div`
   color: ${COLORS.blue};

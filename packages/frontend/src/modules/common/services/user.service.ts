@@ -33,6 +33,33 @@ const addToWishlist = async (data: addAppToUser) => {
   return responseData;
 };
 
+const deleteFromLibrary = async (data: addAppToUser) => {
+  console.log("mutation start");
+  const response = await fetch(`${BASE_URL}/user/library`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  console.log("mutation response", response);
+  const responseData = await response.json();
+  console.log("mutation response Json", responseData);
+  return responseData;
+};
+
+const deleteFromWishlist = async (data: addAppToUser) => {
+  const response = await fetch(`${BASE_URL}/user/wishlist`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const responseData = await response.json();
+  return responseData;
+};
+
 const getLibrary = async (userId: string) => {
   console.log("mutation start");
   const response = await fetch(`${BASE_URL}/user/library/${userId}`, {
@@ -60,5 +87,9 @@ const getWishlist = async (userId: string) => {
 
 export const useAddToLibrary = () => useMutation(addToLibrary);
 export const useAddToWishlist = () => useMutation(addToWishlist);
+
+export const useDeleteFromLibrary = () => useMutation(deleteFromLibrary);
+export const useDeleteFromWishlist = () => useMutation(deleteFromWishlist);
+
 export const useGetLibrary = () => useMutation(getLibrary);
 export const useGetWishlist = () => useMutation(getWishlist);

@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { APP_KEYS } from "../common/consts";
 import { LoaderBig } from "../common/loader/loader";
 import { useGetAppById } from "../common/services/apps.service";
-import { useGetLibrary } from "../common/services/user.service";
+import { useDeleteFromLibrary, useGetLibrary } from "../common/services/user.service";
 import { IApp } from "../common/types/app.interface";
 import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
 import { formatDate } from "../common/utils/formatDate";
@@ -12,7 +12,7 @@ import { Header } from "../header"
 import { Footer } from "../home/footer"
 import { handleSearch } from "../store/app-list/utils/handlers";
 import { sortAppsByDiscount, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from "../store/app-list/utils/sort-apps";
-import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NicknameSpan, NoItems, SearchBar, SearchContainer, Stats, StatsLabel, Tag, TagsContainer, LibraryContainer, LibraryItem, LibraryTitle } from "./index.styled"
+import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NicknameSpan, NoItems, SearchBar, SearchContainer, Stats, StatsLabel, Tag, TagsContainer, LibraryContainer, LibraryItem, LibraryTitle, RemoveButton } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
 
 export const Library = () => {
@@ -25,6 +25,7 @@ export const Library = () => {
 
   const history = useHistory()
   const getLibraryMutation = useGetLibrary();
+  const deleteFromLibraryMutation = useDeleteFromLibrary();
   const getAppByIdMutation = useGetAppById();
   const user = localStorage.getItem("account");
 
@@ -91,6 +92,16 @@ export const Library = () => {
       setSortedApps(appsCopy);
     }
   }, [apps, sortBy]);
+
+  const handleDeleteFromLibrary = (appId: string) => {
+    const user = localStorage.getItem("account");
+    if (user) {
+      const userId = JSON.parse(user)._id;
+
+      deleteFromLibraryMutation.mutateAsync({ userId, appId });
+      setApps(sortedApps.filter((app) => app._id !== appId));
+    }
+  };
   
   const handleSortChange = (selectedOption: string, setSortBy: any) => {
     setSortBy(selectedOption);
@@ -159,9 +170,14 @@ export const Library = () => {
                       </Stats>
                     </MidContainer>
                     <TagsContainer>
-                      {item.tags.map((tag) => (
-                        <Tag key={tag}>{tag}</Tag>
-                      ))}
+                      <div>
+                        {item.tags.map((tag) => (
+                          <Tag key={tag}>{tag}</Tag>
+                        ))}
+                      </div>
+                      <RemoveButton onClick={() => handleDeleteFromLibrary(item._id)}>
+                        Remove
+                      </RemoveButton>
                     </TagsContainer>
                   </Capsule>
                 </LibraryItem>
