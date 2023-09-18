@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { IUser } from "../../types/User";
+import { APP_KEYS } from "../consts";
+import { useGetUserById } from "../services/user.service";
 
 interface IUserContext {
   userData: IUser | null;
@@ -9,10 +11,30 @@ interface IUserContext {
 const UserDataContext = createContext<IUserContext | null>(null);
 
 export const UserDataProvider = ({ children }: any) => {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<IUser | null>(null);
+  const getUserByIdMutation = useGetUserById();
 
-  const setUser = (user: any) => {
+  useEffect(() => {
+    const storedUserId = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT);
+    console.log("storedUserId", storedUserId);
+    async function fetchUserById(userId: string | null) {
+      if (userId) {
+        const data = await getUserByIdMutation.mutateAsync(
+          JSON.parse(userId)
+        );
+
+        setUserData(data);
+      }
+    }
+  
+    if (storedUserId) {
+      fetchUserById(storedUserId)
+    }
+  }, []);
+
+  const setUser = (user: IUser | null) => {
     setUserData(user);
+    localStorage.setItem(APP_KEYS.STORAGE_KEYS.ACCOUNT, JSON.stringify(user?._id));
   };
 
   return (

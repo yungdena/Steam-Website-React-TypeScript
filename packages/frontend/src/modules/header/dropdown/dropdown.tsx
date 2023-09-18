@@ -18,6 +18,7 @@ export const Dropdown = ({ linkId, hoveredLink, content }: { linkId: string, hov
     localStorage.removeItem("account");
     sessionStorage.removeItem("account");
     history.push(route);
+    window.location.reload();
   };
 
     return (

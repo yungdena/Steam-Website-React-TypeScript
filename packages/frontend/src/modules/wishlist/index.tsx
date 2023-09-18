@@ -18,6 +18,7 @@ import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent }
 import { AppPrice } from "../store/app-list/index.styled";
 import { handleSearch } from "../store/app-list/utils/handlers";
 import { sortAppsByDiscount, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from "../store/app-list/utils/sort-apps";
+import { IUser } from "../types/User";
 import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NoItems, RemoveButton, SearchBar, SearchContainer,  Stats, StatsLabel, Tag, TagsContainer, WishlistContainer, WishlistItem, WishlistTitle } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
 import Toast from "./toast";
@@ -60,14 +61,6 @@ export const Wishlist = () => {
     getAppsFromWishlist();
   }, []);
 
-  const handleDeleteFromWishlist = (appId: string) => {
-    if (UserDataContext?.userData) {
-      const userId = UserDataContext?.userData._id
-      deleteAppFromWishlistMutation.mutateAsync({ userId, appId });
-      setApps(sortedApps.filter((app) => app._id !== appId))
-    }
-  }
-
   useEffect(() => {
     const appsCopy = [...apps];
 
@@ -108,6 +101,27 @@ export const Wishlist = () => {
     setSortBy(selectedOption);
   };
 
+  const handleDeleteFromWishlist = (appId: string) => {
+    if (UserDataContext?.userData) {
+      const userId = UserDataContext.userData._id;
+      deleteAppFromWishlistMutation.mutateAsync({ userId, appId });
+
+      setApps((prevApps) => prevApps.filter((app) => app._id !== appId));
+
+      setSortedApps((prevSortedApps) =>
+        prevSortedApps.filter((app) => app._id !== appId)
+      );
+
+      if (UserDataContext?.userData) {
+        const updatedUserData = { ...UserDataContext.userData } as IUser;
+        updatedUserData.wishlist = updatedUserData.wishlist.filter(
+          (id) => id !== appId
+        );
+        UserDataContext.setUser(updatedUserData);
+      }
+    }
+  };
+
   const handleAddToLibrary = async (appId: string) => {
     const user = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT);
     if (user) {
@@ -115,6 +129,12 @@ export const Wishlist = () => {
       await addToLibraryMutation.mutateAsync({ userId, appId });
       handleDeleteFromWishlist(appId);
       setShowToast(true);
+
+      const updatedUserData = { ...UserDataContext?.userData } as IUser | null;
+      if (updatedUserData) {
+        updatedUserData.library.push(appId);
+        UserDataContext?.setUser(updatedUserData);
+      }
     } else {
       handleNavigate(
         history,
@@ -122,7 +142,7 @@ export const Wishlist = () => {
       );
     }
   };
-  
+
   const handleInputChange = (inputValue: string) => {
     setSearchInput(inputValue);
     handleSearch(inputValue, setSortedApps, apps);

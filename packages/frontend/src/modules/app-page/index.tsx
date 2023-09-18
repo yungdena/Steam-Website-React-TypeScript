@@ -14,6 +14,7 @@ import { handleNavigate } from "../common/utils/handleNavigate";
 import { Header } from "../header";
 import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "../home/offers/index.styled";
 import { AppPrice } from "../store/app-list/index.styled";
+import { IUser } from "../types/User";
 import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton } from "./index.styled";
 import { ImageSlider } from "./swiper";
 
@@ -68,27 +69,45 @@ export const AppPage = () => {
     getUsersWishlist();
   }, [wishlistIds]);
 
-  const handleAddToWishlist = async () => {
-    if (UserDataContext?.userData) {
-      const appId = id;
-      const userId = UserDataContext?.userData._id;
-      await addToWishlistMutation.mutateAsync({ userId, appId });
-      setAddedToWishlist(true);
-    } else {
-      handleNavigate(history, APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN);
-    }
-  }
+const handleAddToWishlist = async () => {
+  if (UserDataContext?.userData) {
+    const appId = id;
+    const userId = UserDataContext.userData._id;
+    await addToWishlistMutation.mutateAsync({ userId, appId });
+    setAddedToWishlist(true);
 
-  const handleAddToLibrary = async () => {
     if (UserDataContext?.userData) {
-      const appId = id;
-      const userId = UserDataContext?.userData._id;
-      await addToLibraryMutation.mutateAsync({ userId, appId });
-      setAddedToLibrary(true);
-    } else {
-      handleNavigate(history, APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN);
+      const updatedUserData = { ...UserDataContext.userData } as IUser;
+      updatedUserData.wishlist.push(appId);
+      UserDataContext.setUser(updatedUserData);
     }
-  };
+  } else {
+    handleNavigate(
+      history,
+      APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
+    );
+  }
+};
+
+const handleAddToLibrary = async () => {
+  if (UserDataContext?.userData) {
+    const appId = id;
+    const userId = UserDataContext.userData._id;
+    await addToLibraryMutation.mutateAsync({ userId, appId });
+    setAddedToLibrary(true);
+
+    if (UserDataContext?.userData) {
+      const updatedUserData = { ...UserDataContext.userData } as IUser;
+      updatedUserData.library.push(appId);
+      UserDataContext.setUser(updatedUserData);
+    }
+  } else {
+    handleNavigate(
+      history,
+      APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
+    );
+  }
+};
 
   return (
     <Background>
