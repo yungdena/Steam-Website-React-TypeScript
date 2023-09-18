@@ -38,7 +38,7 @@ export const HomePage = () => {
   const { isLoadingApps, appsData } = useAppsData();
   const { isLoadingBanners, bannersData } = useBannersData();
   const history = useHistory();
-  const userData = useUserData();
+  const UserDataContext = useUserData();
 
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],
@@ -82,7 +82,7 @@ export const HomePage = () => {
               )
             }
           >
-            Wishlist ({userData?.wishlist.length})
+            Wishlist ({UserDataContext?.userData?.wishlist.length})
           </WishlistButton>
           <HomepageHeader />
           {isLoadingBanners ? (
@@ -95,10 +95,10 @@ export const HomePage = () => {
               <Swiper {...swiperParams}>
                 {bannersData.map((banner) => (
                   <SwiperSlide key={banner._id} className="banner-slide">
-                      <GameBannerComponent
-                        onClick={handleNavigateToApps}
-                        appInfo={banner}
-                      />
+                    <GameBannerComponent
+                      onClick={handleNavigateToApps}
+                      appInfo={banner}
+                    />
                   </SwiperSlide>
                 ))}
                 <StyledPagination>

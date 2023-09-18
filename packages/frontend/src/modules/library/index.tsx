@@ -23,30 +23,34 @@ export const Library = () => {
   const [searchInput, setSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const userData = useUserData();
-  console.log("userData in library", userData);
+  const UserDataContext = useUserData();
+  console.log("userData in library", UserDataContext?.userData);
   const history = useHistory()
   const deleteFromLibraryMutation = useDeleteFromLibrary();
   const getAppByIdMutation = useGetAppById();
 
   useEffect(() => {
     async function getAppsFromLibrary() {
-      if(userData) {
+      if (UserDataContext?.userData?.apps) {
         try {
-          
           const appsResponse = await Promise.all(
-            userData.library.map((id: string) => getAppByIdMutation.mutateAsync(id))
+            UserDataContext.userData.apps.map((id: string) =>
+              getAppByIdMutation.mutateAsync(id)
+            )
           );
           setApps(appsResponse);
-          setIsLoading(false); 
+          setIsLoading(false);
         } catch (error) {
           console.error("Error fetching apps from library:", error);
         }
+      } else {
+        setIsLoading(false);
+        setApps([]);
       }
     }
 
     getAppsFromLibrary();
-  }, []);
+  }, [UserDataContext]);
 
   useEffect(() => {
     const appsCopy = [...apps];
@@ -85,8 +89,8 @@ export const Library = () => {
   }, [apps, sortBy]);
 
   const handleDeleteFromLibrary = (appId: string) => {
-    if (userData) {
-      const userId = userData._id
+    if (UserDataContext?.userData) {
+      const userId = UserDataContext?.userData._id;
       deleteFromLibraryMutation.mutateAsync({ userId, appId });
       setApps(sortedApps.filter((app) => app._id !== appId));
     }
@@ -109,7 +113,7 @@ export const Library = () => {
       <Background>
         <MainContainer>
           <LibraryTitle>
-            {userData && userData.name}
+            {UserDataContext?.userData && UserDataContext?.userData.name}
             <NicknameSpan>
               {">"}
               {">"} games
@@ -166,7 +170,9 @@ export const Library = () => {
                           <Tag key={tag}>{tag}</Tag>
                         ))}
                       </div>
-                      <RemoveButton onClick={() => handleDeleteFromLibrary(item._id)}>
+                      <RemoveButton
+                        onClick={() => handleDeleteFromLibrary(item._id)}
+                      >
                         Remove
                       </RemoveButton>
                     </TagsContainer>

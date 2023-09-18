@@ -29,7 +29,7 @@ export const AppPage = () => {
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [libraryIds, setLibraryIds] = useState<string[]>([]);
 
-  const userData = useUserData()
+  const UserDataContext = useUserData()
   const getAppByIdMutation = useGetAppById();
   const addToWishlistMutation = useAddToWishlist();
   const addToLibraryMutation = useAddToLibrary();
@@ -50,7 +50,7 @@ export const AppPage = () => {
 
   useEffect(() => {
     async function getUsersLibrary() {
-      if (userData?.library.includes(id)) {
+      if (UserDataContext?.userData?.library.includes(id)) {
         setAddedToLibrary(true);
       }
     }
@@ -60,7 +60,7 @@ export const AppPage = () => {
 
   useEffect(() => {
     async function getUsersWishlist() {
-      if (userData?.wishlist.includes(id)) {
+      if (UserDataContext?.userData?.wishlist.includes(id)) {
         setAddedToWishlist(true);
       }
     }
@@ -69,9 +69,9 @@ export const AppPage = () => {
   }, [wishlistIds]);
 
   const handleAddToWishlist = async () => {
-    if (userData) {
+    if (UserDataContext?.userData) {
       const appId = id;
-      const userId = userData._id;
+      const userId = UserDataContext?.userData._id;
       await addToWishlistMutation.mutateAsync({ userId, appId });
       setAddedToWishlist(true);
     } else {
@@ -80,9 +80,9 @@ export const AppPage = () => {
   }
 
   const handleAddToLibrary = async () => {
-    if (userData) {
+    if (UserDataContext?.userData) {
       const appId = id;
-      const userId = userData._id;
+      const userId = UserDataContext?.userData._id;
       await addToLibraryMutation.mutateAsync({ userId, appId });
       setAddedToLibrary(true);
     } else {

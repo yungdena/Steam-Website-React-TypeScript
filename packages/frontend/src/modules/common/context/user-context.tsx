@@ -1,38 +1,22 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { IUser } from "../../types/User";
-import { useGetUserById } from "../services/user.service";
 
-const UserDataContext = createContext<IUser | null>(null);
+interface IUserContext {
+  userData: IUser | null;
+  setUser: (user: IUser | null) => void;
+}
+
+const UserDataContext = createContext<IUserContext | null>(null);
 
 export const UserDataProvider = ({ children }: any) => {
-  const [userData, setUserData] = useState<IUser | null>(null);
-  const [fetchCounter, setFetchCounter] = useState(0);
-  const getUserByIdMutation = useGetUserById();
+  const [userData, setUserData] = useState(null);
 
-  const userIdLocal = localStorage.getItem("account");
-  const userIdSession = sessionStorage.getItem("account");
-
-  useEffect(() => {
-    async function fetchUserById(userId: string | null) {
-      if (userId) {
-        const data = await getUserByIdMutation.mutateAsync(JSON.parse(userId));
-        
-        setUserData(data);
-        setFetchCounter(fetchCounter + 1);
-      }
-    }
-
-    if (userIdSession) {
-      fetchUserById(userIdSession);
-    } else if (userIdLocal) {
-      fetchUserById(userIdLocal);
-    }
-  }, [userIdSession, userIdLocal]);
-  console.log("Context userData: ", userData);
-  console.log("Fetch Counter - User: ", fetchCounter);
+  const setUser = (user: any) => {
+    setUserData(user);
+  };
 
   return (
-    <UserDataContext.Provider value={userData}>
+    <UserDataContext.Provider value={{ userData, setUser }}>
       {children}
     </UserDataContext.Provider>
   );

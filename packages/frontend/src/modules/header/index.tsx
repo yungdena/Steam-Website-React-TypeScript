@@ -13,10 +13,10 @@ const Logo = "https://res.cloudinary.com/didkbrlcz/image/upload/v1677489737/Syst
 export const Header = () => {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [hoveredName, setHoveredName] = useState<string | null>(null);
-  const userData = useUserData()
+  const UserDataContext = useUserData()
   const history = useHistory();
 
-  console.log('header user Data: ', userData)
+  console.log('header user Data: ', UserDataContext?.userData)
 
   return (
     <HeaderContainer>
@@ -32,10 +32,7 @@ export const Header = () => {
                 onMouseLeave={() => setHoveredLink(null)}
               >
                 <Link
-                  onClick={handleNavigate(
-                    history,
-                    link.link
-                  )}
+                  onClick={handleNavigate(history, link.link)}
                   id={link.id}
                   key={link.id}
                 >
@@ -59,13 +56,13 @@ export const Header = () => {
             );
           })}
         </LinkGroup>
-        {userData ? (
+        {UserDataContext?.userData ? (
           <DropdownContainer
             onMouseEnter={() => setHoveredName("name")}
             onMouseLeave={() => setHoveredName(null)}
           >
             <Link>
-              {userData.name}
+              {UserDataContext?.userData.name}
               {hoveredName && (
                 <Dropdown
                   hoveredLink={hoveredName}

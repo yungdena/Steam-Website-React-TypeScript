@@ -29,8 +29,11 @@ export const Wishlist = () => {
   const [searchInput, setSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
-  const userData = useUserData();
-  console.log("userData wishlist: ", userData?.wishlist);
+  const UserDataContext = useUserData();
+  console.log(
+    "userData wishlist: ",
+    UserDataContext?.userData?.wishlist
+  );
 
   const history = useHistory()
   const getAppByIdMutation = useGetAppById();
@@ -40,9 +43,11 @@ export const Wishlist = () => {
   useEffect(() => {
     async function getAppsFromWishlist() {
       try {
-        if (userData && apps.length === 0) {
+        if (UserDataContext?.userData && apps.length === 0) {
           const appsResponse = await Promise.all(
-            userData.wishlist.map((id) => getAppByIdMutation.mutateAsync(id))
+            UserDataContext?.userData.wishlist.map((id) =>
+              getAppByIdMutation.mutateAsync(id)
+            )
           );
           setApps(appsResponse);
           setIsLoading(false);
@@ -56,8 +61,8 @@ export const Wishlist = () => {
   }, []);
 
   const handleDeleteFromWishlist = (appId: string) => {
-    if (userData) {
-      const userId = userData._id
+    if (UserDataContext?.userData) {
+      const userId = UserDataContext?.userData._id
       deleteAppFromWishlistMutation.mutateAsync({ userId, appId });
       setApps(sortedApps.filter((app) => app._id !== appId))
     }
@@ -129,7 +134,7 @@ export const Wishlist = () => {
       <Background>
         <MainContainer>
           <WishlistTitle>
-            {userData && userData.name}'s wishlist
+            {UserDataContext?.userData && UserDataContext?.userData.name}'s wishlist
           </WishlistTitle>
           <SearchContainer>
             <SearchBar
@@ -229,7 +234,10 @@ export const Wishlist = () => {
           </WishlistContainer>
         </MainContainer>
         {showToast && (
-          <Toast message='Successfully added to Library' onClose={() => setShowToast(false)} />
+          <Toast
+            message="Successfully added to Library"
+            onClose={() => setShowToast(false)}
+          />
         )}
       </Background>
       <Footer />

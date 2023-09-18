@@ -8,6 +8,7 @@ import { IAccount } from '../../common/types/Account.interface';
 import { useSignIn } from '../../common/services/auth.service';
 import { Loader } from '../../common/loader/loader'
 import { Header } from '../../header';
+import { useUserData } from '../../common/context/user-context';
 import {
   Form,
   Container,
@@ -29,6 +30,7 @@ import { QRCode } from './qrcode/QRCode';
 export const SignIn: React.FC = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const UserDataContext = useUserData();
 
   function handleCheckboxChange() {
     setIsChecked(!isChecked);
@@ -72,17 +74,7 @@ export const SignIn: React.FC = () => {
         formik.setFieldError("name", "error");
         return;
       }
-      if (isChecked) {
-        localStorage.setItem(
-          APP_KEYS.STORAGE_KEYS.ACCOUNT,
-          JSON.stringify(user._id)
-        );
-      } else {
-        sessionStorage.setItem(
-          APP_KEYS.STORAGE_KEYS.ACCOUNT,
-          JSON.stringify(user._id)
-        );
-      }
+      UserDataContext?.setUser(user);
       console.log('data', user);
 
       console.log('user', JSON.stringify(user));
