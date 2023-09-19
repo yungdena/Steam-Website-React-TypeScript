@@ -16,8 +16,6 @@ export const Header = () => {
   const UserDataContext = useUserData()
   const history = useHistory();
 
-  console.log('header user Data: ', UserDataContext?.userData)
-
   return (
     <HeaderContainer>
       <ButtonGroup>

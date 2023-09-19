@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { APP_KEYS } from "../common/consts";
+import { useAppsData } from "../common/context/apps-context";
 import { useUserData } from "../common/context/user-context";
 import { LoaderBig } from "../common/loader/loader";
-import { useGetAppById } from "../common/services/apps.service";
 import { useDeleteFromLibrary } from "../common/services/user.service";
 import { IApp } from "../common/types/app.interface";
 import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
@@ -17,82 +17,69 @@ import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer,
 import { CustomSelect } from "./select/custom-select";
 
 export const Library = () => {
-  const [apps, setApps] = useState<IApp[]>([]);
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
-  const [sortBy, setSortBy] = useState<string>("Your Rank");
+  const [sortBy, setSortBy] = useState("Your Rank");
   const [searchInput, setSearchInput] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const UserDataContext = useUserData();
-  console.log("userData in library", UserDataContext?.userData);
-  const history = useHistory()
   const deleteFromLibraryMutation = useDeleteFromLibrary();
-  const getAppByIdMutation = useGetAppById();
+  const UserDataContext = useUserData();
+  const { appsData } = useAppsData();
+  const history = useHistory();
+
+  const userLibraryIds = UserDataContext?.userData?.apps || [];
+  const userLibraryApps = appsData.filter((app) =>
+    userLibraryIds.includes(app._id)
+  );
 
   useEffect(() => {
-    async function getAppsFromLibrary() {
-      if (UserDataContext?.userData?.apps) {
-        try {
-          const appsResponse = await Promise.all(
-            UserDataContext.userData.apps.map((id: string) =>
-              getAppByIdMutation.mutateAsync(id)
-            )
-          );
-          setApps(appsResponse);
-          setIsLoading(false);
-        } catch (error) {
-          console.error("Error fetching apps from library:", error);
-        }
-      } else {
-        setIsLoading(false);
-        setApps([]);
-      }
-    }
-
-    getAppsFromLibrary();
-  }, [UserDataContext]);
+    setSortedApps(userLibraryApps);
+    setIsLoading(false);
+  }, [appsData, userLibraryIds]);
 
   useEffect(() => {
-    const appsCopy = [...apps];
+    let sortedAppsCopy = [...userLibraryApps];
 
     switch (sortBy) {
       case "Your Rank":
         break;
       case "Release Date":
-        sortAppsByReleaseDate(appsCopy);
+        sortAppsByReleaseDate(sortedAppsCopy);
         break;
       case "Name":
-        sortAppsByName(appsCopy);
+        sortAppsByName(sortedAppsCopy);
         break;
       case "Price":
-        sortAppsByLowestPrice(appsCopy);
+        sortAppsByLowestPrice(sortedAppsCopy);
         break;
       case "Review Score":
-        sortAppsByReviews(appsCopy);
+        sortAppsByReviews(sortedAppsCopy);
         break;
       case "Discount":
-        sortAppsByDiscount(appsCopy);
+        sortAppsByDiscount(sortedAppsCopy);
         break;
       default:
         break;
     }
 
     if (searchInput) {
-      const filteredApps = appsCopy.filter((app) =>
+      const filteredApps = sortedAppsCopy.filter((app) =>
         app.title.toLowerCase().includes(searchInput.toLowerCase())
       );
-
       setSortedApps(filteredApps);
     } else {
-      setSortedApps(appsCopy);
+      setSortedApps(sortedAppsCopy);
     }
-  }, [apps, sortBy]);
+
+    setIsLoading(false);
+  }, [appsData, userLibraryIds, sortBy, searchInput]);
 
   const handleDeleteFromLibrary = (appId: string) => {
     if (UserDataContext?.userData) {
       const userId = UserDataContext?.userData._id;
+      console.log(`deleting ${appId} from user ${userId}`)
       deleteFromLibraryMutation.mutateAsync({ userId, appId });
-      setApps(sortedApps.filter((app) => app._id !== appId));
+      setSortedApps(sortedApps.filter((app) => app._id !== appId));
     }
   };
   
@@ -102,10 +89,10 @@ export const Library = () => {
   
   const handleInputChange = (inputValue: string) => {
     setSearchInput(inputValue);
-    handleSearch(inputValue, setSortedApps, apps);
+    handleSearch(inputValue, setSortedApps, sortedApps);
   };
 
-  console.log('apps', apps)
+  console.log('userData in library', UserDataContext?.userData)
 
   return (
     <>

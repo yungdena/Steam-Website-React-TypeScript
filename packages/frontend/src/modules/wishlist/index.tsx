@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import { ButtonWrapper, PurchaseButton } from "../app-page/index.styled";
 import { APP_KEYS } from "../common/consts";
+import { useAppsData } from "../common/context/apps-context";
 import { useUserData } from "../common/context/user-context";
 import { LoaderBig } from "../common/loader/loader";
 import { useGetAppById } from "../common/services/apps.service";
@@ -24,79 +25,65 @@ import { CustomSelect } from "./select/custom-select";
 import Toast from "./toast";
 
 export const Wishlist = () => {
-  const [apps, setApps] = useState<IApp[]>([]);
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
   const [sortBy, setSortBy] = useState("Your Rank");
   const [searchInput, setSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
-  const UserDataContext = useUserData();
-  console.log(
-    "userData wishlist: ",
-    UserDataContext?.userData?.wishlist
-  );
 
+  const UserDataContext = useUserData();
+  const { appsData } = useAppsData();
   const history = useHistory()
-  const getAppByIdMutation = useGetAppById();
   const deleteAppFromWishlistMutation = useDeleteFromWishlist()
   const addToLibraryMutation = useAddToLibrary();
 
-  useEffect(() => {
-    async function getAppsFromWishlist() {
-      try {
-        if (UserDataContext?.userData && apps.length === 0) {
-          const appsResponse = await Promise.all(
-            UserDataContext?.userData.wishlist.map((id) =>
-              getAppByIdMutation.mutateAsync(id)
-            )
-          );
-          setApps(appsResponse);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching apps from wishlist:", error);
-      }
-    }
-
-    getAppsFromWishlist();
-  }, []);
+  const userWishlistIds = UserDataContext?.userData?.wishlist || [];
+  const userWishlistApps = appsData.filter((app) =>
+    userWishlistIds.includes(app._id)
+  );
 
   useEffect(() => {
-    const appsCopy = [...apps];
+    setSortedApps(userWishlistApps);
+    setIsLoading(false);
+  }, [appsData, userWishlistIds]);
+
+  useEffect(() => {
+    let sortedAppsCopy = [...userWishlistApps];
 
     switch (sortBy) {
       case "Your Rank":
         break;
       case "Release Date":
-        sortAppsByReleaseDate(appsCopy);
+        sortAppsByReleaseDate(sortedAppsCopy);
         break;
       case "Name":
-        sortAppsByName(appsCopy);
+        sortAppsByName(sortedAppsCopy);
         break;
       case "Price":
-        sortAppsByLowestPrice(appsCopy);
+        sortAppsByLowestPrice(sortedAppsCopy);
         break;
       case "Review Score":
-        sortAppsByReviews(appsCopy);
+        sortAppsByReviews(sortedAppsCopy);
         break;
       case "Discount":
-        sortAppsByDiscount(appsCopy);
+        sortAppsByDiscount(sortedAppsCopy);
         break;
       default:
         break;
     }
 
     if (searchInput) {
-      const filteredApps = appsCopy.filter((app) =>
+      const filteredApps = sortedAppsCopy.filter((app) =>
         app.title.toLowerCase().includes(searchInput.toLowerCase())
       );
-
       setSortedApps(filteredApps);
     } else {
-      setSortedApps(appsCopy);
+      setSortedApps(sortedAppsCopy);
     }
-  }, [apps, sortBy]);
-  
+
+    setIsLoading(false);
+  }, [appsData, userWishlistIds, sortBy, searchInput]);
+
   const handleSortChange = (selectedOption: string, setSortBy: any) => {
     setSortBy(selectedOption);
   };
@@ -105,8 +92,6 @@ export const Wishlist = () => {
     if (UserDataContext?.userData) {
       const userId = UserDataContext.userData._id;
       deleteAppFromWishlistMutation.mutateAsync({ userId, appId });
-
-      setApps((prevApps) => prevApps.filter((app) => app._id !== appId));
 
       setSortedApps((prevSortedApps) =>
         prevSortedApps.filter((app) => app._id !== appId)
@@ -125,7 +110,7 @@ export const Wishlist = () => {
   const handleAddToLibrary = async (appId: string) => {
     const user = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT);
     if (user) {
-      const userId: string = JSON.parse(user)._id;
+      const userId: string = JSON.parse(user);
       await addToLibraryMutation.mutateAsync({ userId, appId });
       handleDeleteFromWishlist(appId);
       setShowToast(true);
@@ -145,8 +130,10 @@ export const Wishlist = () => {
 
   const handleInputChange = (inputValue: string) => {
     setSearchInput(inputValue);
-    handleSearch(inputValue, setSortedApps, apps);
+    handleSearch(inputValue, setSortedApps, sortedApps);
   };
+
+  console.log("userData in Wishlist", UserDataContext?.userData);
 
   return (
     <>
@@ -173,7 +160,7 @@ export const Wishlist = () => {
           <WishlistContainer>
             {isLoading ? (
               <LoaderBig marginTop="5rem" />
-            ) : apps.length > 0 ? (
+            ) : sortedApps.length > 0 ? (
               sortedApps.map((item) => (
                 <WishlistItem key={item._id}>
                   <ItemImage src={item.titleImage} />

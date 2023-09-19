@@ -98,7 +98,7 @@ const handleAddToLibrary = async () => {
 
     if (UserDataContext?.userData) {
       const updatedUserData = { ...UserDataContext.userData } as IUser;
-      updatedUserData.library.push(appId);
+      updatedUserData.apps.push(appId);
       UserDataContext.setUser(updatedUserData);
     }
   } else {

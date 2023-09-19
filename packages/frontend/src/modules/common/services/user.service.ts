@@ -7,7 +7,6 @@ type IBody = {
 };
 
 const addToLibrary = async (data: IBody) => {
-  console.log('mutation start')
   const response = await fetch(`${BASE_URL}/user/library`, {
     method: "POST",
     headers: {
@@ -15,9 +14,7 @@ const addToLibrary = async (data: IBody) => {
     },
     body: JSON.stringify(data),
   });
-  console.log("mutation response", response);
   const responseData = await response.json();
-  console.log("mutation response Json", responseData);
   return responseData;
 };
 
@@ -44,7 +41,7 @@ const deleteFromLibrary = async (data: IBody) => {
   });
   console.log("mutation response", response);
   const responseData = await response.json();
-  console.log("mutation response Json", responseData);
+  console.log("User's delete from library mutation", responseData);
   return responseData;
 };
 
@@ -69,7 +66,7 @@ const getUserById = async (userId: string) => {
     },
   });
   const responseData = await response.json();
-  console.log("response: ", responseData);
+  console.log("get user by id mutation: ", responseData);
   return responseData;
 };
 

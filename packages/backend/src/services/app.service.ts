@@ -34,7 +34,6 @@ class AppsService {
       return;
     }
 
-    console.log("getAppByTitle Service: ", app);
     res.send(app);
   }
 
@@ -46,12 +45,10 @@ class AppsService {
       return;
     }
 
-    console.log("getAppById Service: ", app);
     res.send(app);
   }
 
   async createApp({ app, res }: ICreatePayload) {
-    console.log("App", app);
     const createdApp = await AppModel.create(app);
 
     if (!createdApp) {
@@ -59,20 +56,14 @@ class AppsService {
       return;
     }
 
-    console.log("createdApp: ", createdApp);
-
     res.send(createdApp);
   }
 
   async updateApp({ app, res, id }: IUpdatePayload) {
-    console.log("App", app);
-    console.log("id", id);
     try {
       const updatedApp = await AppModel.findOneAndUpdate({ _id: id }, app, {
         new: true,
       });
-
-      console.log("updatedApp: ", updatedApp);
 
       res.send(updatedApp);
     } catch (err) {

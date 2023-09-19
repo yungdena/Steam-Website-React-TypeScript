@@ -57,11 +57,19 @@ export const MainRouter = () => (
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.ABOUT}
       />
       <Route
-        component={Wishlist}
+        component={() => (
+          <AppsDataProvider>
+            <Wishlist />
+          </AppsDataProvider>
+        )}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.WISHLIST}
       />
       <Route
-        component={Library}
+        component={() => (
+          <AppsDataProvider>
+            <Library />
+          </AppsDataProvider>
+        )}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY}
       />
     </Switch>
