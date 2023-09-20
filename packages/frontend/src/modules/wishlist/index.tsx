@@ -112,13 +112,13 @@ export const Wishlist = () => {
     if (user) {
       const userId: string = JSON.parse(user);
       await addToLibraryMutation.mutateAsync({ userId, appId });
-      handleDeleteFromWishlist(appId);
       setShowToast(true);
 
       const updatedUserData = { ...UserDataContext?.userData } as IUser | null;
       if (updatedUserData) {
-        updatedUserData.library.push(appId);
+        updatedUserData.apps.push(appId);
         UserDataContext?.setUser(updatedUserData);
+        handleDeleteFromWishlist(appId);
       }
     } else {
       handleNavigate(
