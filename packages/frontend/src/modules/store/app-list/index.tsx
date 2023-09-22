@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
+import { useAppsData } from '../../common/context/apps-context';
 import { ContentContainer, AppsList, AppContainer, AppImage, AppImageContainer, AppTitle, AppTextContainer, AppPrice, AppLink, AppReleaseDate, AppReviews, SearchBarContainer, SearchBarInput, SearchBarButton, SearchBarSortByTitle, SearchBarSortBySelect, SearchBarOption, Dropdown } from './index.styled';
 import { PriceContainer, PriceAmounts, PricePercent, OriginalPrice, FinalPrice } from '../../home/offers/index.styled';
-import { useGetAllApps } from '../../common/services/apps.service';
 import { IApp } from '../../common/types/app.interface';
 import { calculatePercentageDecrease } from '../../common/utils/countPercentage';
 import { LoaderBig } from '../../common/loader/loader';
@@ -13,26 +13,19 @@ import { sortAppsByHighestPrice, sortAppsByLowestPrice, sortAppsByName, sortApps
 import { handleNavigate, handleSearch, handleSearchInputChange, handleSortChange } from './utils/handlers';
 
 export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number | null, minHeight?: string, margin?: string }) => {
-  const [apps, setApps] = useState<IApp[]>([]);
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
   const [sortBy, setSortBy] = useState("Relevance");
-  const [searchInput, setSearchInput] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
-  const getAllAppsMutation = useGetAllApps();
 
-  useEffect(() => {
-    async function fetchAllApps() {
-      const data = await getAllAppsMutation.mutateAsync();
-      console.log("response on front: ", data);
-      setApps(data);
-      setIsLoading(false);
-    }
-    fetchAllApps();
-  }, []);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchUrl = searchParams.get("search");
+  const [searchInput, setSearchInput] = useState<string>(searchUrl || "");
+
+  const { isLoadingApps, appsData } = useAppsData();
 
 useEffect(() => {
-  const appsCopy = [...apps];
+  const appsCopy = [...appsData];
 
   switch (sortBy) {
     case "Relevance":
@@ -65,11 +58,12 @@ useEffect(() => {
   } else {
     setSortedApps(appsCopy);
   }
-}, [apps, sortBy]);
+}, [appsData, sortBy]);
+
 
   return (
     <ContentContainer minHeight={minHeight}>
-      {isLoading ? (
+      {isLoadingApps ? (
         <LoaderBig marginTop="15rem" />
       ) : (
         <>
@@ -78,7 +72,7 @@ useEffect(() => {
               onChange={(event) => handleSearchInputChange(event, setSearchInput)}
               placeholder="enter search term or tag"
             />
-            <SearchBarButton onClick={() => handleSearch(searchInput, setSortedApps, apps)}>Search</SearchBarButton>
+            <SearchBarButton onClick={() => handleSearch(searchInput, setSortedApps, appsData)}>Search</SearchBarButton>
             <SearchBarSortByTitle>Sort by</SearchBarSortByTitle>
             <SearchBarSortBySelect onChange={(event) => handleSortChange(event, setSortBy)} value={sortBy}>
               <SearchBarOption>Relevance</SearchBarOption>
@@ -91,7 +85,7 @@ useEffect(() => {
           </SearchBarContainer>
           <AppsList margin={margin}>
             {sortedApps
-              .slice(0, sliceIndex ? sliceIndex : apps.length)
+              .slice(0, sliceIndex ? sliceIndex : appsData.length)
               .map((app) => (
                 <AppLink key={app._id} onClick={() => handleNavigate(app._id, history)}>
                   <AppContainer>

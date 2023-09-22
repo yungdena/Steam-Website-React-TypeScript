@@ -33,8 +33,12 @@ import { formatDate } from "../common/utils/formatDate";
 import { useAppsData } from "../common/context/apps-context";
 import { useBannersData } from "../common/context/banners-context";
 import { useUserData } from "../common/context/user-context";
+import SearchApps from "./search-dropdown";
+import { IApp } from "../common/types/app.interface";
 
 export const HomePage = () => {
+  const [filteredApps, setFilteredApps] = useState<IApp[] | null>(null)
+  const [searchQuery, setSearchQuery] = useState("");
   const { isLoadingApps, appsData } = useAppsData();
   const { isLoadingBanners, bannersData } = useBannersData();
   const history = useHistory();
@@ -70,6 +74,15 @@ export const HomePage = () => {
     );
   };
 
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    const filteredApps = appsData.filter((app) =>
+      app.title.toLowerCase().includes(query.toLowerCase())
+    );
+
+    setFilteredApps(filteredApps);
+  };
+
   return (
     <>
       <Header />
@@ -84,7 +97,8 @@ export const HomePage = () => {
           >
             Wishlist ({UserDataContext?.userData?.wishlist.length})
           </WishlistButton>
-          <HomepageHeader />
+          <HomepageHeader onSearch={handleSearch} />
+          <SearchApps apps={filteredApps} searchQuery={searchQuery} />
           {isLoadingBanners ? (
             <LoaderBig marginTop="10rem" marginBottom="10rem" />
           ) : (
