@@ -11,6 +11,12 @@ export class UserController {
     await this.userService.getUserById(id, res);
   }
 
+  async getUserByName(req: Request, res: Response) {
+    const { name } = req.body;
+
+    await this.userService.getUserByName(name, res);
+  }
+
   async addToWishlist(req: Request, res: Response) {
     const { userId, appId } = req.body;
 

@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId, Model } from 'mongoose';
+import { UserModel } from '../models/User';
 
 export const appSchema = Joi.object().keys({
   title: Joi.string().required(),
@@ -54,3 +55,24 @@ export const isExist =
       next(error);
     }
   };
+
+export const userExistsByName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { name } = req.body;
+    const user = await UserModel.findOne({
+      name: { $regex: new RegExp(name, "i") },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
