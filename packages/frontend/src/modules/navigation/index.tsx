@@ -12,6 +12,7 @@ import { Wishlist } from '../wishlist';
 import { Library } from '../library';
 import { AppsDataProvider } from '../common/context/apps-context';
 import { BannersDataProvider } from '../common/context/banners-context';
+import { FriendList } from '../friend-list';
 
 export const MainRouter = () => (
   <Router>
@@ -71,6 +72,10 @@ export const MainRouter = () => (
           </AppsDataProvider>
         )}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY}
+      />
+      <Route
+        component={FriendList}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.FRIENDS}
       />
     </Switch>
   </Router>

@@ -34,5 +34,6 @@ export const ROUTER_KEYS = {
   ABOUT: 'about',
   ADMIN: 'admin',
   WISHLIST: 'wishlist',
-  LIBRARY: 'library'
+  LIBRARY: 'library',
+  FRIENDS: 'friends',
 };

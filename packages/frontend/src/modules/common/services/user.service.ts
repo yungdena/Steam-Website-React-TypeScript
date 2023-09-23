@@ -70,8 +70,21 @@ const getUserById = async (userId: string) => {
   return responseData;
 };
 
+const getUserByName = async (name: string) => {
+  const response = await fetch(`${BASE_URL}/user/search`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name }),
+  });
+  const responseData = await response.json();
+  return responseData;
+};
+
 export const useAddToLibrary = () => useMutation(addToLibrary);
 export const useAddToWishlist = () => useMutation(addToWishlist);
 export const useDeleteFromLibrary = () => useMutation(deleteFromLibrary);
 export const useDeleteFromWishlist = () => useMutation(deleteFromWishlist);
 export const useGetUserById = () => useMutation(getUserById);
+export const useGetUserByName = () => useMutation(getUserByName);
