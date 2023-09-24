@@ -42,3 +42,51 @@ export const UserName = styled.div`
   padding-top: 2.5rem;
   padding-left: 2.5rem;
 `;
+
+export const ButtonsMenu = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  min-height: 600px;
+`
+
+export const MenuTitle = styled.div`
+  color: #7092a5;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  padding: 12px 0 0 8px;
+  font-size: 11px;
+`;
+
+export const ButtonWrapper = styled.div`
+  padding: 10px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+`;
+
+export const Button = styled.div<any>`
+  color: #ebebeb;
+  font-weight: 300;
+  font-size: 14px;
+  background-repeat: no-repeat;
+  background-size: 16px 192px;
+  display: inline-block;
+  line-height: 16px;
+  padding-left: 35px;
+  background-image: url(https://community.cloudflare.steamstatic.com/public/images/iconsheet_friends.png?v=5);
+  background-position: ${(props) => props.backgroundPosition};
+`;
+
+export const MenuContainer = styled.div`
+  width: 100%;
+  display: flex;
+`

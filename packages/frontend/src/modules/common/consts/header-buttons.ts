@@ -102,6 +102,10 @@ export const NAME_DROPDOWN_DATA = {
       linkTo: "/store",
     },
     {
+      title: "FRIENDS",
+      linkTo: "/friends",
+    },
+    {
       title: "LIBRARY",
       linkTo: "/library",
     },
