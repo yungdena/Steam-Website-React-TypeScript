@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Response } from 'express';
+import crypto from 'crypto';
 
 import { IUser, UserModel } from '../models/User';
 
@@ -21,6 +22,17 @@ export class AuthService {
     return jwt.sign({ id, name, email }, JWT_SECRET, { expiresIn: '7d' });
   }
 
+  async generateFriendCode(userId: string) {
+    console.log('generating friend code', userId);
+    const hash = crypto.createHash("sha256");
+    hash.update(userId);
+    const hashValue = hash.digest("hex");
+
+    const friendCode = hashValue.substring(0, 8);
+
+    return friendCode;
+  }
+
   async signUp(userData: IUser, res: Response) {
     console.log('signUp');
     console.log('userdata', userData);
@@ -31,6 +43,10 @@ export class AuthService {
       res.status(400).send({ message: 'sign up failed' });
       return;
     }
+
+    const friendCode = await this.generateFriendCode(user._id.toString());
+    user.friendCode = friendCode;
+    await user.save();
 
     res.send(user);
   }

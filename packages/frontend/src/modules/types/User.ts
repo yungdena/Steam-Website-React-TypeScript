@@ -7,4 +7,6 @@ export interface IUser extends Document {
   wishlist: string[];
   apps: string[];
   _id: string;
+  friends: string[];
+  friendCode: string;
 }
