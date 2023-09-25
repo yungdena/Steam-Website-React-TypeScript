@@ -20,7 +20,6 @@ export const Header = styled.div`
 export const CodeBlockTop = styled.div`
   background-color: rgba(0, 0, 0, 0.4);
   padding: 20px 20px 20px 20px;
-  height: 218px;
 `;
 
 export const CodeBlockMid = styled.div`
@@ -90,5 +89,50 @@ export const FriendCode = styled.div`
   color: #f5f5f5;
   letter-spacing: .02em;
   padding: 14px;
-}
+`;
+
+export const UserContainer = styled.div`
+  width: 620px;
+  height: 144px;
+  padding: 15px;
+  background: #2c3842;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  display: flex;
+`;
+
+export const UserAvatar = styled.img`
+  width: 80px;
+  height: 80px;
+  margin-right: 1rem;
+`
+
+export const UserName = styled.div`
+  font-size: 17px;
+  font-weight: normal;
+  line-height: 20px;
+  color: #f5f5f5;
+  margin-bottom: -7px;
+  max-width: 620px;
+`;
+
+export const Button = styled.button`
+  all: unset;
+  background: linear-gradient(to right, #47bfff 0%, #1a44c2 60%);
+  background-position: 25%;
+  background-size: 330% 100%;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: normal;
+  color: #f5f5f5;
+  letter-spacing: 0.02em;
+  padding: 5px 10px;
+  margin: 2rem 0 0 auto;
+  height: fit-content;
+  width: fit-content;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(110%);
+  }
 `;

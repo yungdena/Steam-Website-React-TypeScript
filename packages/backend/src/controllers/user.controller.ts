@@ -11,8 +11,14 @@ export class UserController {
     await this.userService.getUserById(id, res);
   }
 
+  async getUserByFriendCode(req: Request, res: Response) {
+    const { friendcode } = req.params;
+    console.log('friendCode: ',friendcode);
+    await this.userService.getUserByFriendCode(friendcode, res);
+  }
+
   async getUserByName(req: Request, res: Response) {
-    const { name } = req.body;
+    const { name } = req.params;
 
     await this.userService.getUserByName(name, res);
   }

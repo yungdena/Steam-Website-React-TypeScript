@@ -6,8 +6,33 @@ export class UserService {
     try {
       const user = await UserModel.findById(userId);
 
-      res.send(user);
+      if (user) {
+        const { password, ...userWithoutPassword } = user.toObject();
+
+        res.send(userWithoutPassword);
+      } else {
+        res.status(404).send({ message: "User not found" });
+      }
+
     } catch (error) {
+      res.status(404).send({ message: "User not found" });
+    }
+  }
+
+  async getUserByFriendCode(friendCode: string, res: Response) {
+    console.log("friendCode: ", friendCode);
+    try {
+      const user = await UserModel.findOne({ friendCode });
+
+      if (user) {
+        const { password, ...userWithoutPassword } = user.toObject();
+
+        res.send(userWithoutPassword);
+      } else {
+        res.status(404).send({ message: "User not found" });
+      }
+    } catch (error) {
+      console.log("friendCode: ", error);
       res.status(404).send({ message: "User not found" });
     }
   }
@@ -18,12 +43,16 @@ export class UserService {
         name: { $regex: new RegExp(name, "ig") },
       });
 
-      res.send(users);
+      const usersWithoutPassword = users.map((user) => {
+        const { password, ...userWithoutPassword } = user.toObject();
+        return userWithoutPassword;
+      });
+
+      res.send(usersWithoutPassword);
     } catch (error) {
       res.status(500).send({ message: "Internal server error" });
     }
   }
-
   async addToWishlist(userId: string, appId: string, res: Response) {
     try {
       const user = await UserModel.findById(userId);

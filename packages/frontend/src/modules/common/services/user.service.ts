@@ -59,7 +59,7 @@ const deleteFromWishlist = async (data: IBody) => {
 
 const getUserById = async (userId: string) => {
   console.log("mutation start");
-  const response = await fetch(`${BASE_URL}/user/${userId}`, {
+  const response = await fetch(`${BASE_URL}/user/id/${userId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -71,14 +71,25 @@ const getUserById = async (userId: string) => {
 };
 
 const getUserByName = async (name: string) => {
-  const response = await fetch(`${BASE_URL}/user/search`, {
-    method: "POST",
+  const response = await fetch(`${BASE_URL}/user/name/${name}`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ name }),
   });
   const responseData = await response.json();
+  return responseData;
+};
+
+const getUserByFriendCode = async (friendCode: string) => {
+  const response = await fetch(`${BASE_URL}/user/friendcode/${friendCode}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const responseData = await response.json();
+  console.log('get by code response', responseData)
   return responseData;
 };
 
@@ -88,3 +99,4 @@ export const useDeleteFromLibrary = () => useMutation(deleteFromLibrary);
 export const useDeleteFromWishlist = () => useMutation(deleteFromWishlist);
 export const useGetUserById = () => useMutation(getUserById);
 export const useGetUserByName = () => useMutation(getUserByName);
+export const useGetUserByFriendCode = () => useMutation(getUserByFriendCode);

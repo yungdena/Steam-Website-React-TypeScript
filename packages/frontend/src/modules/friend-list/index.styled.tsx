@@ -89,4 +89,5 @@ export const Button = styled.div<any>`
 export const MenuContainer = styled.div`
   width: 100%;
   display: flex;
+  gap: 1rem;
 `
