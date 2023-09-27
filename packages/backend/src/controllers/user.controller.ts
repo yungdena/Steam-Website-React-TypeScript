@@ -13,7 +13,7 @@ export class UserController {
 
   async getUserByFriendCode(req: Request, res: Response) {
     const { friendcode } = req.params;
-    console.log('friendCode: ',friendcode);
+    console.log("friendCode: ", friendcode);
     await this.userService.getUserByFriendCode(friendcode, res);
   }
 
@@ -57,6 +57,24 @@ export class UserController {
     const { id } = req.params;
 
     await this.userService.getLibrary(id, res);
+  }
+
+  async sendFriendRequest(req: Request, res: Response) {
+    const { senderId, receiverId } = req.body;
+
+    await this.userService.sendFriendRequest(senderId, receiverId, res);
+  }
+
+  async respondToFriendRequest(req: Request, res: Response) {
+    const { receiverId, senderId, response } = req.body;
+
+    await this.userService.respondToFriendRequest(receiverId, senderId, response, res);
+  }
+
+  async removeFriend(req: Request, res: Response) {
+    const { userId, friendId } = req.body;
+
+    await this.userService.removeFriend(userId, friendId, res);
   }
 }
 

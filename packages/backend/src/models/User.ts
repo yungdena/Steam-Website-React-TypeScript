@@ -1,6 +1,7 @@
 import { Document, Model, model, Schema } from 'mongoose';
 
 export interface IUser extends Document {
+  avatar?: string;
   name: string;
   email: string;
   password: string;
@@ -9,6 +10,14 @@ export interface IUser extends Document {
   apps: string[];
   friends: string[];
   friendCode: string;
+  friendRequests: Array<{
+    senderId: Schema.Types.ObjectId;
+    status: "pending" | "accepted" | "declined";
+  }>;
+  sentFriendRequests: Array<{
+    receiverId: Schema.Types.ObjectId;
+    status: "pending" | "accepted" | "declined";
+  }>;
 }
 
 const userSchema: Schema<any, Model<IUser>> = new Schema({
@@ -45,6 +54,18 @@ const userSchema: Schema<any, Model<IUser>> = new Schema({
     type: String,
     unique: true,
   },
+  friendRequests: [
+    {
+      senderId: { type: Schema.Types.ObjectId, ref: "User" },
+      status: { type: String, enum: ["pending", "accepted", "declined"] },
+    },
+  ],
+  sentFriendRequests: [
+    {
+      receiverId: { type: Schema.Types.ObjectId, ref: "User" },
+      status: { type: String, enum: ["pending", "accepted", "declined"] },
+    },
+  ]
 });
 
 export const UserModel: Model<IUser> = model<IUser>('User', userSchema);
