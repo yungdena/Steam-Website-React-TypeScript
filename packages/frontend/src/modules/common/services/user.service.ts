@@ -93,6 +93,61 @@ const getUserByFriendCode = async (friendCode: string) => {
   return responseData;
 };
 
+interface IFriendRequest {
+  senderId: string;
+  receiverId: string;
+}
+
+const sendFriendRequest = async (data: IFriendRequest) => {
+  const response = await fetch(`${BASE_URL}/user/send-friend-request`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const responseData = await response.json();
+  return responseData;
+};
+
+interface IFriendRespond {
+  senderId: string;
+  receiverId: string;
+}
+
+
+const respondToFriendRequest = async (data: IFriendRespond) => {
+  const response = await fetch(`${BASE_URL}/user/respond-to-friend-request`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const responseData = await response.json();
+  return responseData;
+};
+
+interface IFriendRemove {
+  senderId: string;
+  receiverId: string;
+}
+
+const removeFriend = async (data: IFriendRemove) => {
+  const response = await fetch(`${BASE_URL}/user/remove-friend`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const responseData = await response.json();
+  return responseData;
+};
+
+export const useRemoveFriend = () => useMutation(removeFriend);
+export const useRespondToFriendRequest = () => useMutation(respondToFriendRequest);
+export const useSendFriendRequest = () => useMutation(sendFriendRequest);
 export const useAddToLibrary = () => useMutation(addToLibrary);
 export const useAddToWishlist = () => useMutation(addToWishlist);
 export const useDeleteFromLibrary = () => useMutation(deleteFromLibrary);

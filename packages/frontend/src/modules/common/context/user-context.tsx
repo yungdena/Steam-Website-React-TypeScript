@@ -26,7 +26,7 @@ export const UserDataProvider = ({ children }: any) => {
         setUserData(data);
       }
     }
-  
+
     if (storedUserId) {
       fetchUserById(storedUserId)
     }
