@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/Steam-Website-React-TypeScript/static/css/main.95b829b5.css",
+    "main.js": "/Steam-Website-React-TypeScript/static/js/main.7a8bf837.js",
+    "static/media/MotivaSansThin.ttf": "/Steam-Website-React-TypeScript/static/media/MotivaSansThin.d843c289bb62286d2729.ttf",
+    "static/media/MotivaSansRegular.woff.ttf": "/Steam-Website-React-TypeScript/static/media/MotivaSansRegular.woff.a576eb133febecaf8aef.ttf",
+    "static/media/MotivaSansBold.woff.ttf": "/Steam-Website-React-TypeScript/static/media/MotivaSansBold.woff.f39c6a7cff3590390c93.ttf",
+    "index.html": "/Steam-Website-React-TypeScript/index.html",
+    "main.95b829b5.css.map": "/Steam-Website-React-TypeScript/static/css/main.95b829b5.css.map",
+    "main.7a8bf837.js.map": "/Steam-Website-React-TypeScript/static/js/main.7a8bf837.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.95b829b5.css",
+    "static/js/main.7a8bf837.js"
+  ]
+}
