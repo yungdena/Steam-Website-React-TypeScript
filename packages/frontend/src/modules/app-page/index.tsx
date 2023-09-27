@@ -51,7 +51,7 @@ export const AppPage = () => {
 
   useEffect(() => {
     async function getUsersLibrary() {
-      if (UserDataContext?.userData?.library.includes(id)) {
+      if (UserDataContext?.userData?.apps.includes(id)) {
         setAddedToLibrary(true);
       }
     }

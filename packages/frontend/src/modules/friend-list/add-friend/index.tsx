@@ -1,7 +1,7 @@
 import { useUserData } from "../../common/context/user-context";
 import { CodeBlockTop, CodeBlockBottom, MainContainer, Header, CodeBlockMid, CodeBlockHeading, FriendCode, CodeBlockText, CodeBlockInput, UserContainer, UserAvatar, UserName, Button } from "./index.styled"
 import { useGetUserByFriendCode, useSendFriendRequest } from "../../common/services/user.service";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IUser } from "../../types/User";
 
 export const AddFriend = () => {
@@ -49,6 +49,16 @@ export const AddFriend = () => {
       }
     }, 1000);
   };
+
+  useEffect(() => {
+    const isRequestSent = UserDataContext?.userData?.sentFriendRequests.some(
+      (request) => request.receiverId === foundUser?._id
+    );
+    
+    if (isRequestSent) {
+      setRequestSent(true);
+    }
+  }, [foundUser, UserDataContext?.userData?.sentFriendRequests]);
 
   return (
     <MainContainer>

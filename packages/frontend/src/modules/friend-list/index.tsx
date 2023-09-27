@@ -4,6 +4,7 @@ import { Header } from "../header"
 import { Footer } from "../home/footer";
 import { AddFriend } from "./add-friend";
 import { Background, BackgroundImage, Button, ButtonsMenu, ButtonWrapper, MainContainer, MenuContainer, MenuTitle, UserContainer, UserName } from "./index.styled"
+import { PendingInvites } from "./pending-invites";
 import { YourFriends } from "./your-friends";
 
 export const FriendList = () => {
@@ -17,7 +18,12 @@ export const FriendList = () => {
       case "AddFriend":
         return <AddFriend />;
       case "PendingInvites":
-        return 
+        return (
+          <PendingInvites
+            receivedInvites={UserDataContext?.userData?.friendRequests}
+            sentInvites={UserDataContext?.userData?.sentFriendRequests}
+          />
+        );
       case "Blocked":
         return 
       default:
@@ -45,7 +51,7 @@ export const FriendList = () => {
                 <ButtonWrapper onClick={() => setActiveComponent("AddFriend")}>
                   <Button backgroundPosition="0 -176px">Add a Friend</Button>
                 </ButtonWrapper>
-                <ButtonWrapper>
+                <ButtonWrapper onClick={() => setActiveComponent("PendingInvites")}>
                   <Button backgroundPosition="0 -32px">Pending invites</Button>
                 </ButtonWrapper>
                 <ButtonWrapper>
