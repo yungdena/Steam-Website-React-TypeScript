@@ -66,9 +66,14 @@ export class UserController {
   }
 
   async respondToFriendRequest(req: Request, res: Response) {
-    const { receiverId, senderId, response } = req.body;
+    const { senderId, receiverId, response } = req.body;
 
-    await this.userService.respondToFriendRequest(receiverId, senderId, response, res);
+    await this.userService.respondToFriendRequest(
+      senderId,
+      receiverId,
+      response,
+      res
+    );
   }
 
   async removeFriend(req: Request, res: Response) {

@@ -3,12 +3,13 @@ import { useUserData } from "../common/context/user-context"
 import { Header } from "../header"
 import { Footer } from "../home/footer";
 import { AddFriend } from "./add-friend";
-import { Background, BackgroundImage, Button, ButtonsMenu, ButtonWrapper, MainContainer, MenuContainer, MenuTitle, UserContainer, UserName } from "./index.styled"
+import { Avatar, Background, BackgroundImage, Button, ButtonsMenu, ButtonWrapper, MainContainer, MenuContainer, MenuTitle, UserContainer, UserName } from "./index.styled"
 import { PendingInvites } from "./pending-invites";
 import { YourFriends } from "./your-friends";
-
+const avatar =
+  "https://res.cloudinary.com/didkbrlcz/image/upload/v1695624961/System/b5bd56c1aa4644a474a2e4972be27ef9e82e517e_full_pfrgqw.jpg";
 export const FriendList = () => {
-  const [activeComponent, setActiveComponent] = useState("AddFriend");
+  const [activeComponent, setActiveComponent] = useState("YourFriends");
   const UserDataContext = useUserData();
 
   const renderComponent = () => {
@@ -38,6 +39,7 @@ export const FriendList = () => {
         <BackgroundImage>
           <MainContainer>
             <UserContainer>
+              <Avatar src={avatar} />
               <UserName>{UserDataContext?.userData?.name}</UserName>
             </UserContainer>
             <MenuContainer>

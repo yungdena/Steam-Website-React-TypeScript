@@ -113,8 +113,8 @@ const sendFriendRequest = async (data: IFriendRequest) => {
 interface IFriendRespond {
   senderId: string;
   receiverId: string;
+  response: string;
 }
-
 
 const respondToFriendRequest = async (data: IFriendRespond) => {
   const response = await fetch(`${BASE_URL}/user/respond-to-friend-request`, {

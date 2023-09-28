@@ -20,15 +20,14 @@ export const BackgroundImage = styled.div`
 `;
 
 export const UserContainer = styled.div`
-  width: 100%;
   height: 128px;
+  display: flex;
   background: url(${backgroundGradient}) center bottom no-repeat;
-  margin: 0 auto;
 `;
 
 export const MainContainer = styled.div`
   margin: 0 auto;
-  max-width: 1050px;
+  max-width: 1440px;
   width: 100vw;
   padding-top: 6.5rem;
 `;
@@ -40,7 +39,7 @@ export const UserName = styled.div`
   font-size: 26px;
   font-weight: 300;
   padding-top: 2.5rem;
-  padding-left: 2.5rem;
+  padding-left: 1rem;
 `;
 
 export const ButtonsMenu = styled.div`
@@ -88,6 +87,14 @@ export const Button = styled.div<any>`
 
 export const MenuContainer = styled.div`
   width: 100%;
+  justify-content: center;
   display: flex;
   gap: 1rem;
 `
+
+export const Avatar = styled.img`
+  width: 64px;
+  height: 64px;
+  margin-top: 2rem;
+  margin-left: 10rem;
+`;

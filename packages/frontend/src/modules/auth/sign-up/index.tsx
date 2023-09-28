@@ -27,6 +27,7 @@ import {
 } from './index.styled';
 import AppContainer from '../../app';
 import { Loader } from '../../common/loader/loader';
+import { useUserData } from '../../common/context/user-context';
 
 const COUNTRY_API_URL = "https://get.geojs.io/v1/ip/country.json";
 
@@ -38,7 +39,7 @@ export const SignUp: React.FC = () => {
   const [isSignedEmail, setIsSignedEmail] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
   const [trueEmail, setTrueEmail] = useState(true);
-  const [privacyCheck, setPrivacyCheck] = useState(true);
+  const UserDataContext = useUserData();
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -116,6 +117,7 @@ export const SignUp: React.FC = () => {
         password,
         country,
       });
+      UserDataContext?.setUser(user);
 
       console.log("user", user);
       localStorage.setItem(
@@ -125,7 +127,7 @@ export const SignUp: React.FC = () => {
     }
 
     setIsLoading(false);
-
+    
     if (isValid) {
       history.push(route);
     } else {
@@ -145,11 +147,12 @@ export const SignUp: React.FC = () => {
           {formik.errors.name && formik.touched.name && (
             <ErrorMessage>{formik.errors.name}</ErrorMessage>
           )}
-          {formik.values.confirmPassword !== formik.values.password && (
-            <ErrorMessage>
-              Please make sure that your passwords are identical
-            </ErrorMessage>
-          )}
+          {formik.values.confirmPassword !== formik.values.password &&
+            formik.touched.confirmPassword && formik.touched.password && (
+              <ErrorMessage>
+                Please make sure that your passwords are identical
+              </ErrorMessage>
+            )}
           {SIGNUP_INPUTS_2.map((input) => (
             <FormControl key={input.id}>
               <Label>{input.label}</Label>
