@@ -111,8 +111,8 @@ const sendFriendRequest = async (data: IFriendRequest) => {
 };
 
 interface IFriendRespond {
-  senderId: string;
   receiverId: string;
+  senderId: string;
   response: string;
 }
 

@@ -73,8 +73,8 @@ export class UserService {
         return;
       }
 
-      sender.sentFriendRequests.push({ receiverId, status: "pending" });
-      receiver.friendRequests.push({ senderId, status: "pending" });
+      sender.sentFriendRequests.push({ senderId, receiverId, status: "pending" });
+      receiver.friendRequests.push({ senderId, receiverId, status: "pending" });
 
       await sender.save();
       await receiver.save();
@@ -89,13 +89,13 @@ export class UserService {
   }
 
   async respondToFriendRequest(
-    userId: ObjectId,
     senderId: ObjectId,
+    receiverId: ObjectId,
     response: string,
     res: Response
   ) {
     try {
-      const receiver = await UserModel.findById(userId);
+      const receiver = await UserModel.findById(receiverId);
       const sender = await UserModel.findById(senderId);
 
       if (!receiver || !sender) {
@@ -114,7 +114,7 @@ export class UserService {
       const friendRequestFromReceiver = sender.sentFriendRequests.find(
         (request) =>
           request.receiverId &&
-          request.receiverId.toString() === userId.toString() &&
+          request.receiverId.toString() === receiverId.toString() &&
           request.status === "pending"
       );
 
@@ -135,40 +135,44 @@ export class UserService {
         return;
       }
 
-      if (response === "accepted") {
-        friendRequestFromSender.status = "accepted";
-        friendRequestFromReceiver.status = "accepted";
-
-        receiver.friends.push(senderId.toString());
-        sender.friends.push(userId.toString());
-
+      if (response === "accepted" || response === "declined") {
         sender.sentFriendRequests = sender.sentFriendRequests.filter(
-          (request) =>
-            request.receiverId &&
-            request.receiverId.toString() === userId.toString() &&
-            request.status === "pending"
+          (request) => {
+            if (
+              request.receiverId &&
+              request.receiverId.toString() === receiverId.toString() &&
+              (request.status === "pending" ||
+                request === friendRequestFromReceiver)
+            ) {
+              if (request.status === "accepted") {
+                receiver.friends.push(senderId.toString());
+                sender.friends.push(receiverId.toString());
+              }
+              return false;
+            }
+            return true;
+          }
         );
 
-        receiver.friendRequests = receiver.friendRequests.filter(
-          (request) =>
+        receiver.friendRequests = receiver.friendRequests.filter((request) => {
+          if (
             request.senderId &&
             request.senderId.toString() === senderId.toString() &&
-            request.status === "pending"
-        );
+            (request.status === "pending" ||
+              (request.status === "accepted" &&
+                request === friendRequestFromSender))
+          ) {
+            request.status = "accepted";
+            if (request.status === "accepted") {
+              receiver.friends.push(senderId.toString());
+              sender.friends.push(receiverId.toString());
+            }
+            return false;
+          }
+          return true;
+        });
 
         await sender.save();
-      } else if (response === "declined") {
-        receiver.friendRequests = receiver.friendRequests.filter(
-          (request) =>
-            request.senderId.toString() !== senderId.toString() ||
-            request.status !== "pending"
-        );
-        sender.sentFriendRequests = sender.sentFriendRequests.filter(
-          (request) =>
-            request.receiverId &&
-            request.receiverId.toString() !== userId.toString() &&
-            request.status !== "pending"
-        );
       } else {
         res
           .status(400)

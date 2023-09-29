@@ -67,7 +67,7 @@ export class UserController {
 
   async respondToFriendRequest(req: Request, res: Response) {
     const { senderId, receiverId, response } = req.body;
-
+    console.log('Controller: ', senderId, receiverId, response);
     await this.userService.respondToFriendRequest(
       senderId,
       receiverId,

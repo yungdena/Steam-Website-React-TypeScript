@@ -21,7 +21,7 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
       const user = await getUserByIdMutation.mutateAsync(userId);
       setFoundSentUsers((prevFoundUsers: any) => [...prevFoundUsers, user]);
     } catch (error) {
-      console.error(`Error fetching user by ID ${userId}:`, error);
+      console.error(`Error fetching user by ID`);
     }
   };
 
@@ -30,7 +30,7 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
       const user = await getUserByIdMutation.mutateAsync(userId);
       setFoundReceivedUsers((prevFoundUsers: any) => [...prevFoundUsers, user]);
     } catch (error) {
-      console.error(`Error fetching user by ID ${userId}:`, error);
+      console.error(`Error fetching user by ID`);
     }
   };
 
@@ -54,20 +54,31 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
     senderId: string,
     receiverId: string,
     response: string,
-    setter: React.Dispatch<React.SetStateAction<IUser[]>>
   ) => {
     if (UserDataContext && UserDataContext.userData) {
       try {
+        console.log("receiverId: ", receiverId);
+        console.log("senderId: ", senderId);
+        const updatedUsers = foundReceivedUsers.filter(
+          (user: IUser) => user._id !== senderId
+        );
         await respondToRequestMutation.mutateAsync({
           senderId,
           receiverId,
           response,
         });
-        setter((prevFoundUsers: IUser[]) =>
-          prevFoundUsers.map((user: IUser) =>
-            user._id === senderId ? { ...user, status: response } : user
-          )
-        );
+
+        const newFriends = [
+          ...UserDataContext.userData.friends,
+          senderId,
+        ];
+
+        UserDataContext.setUser({
+          ...UserDataContext.userData,
+          friends: newFriends,
+        });
+
+        setFoundReceivedUsers(updatedUsers);
       } catch (error) {
         console.error("Error responding to friend request:", error);
       }
@@ -102,10 +113,9 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
             <ButtonAccept
               onClick={() =>
                 handleRequest(
-                  userDataId,
                   user._id,
-                  "accepted",
-                  setFoundReceivedUsers
+                  userDataId,
+                  "accepted"
                 )
               }
             >
@@ -114,10 +124,9 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
             <ButtonDecline
               onClick={() =>
                 handleRequest(
-                  userDataId,
                   user._id,
-                  "declined",
-                  setFoundReceivedUsers
+                  userDataId,
+                  "declined"
                 )
               }
               style={{ margin: "1.5rem 0 0 0.5rem" }}
@@ -143,10 +152,9 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
             <ButtonDecline
               onClick={() =>
                 handleRequest(
-                  userDataId,
                   user._id,
-                  "declined",
-                  setFoundSentUsers
+                  userDataId,
+                  "declined"
                 )
               }
             >

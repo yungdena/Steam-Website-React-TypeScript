@@ -12,9 +12,11 @@ export interface IUser extends Document {
   friendCode: string;
   friendRequests: Array<{
     senderId: Schema.Types.ObjectId;
+    receiverId: Schema.Types.ObjectId;
     status: "pending" | "accepted" | "declined";
   }>;
   sentFriendRequests: Array<{
+    senderId: Schema.Types.ObjectId;
     receiverId: Schema.Types.ObjectId;
     status: "pending" | "accepted" | "declined";
   }>;
@@ -57,15 +59,17 @@ const userSchema: Schema<any, Model<IUser>> = new Schema({
   friendRequests: [
     {
       senderId: { type: Schema.Types.ObjectId, ref: "User" },
+      receiverId: { type: Schema.Types.ObjectId, ref: "User" },
       status: { type: String, enum: ["pending", "accepted", "declined"] },
     },
   ],
   sentFriendRequests: [
     {
+      senderId: { type: Schema.Types.ObjectId, ref: "User" },
       receiverId: { type: Schema.Types.ObjectId, ref: "User" },
       status: { type: String, enum: ["pending", "accepted", "declined"] },
     },
-  ]
+  ],
 });
 
 export const UserModel: Model<IUser> = model<IUser>('User', userSchema);
