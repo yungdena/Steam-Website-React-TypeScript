@@ -16,6 +16,7 @@ import {
   FeaturedButton,
   FeaturedTitle,
   HomeAppsContainer,
+  MainBanner,
   MainContainer,
   StyledPagination,
   WishlistButton,
@@ -86,6 +87,7 @@ export const HomePage = () => {
   return (
     <>
       <Header />
+      <MainBanner />
       <MainContainer>
         <ContentContainer>
           <WishlistButton
@@ -103,10 +105,10 @@ export const HomePage = () => {
             <LoaderBig marginTop="10rem" marginBottom="10rem" />
           ) : (
             <>
-              <FeaturedTitle left="60px" top="190px">
+              <FeaturedTitle left="60px" top="33rem">
                 FEATURED & RECOMMENDED
               </FeaturedTitle>
-              <Swiper {...swiperParams}>
+              <Swiper style={{marginTop:'21rem'}} {...swiperParams}>
                 {bannersData.map((banner) => (
                   <SwiperSlide key={banner._id} className="banner-slide">
                     <GameBannerComponent

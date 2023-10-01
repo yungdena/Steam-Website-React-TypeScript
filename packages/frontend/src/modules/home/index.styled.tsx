@@ -146,3 +146,41 @@ export const WishlistButton = styled.button`
     background: linear-gradient(135deg, #ffffff 0%,#919aa3 100%);
   }
 `;
+
+const mainBanner =
+  "https://res.cloudinary.com/didkbrlcz/image/upload/v1696141569/System/page_bg_english_gcflca.jpg";
+
+
+export const MainBanner = styled.div`
+  position: absolute;
+  height: 450px;
+  width: 100%;
+  background-image: url(${mainBanner});
+  background-position: center;
+  background-repeat: no-repeat;
+  top: 104px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  @media (min-width: 1850px) {
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 13.65%;
+      z-index: -1;
+    }
+
+    &::before {
+      left: 0;
+      background: #d9d8d7;
+    }
+
+    &::after {
+      right: 0;
+      background: #e07d0e;
+    }
+  }
+`;
