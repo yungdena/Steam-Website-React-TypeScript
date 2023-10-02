@@ -1,18 +1,20 @@
 import { Router } from "express";
-import { userExistsByName } from "../..//middlewares/validate.middleware";
+import libraryController from "../../controllers/library.controller";
 import userController from "../../controllers/user.controller";
+import friendsController from "../../controllers/friends.controller";
+import { userExistsByName } from "../..//middlewares/validate.middleware";
 
 const userRouter: Router = Router();
 
-userRouter.post("/library", userController.addToLibrary.bind(userController));
-userRouter.post("/wishlist", userController.addToWishlist.bind(userController));
+userRouter.post("/library", libraryController.addToLibrary.bind(libraryController));
+userRouter.post("/wishlist", libraryController.addToWishlist.bind(libraryController));
 
-userRouter.get("/library/:id", userController.getLibrary.bind(userController));
-userRouter.get("/wishlist/:id", userController.getWishlist.bind(userController));
+userRouter.get("/library/:id", libraryController.getLibrary.bind(libraryController));
+userRouter.get("/wishlist/:id", libraryController.getWishlist.bind(libraryController));
 
 
-userRouter.delete("/library", userController.deleteFromLibrary.bind(userController));
-userRouter.delete("/wishlist", userController.deleteFromWishlist.bind(userController));
+userRouter.delete("/library", libraryController.deleteFromLibrary.bind(libraryController));
+userRouter.delete("/wishlist", libraryController.deleteFromWishlist.bind(libraryController));
 
 userRouter.get("/id/:id", userController.getUserById.bind(userController));
 userRouter.get(
@@ -27,15 +29,15 @@ userRouter.get(
 
 userRouter.post(
   "/send-friend-request",
-  userController.sendFriendRequest.bind(userController)
+  friendsController.sendFriendRequest.bind(friendsController)
 );
 userRouter.post(
   "/respond-to-friend-request",
-  userController.respondToFriendRequest.bind(userController)
+  friendsController.respondToFriendRequest.bind(friendsController)
 );
 userRouter.post(
   "/remove-friend",
-  userController.removeFriend.bind(userController)
+  friendsController.removeFriend.bind(friendsController)
 );
 
 export default userRouter;
