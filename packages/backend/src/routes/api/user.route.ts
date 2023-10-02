@@ -17,15 +17,9 @@ userRouter.delete("/library", libraryController.deleteFromLibrary.bind(libraryCo
 userRouter.delete("/wishlist", libraryController.deleteFromWishlist.bind(libraryController));
 
 userRouter.get("/id/:id", userController.getUserById.bind(userController));
-userRouter.get(
-  "/name/:name",
-  userExistsByName,
-  userController.getUserByName.bind(userController)
-);
-userRouter.get(
-  "/friendcode/:friendcode",
-  userController.getUserByFriendCode.bind(userController)
-);
+userRouter.get("/name/:name", userExistsByName, userController.getUserByName.bind(userController));
+userRouter.get("/friendcode/:friendcode", userController.getUserByFriendCode.bind(userController));
+userRouter.patch("/update/:id", userController.updateUser.bind(userController));
 
 userRouter.post(
   "/send-friend-request",

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { UserService } from "../services/user.service";
 
 export class UserController {
-  constructor (private userService: UserService) {}
+  constructor(private userService: UserService) {}
 
   async getUserById(req: Request, res: Response) {
     const { id } = req.params;
@@ -20,6 +20,13 @@ export class UserController {
     const { name } = req.params;
 
     await this.userService.getUserByName(name, res);
+  }
+
+  async updateUser(req: Request, res: Response) {
+    const { id } = req.params;
+    const updatedFields = req.body;
+
+    await this.userService.updateUser(id, updatedFields, res);
   }
 }
 

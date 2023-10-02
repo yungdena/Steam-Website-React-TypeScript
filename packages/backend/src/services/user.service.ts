@@ -52,4 +52,32 @@ export class UserService {
       res.status(500).send({ message: "Internal server error" });
     }
   }
+
+  async updateUser(
+    userId: string,
+    updatedFields: Record<string, any>,
+    res: Response
+  ) {
+    try {
+      const user = await UserModel.findById(userId);
+      console.log('user: ', user)
+      console.log('updatedFields: ', updatedFields)
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      for (const key in updatedFields) {
+        if (Object.prototype.hasOwnProperty.call(updatedFields, key)) {
+          (user as any)[key] = updatedFields[key];
+        }
+      }
+
+      await user.save();
+
+      const { password, ...userWithoutPassword } = user.toObject();
+      res.send(userWithoutPassword);
+    } catch (error) {
+      res.status(500).send({ message: "Internal server error" });
+    }
+  }
 }
