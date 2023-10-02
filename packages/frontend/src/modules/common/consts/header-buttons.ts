@@ -1,3 +1,5 @@
+import { UserDataProvider, useUserData } from "../context/user-context";
+
 export const HEADER_LABELS = {
   STORE: 'store',
   COMMUNITY: 'community',
@@ -94,26 +96,31 @@ export const DROPDOWN_DATA = [
   },
 ];
 
-export const NAME_DROPDOWN_DATA = {
-  id: "name",
-  content: [
-    {
-      title: "PROFILE",
-      linkTo: "/store",
-    },
-    {
-      title: "FRIENDS",
-      linkTo: "/friends",
-    },
-    {
-      title: "LIBRARY",
-      linkTo: "/library",
-    },
-    {
-      title: "LOG OUT",
-      linkTo: "/signin",
-    },
-  ],
+export const generateNameDropdownData = () => {
+  const UserDataContext = useUserData();
+  const userId = UserDataContext?.userData?._id;
+
+  return {
+    id: "name",
+    content: [
+      {
+        title: "PROFILE",
+        linkTo: `/profile/${userId}`,
+      },
+      {
+        title: "FRIENDS",
+        linkTo: "/friends",
+      },
+      {
+        title: "LIBRARY",
+        linkTo: "/library",
+      },
+      {
+        title: "LOG OUT",
+        linkTo: "/signin",
+      },
+    ],
+  };
 };
 
 export const HOME_HEADER_LABELS = {

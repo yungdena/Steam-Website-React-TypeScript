@@ -55,6 +55,7 @@ export const FriendContainer = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
   color: ${COLORS.tagBlue};
   display: flex;
+  cursor: pointer;
 `
 
 export const Avatar = styled.img`

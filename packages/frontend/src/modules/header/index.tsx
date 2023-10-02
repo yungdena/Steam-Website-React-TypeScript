@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { HeaderContainer, Link, ButtonGroup, Image, LinkGroup, HeaderLink, OptionalLinks, DropdownContainer} from './index.styled';
 import { APP_KEYS } from '../common/consts';
-import { DROPDOWN_DATA, HEADER_LINKS, NAME_DROPDOWN_DATA } from '../common/consts/header-buttons';
+import { DROPDOWN_DATA, generateNameDropdownData, HEADER_LINKS } from '../common/consts/header-buttons';
 import { Dropdown } from './dropdown/dropdown';
 import { handleNavigate } from '../common/utils/handleNavigate';
 import { useUserData } from '../common/context/user-context';
@@ -15,6 +15,7 @@ export const Header = () => {
   const [hoveredName, setHoveredName] = useState<string | null>(null);
   const UserDataContext = useUserData()
   const history = useHistory();
+  const NAME_DROPDOWN_DATA = generateNameDropdownData();
 
   return (
     <HeaderContainer>

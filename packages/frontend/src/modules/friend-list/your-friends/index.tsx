@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { APP_KEYS } from "../../common/consts";
 import { useGetUserById } from "../../common/services/user.service";
 import { IUser } from "../../types/User";
 import { AddFriend, Avatar, FriendContainer, FriendName, FriendsList, Heading, HeadingTitle, MainContainer, NoFriends } from "./index.styled"
@@ -14,6 +16,7 @@ const avatar =
 export const YourFriends = ({ friendsCount, friendsList, setComponent }: IComponent) => {
   const [friends, setFriends] = useState<IUser[]>([])
   const getUserByIdMutation = useGetUserById();
+  const history = useHistory();
 
   const fetchFriendsData = async () => {
     try {
@@ -33,6 +36,10 @@ export const YourFriends = ({ friendsCount, friendsList, setComponent }: ICompon
     fetchFriendsData();
   }, [friendsList]);
 
+  const navigateToProfile = (id: string) => {
+    history.push(APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.PROFILE + `/${id}`);
+  }
+
   return (
     <MainContainer>
       <Heading>
@@ -49,7 +56,7 @@ export const YourFriends = ({ friendsCount, friendsList, setComponent }: ICompon
         )}
         {friendsList !== undefined && friendsList.length > 0 && (
           friends.map((friend, index) => (
-            <FriendContainer key={index}>
+            <FriendContainer onClick={() => navigateToProfile(friend._id)} key={index}>
               <Avatar src={avatar}/>
               <FriendName>
                 {friend.name}
