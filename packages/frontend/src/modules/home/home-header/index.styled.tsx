@@ -9,8 +9,8 @@ export const HomeHeader = styled.div`
   margin-top: 6.5rem;
   background-image: linear-gradient(
     90deg,
-    rgba(62, 103, 150, 0.918) 11.38%,
-    rgba(58, 120, 177, 0.8) 25.23%,
+    rgba(62, 103, 150, 1) 11.38%,
+    rgba(58, 120, 177, 1) 25.23%,
     rgb(15, 33, 110) 100%
   );
   background-repeat: no-repeat;

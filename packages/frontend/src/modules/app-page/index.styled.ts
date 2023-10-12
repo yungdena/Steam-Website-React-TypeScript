@@ -172,6 +172,7 @@ export const PurchaseButton = styled.button`
   background: -webkit-linear-gradient(top, #6fa720 5%, #588a1b 95%);
   text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
   padding: 0.25rem 0.75rem;
+  margin: 2px;
 
   &:hover {
     background: #6fa720;
@@ -181,7 +182,6 @@ export const PurchaseButton = styled.button`
 export const ButtonWrapper = styled.div`
   display: flex;
   background-color: black;
-  padding: 2px;
   border-radius: 2px;
   position: absolute;
   right: 16px;

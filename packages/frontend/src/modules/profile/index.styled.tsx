@@ -39,7 +39,6 @@ export const ProfileContainer = styled.div`
 
 export const ProfileHeading = styled.div`
   height: 224px;
-  border-bottom: 2px solid black;
   margin: 0 25px;
   padding-top: 24px;
   display: flex;
@@ -78,4 +77,85 @@ export const Button = styled.div`
   &:hover {
     filter: brightness(150%);
   }
+`
+
+export const ActivityContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 652px;
+  min-height: 617px;
+  margin: 12px;
+`
+
+export const ActivityTitle = styled.div`
+  border-bottom: none;
+  padding: 3px 10px;
+  line-height: 26px;
+  border-radius: 3px;
+  backdrop-filter: blur(20px);
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  font-size: 18px;
+  font-weight: 300;
+  font-family: 'Motiva-sans';
+  color:rgb(150, 150, 150);
+  margin-bottom: 12px;
+`;
+
+export const GameContainer = styled.div`
+  backdrop-filter: blur(20px);
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  margin-bottom: 21px;
+  width: 100%;
+  height: 145px;
+  padding: 8px 10px;
+`;
+
+export const GameTitle = styled.div`
+  font-size: 14px;
+  color: rgb(235, 235, 235);
+  margin-left: 10px;
+  margin-top: 10px;
+
+  &:hover {
+    color: ${COLORS.tagBlue};
+    cursor: pointer;
+  }
+`;
+
+export const GameImage = styled.img`
+  width: 180px;
+  height: 69px;
+  cursor: pointer;
+`;
+
+export const AchievementsContainer = styled.div`
+  padding: 14px 11px 10px;
+  background-color: ${COLORS.gradientBackground};
+  border-radius: 3px;
+  margin-top: 9px;
+  height: 50px;
+  font-size: 14px;
+  color: rgb(235, 235, 235);
+
+  &:hover {
+    color: ${COLORS.tagBlue};
+    cursor: pointer;
+  }
+`;
+
+export const ProfileInfoContainer = styled.div`
+  width: 288px;
+  height: 617px;
+  background-color: rgba( 0, 0, 0, 0.3 );
+  backdrop-filter: blur(20px);
+  padding: 10px;
+  border-radius: 3px;
+  margin: 12px;
+  margin-left: 0;
+`;
+
+export const InfoContainer = styled.div`
+  display: flex;
 `

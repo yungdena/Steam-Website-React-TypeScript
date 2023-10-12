@@ -14,6 +14,7 @@ import { AppsDataProvider } from '../common/context/apps-context';
 import { BannersDataProvider } from '../common/context/banners-context';
 import { FriendList } from '../friend-list';
 import { Profile } from '../profile';
+import { NotFound } from '../NotFound';
 
 export const MainRouter = () => (
   <Router>
@@ -79,9 +80,14 @@ export const MainRouter = () => (
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.FRIENDS}
       />
       <Route
-        component={Profile}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.PROFILE + '/:id'}
+        component={() => (
+          <AppsDataProvider>
+            <Profile />
+          </AppsDataProvider>
+        )}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.PROFILE + "/:id"}
       />
+      <Route component={NotFound} />
     </Switch>
   </Router>
 );

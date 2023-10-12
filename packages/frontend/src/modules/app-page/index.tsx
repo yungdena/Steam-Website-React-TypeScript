@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Redirect, useHistory, useParams } from "react-router-dom";
 import { APP_KEYS } from "../common/consts";
 import { useUserData } from "../common/context/user-context";
 import { LoaderBig } from "../common/loader/loader";
@@ -44,6 +44,10 @@ export const AppPage = () => {
       console.log("response on front: ", data);
       setApp(data);
       setIsLoading(false);
+
+      if(!app) {
+        return <Redirect to="/not-found" />;
+      }
     }
 
     fetchById();

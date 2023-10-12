@@ -102,13 +102,13 @@ export const HomePage = () => {
           <HomepageHeader onSearch={handleSearch} />
           <SearchApps apps={filteredApps} searchQuery={searchQuery} />
           {isLoadingBanners ? (
-            <LoaderBig marginTop="10rem" marginBottom="10rem" />
+            <LoaderBig marginTop="40rem" marginBottom="10rem" />
           ) : (
             <>
               <FeaturedTitle left="60px" top="33rem">
                 FEATURED & RECOMMENDED
               </FeaturedTitle>
-              <Swiper style={{marginTop:'21rem'}} {...swiperParams}>
+              <Swiper style={{ marginTop: "21rem" }} {...swiperParams}>
                 {bannersData.map((banner) => (
                   <SwiperSlide key={banner._id} className="banner-slide">
                     <GameBannerComponent
@@ -124,13 +124,13 @@ export const HomePage = () => {
             </>
           )}
           {isLoadingApps ? (
-            <LoaderBig marginTop="30rem" />
+            <LoaderBig marginTop="20rem" marginBottom="10rem" />
           ) : (
             <Offers appsArray={appsData} />
           )}
 
           {isLoadingApps ? (
-            <LoaderBig marginTop="20rem" marginBottom="10rem" />
+            <LoaderBig marginTop="10rem" marginBottom="10rem" />
           ) : (
             <>
               <AppsLine>
@@ -168,8 +168,11 @@ export const HomePage = () => {
                           </AppPrice>
                         )}
                         {app.newPrice && (
-                          <PriceContainer className="New-Price">
-                            <PricePercent>
+                          <PriceContainer
+                            style={{ marginTop: "3px" }}
+                            className="New-Price"
+                          >
+                            <PricePercent style={{ marginLeft: "4px" }}>
                               -
                               {calculatePercentageDecrease(
                                 Number(app.price),

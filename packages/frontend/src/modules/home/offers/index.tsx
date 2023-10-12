@@ -50,7 +50,7 @@ export const Offers = ({ appsArray }: { appsArray: IApp[] }) => {
                 {appsChunk.map((app) => (
                   <Offer onClick={() => handleNavigate(app._id)} key={app._id}>
                     <OfferImage src={app.titleImage} />
-                    <PriceContainer>
+                    <PriceContainer style={{marginTop:'5px'}}>
                       <PricePercent>
                         -{calculatePercentageDecrease(
                           Number(app.price),

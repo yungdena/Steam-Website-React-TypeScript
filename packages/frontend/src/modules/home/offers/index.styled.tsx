@@ -73,7 +73,7 @@ export const StyledPagination = styled.div`
 
 export const PriceContainer = styled.div`
   display: flex;
-  margin: 4px;
+  margin: 2px;
   text-align: right;
   padding-right: 5px;
   line-height: 17px;

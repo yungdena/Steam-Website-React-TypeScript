@@ -12,6 +12,8 @@ export interface ILanguage {
 export interface IApp {
   title: string;
   description: string;
+  bannerImage: string;
+  titleImage: string;
   reviews: IReview[];
   price: string;
   releaseDate: string;
