@@ -9,9 +9,7 @@ const getAllApps = async () => {
       "Content-Type": "application/json",
     },
   });
-  console.log('GetAllApps response', response);
   const responseData = await response.json();
-  console.log('data', responseData);
   return responseData;
 };
 
@@ -23,7 +21,6 @@ const postApp = async (data: IApp) => {
     },
     body: JSON.stringify(data),
   });
-  console.log("sign up res", response);
   const responseData = await response.json();
 
   return responseData;
@@ -43,14 +40,12 @@ const updateApp = async ({
     },
     body: JSON.stringify(data),
   });
-  console.log("updateApp response:", response);
   const responseData = await response.json();
 
   return responseData;
 };
 
 const getAppById = async (appId: string) => {
-  console.log('getAppById', appId);
   const response = await fetch(`${BASE_URL}/apps/${appId}`, {
     method: "GET",
     headers: {
@@ -58,9 +53,7 @@ const getAppById = async (appId: string) => {
     },
   });
 
-  console.log("GetAppById response", response);
   const responseData = await response.json();
-  console.log("data by id", responseData);
   return responseData;
 };
 

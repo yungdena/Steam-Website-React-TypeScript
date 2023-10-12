@@ -8,14 +8,11 @@ const getAllBanners = async () => {
       "Content-Type": "application/json",
     },
   });
-  console.log("GetAllBanners response", response);
   const responseData = await response.json();
-  console.log("data", responseData);
   return responseData;
 };
 
 const getBannerById = async (bannerId: string) => {
-  console.log("getBannerById", bannerId);
   const response = await fetch(`${BASE_URL}/banners/${bannerId}`, {
     method: "GET",
     headers: {
@@ -23,9 +20,7 @@ const getBannerById = async (bannerId: string) => {
     },
   });
 
-  console.log("GetBannerById response", response);
   const responseData = await response.json();
-  console.log("data by id", responseData);
   return responseData;
 };
 

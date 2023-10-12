@@ -28,8 +28,6 @@ export const BannersDataProvider = ({ children }: any) => {
     fetchAllBanners();
   }, []);
 
-  console.log('Fetch Counter - Banners: ', fetchCounter);
-
   return (
     <BannersDataContext.Provider value={{ bannersData, isLoadingBanners }}>
       {children}

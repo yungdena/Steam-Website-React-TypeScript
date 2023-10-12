@@ -14,7 +14,6 @@ type SignInFormValues = {
 };
 
 const signUp = async (data: SignUpFormValues) => {
-  console.log('sign up service');
   const response = await fetch(`${BASE_URL}/auth/signup`, {
     method: 'POST',
     headers: {
@@ -22,14 +21,12 @@ const signUp = async (data: SignUpFormValues) => {
     },
     body: JSON.stringify(data)
   });
-  console.log('sign up res', response);
   const responseData = await response.json();
 
   return responseData;
 };
 
 const signIn = async (data: SignInFormValues) => {
-  console.log('sign in service');
   const response = await fetch(`${BASE_URL}/auth/signin`, {
     method: 'POST',
     headers: {
@@ -37,9 +34,7 @@ const signIn = async (data: SignInFormValues) => {
     },
     body: JSON.stringify(data)
   });
-  console.log('sign in service res', response);
   const responseData = await response.json();
-  console.log('res data', responseData);
   return responseData;
 };
 

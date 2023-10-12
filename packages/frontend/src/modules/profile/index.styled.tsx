@@ -159,3 +159,61 @@ export const ProfileInfoContainer = styled.div`
 export const InfoContainer = styled.div`
   display: flex;
 `
+
+export const InfoWrap = styled.div`
+  display: flex;
+  width: 100%;
+  height: 30px;
+  align-items: center;
+`
+
+export const ProfileInfoTitle = styled.div`
+  font-size: 14px;
+  color: rgb(235, 235, 235);
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  cursor: pointer;
+`;
+
+export const ProfileInfoValue = styled.div`
+  font-weight: 200;
+  color: #9b9b9b;
+  font-size: 24px;
+  margin-left: 10px;
+`;
+
+export const ProfileFriendsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 10px;
+`
+
+export const FriendInfo = styled.div`
+  display: flex;
+  width: 268px;
+  height: 44px;
+  color: ${COLORS.tagBlue};
+  padding: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #3a3a3a;
+  }
+`
+
+export const FriendAvatar = styled.img`
+  width: 36px;
+  height: 36px;
+`
+
+export const FriendName = styled.div`
+  font-size: 11px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: 4px;
+`;

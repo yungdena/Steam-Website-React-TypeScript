@@ -28,8 +28,6 @@ export const AppsDataProvider = ({ children }: any) => {
       fetchAllApps();
     }, []);
 
-  console.log("Fetch Counter - Apps: ", fetchCounter);
-
   return (
     <AppsDataContext.Provider value={{ appsData, isLoadingApps }}>
       {children}

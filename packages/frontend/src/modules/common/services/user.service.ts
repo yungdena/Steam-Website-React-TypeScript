@@ -31,7 +31,6 @@ const addToWishlist = async (data: IBody) => {
 };
 
 const deleteFromLibrary = async (data: IBody) => {
-  console.log("mutation start");
   const response = await fetch(`${BASE_URL}/user/library`, {
     method: "DELETE",
     headers: {
@@ -39,9 +38,7 @@ const deleteFromLibrary = async (data: IBody) => {
     },
     body: JSON.stringify(data),
   });
-  console.log("mutation response", response);
   const responseData = await response.json();
-  console.log("User's delete from library mutation", responseData);
   return responseData;
 };
 
@@ -58,7 +55,6 @@ const deleteFromWishlist = async (data: IBody) => {
 };
 
 const getUserById = async (userId: string) => {
-  console.log("mutation start");
   const response = await fetch(`${BASE_URL}/user/id/${userId}`, {
     method: "GET",
     headers: {
@@ -66,7 +62,6 @@ const getUserById = async (userId: string) => {
     },
   });
   const responseData = await response.json();
-  console.log("get user by id mutation: ", responseData);
   return responseData;
 };
 
@@ -89,7 +84,6 @@ const getUserByFriendCode = async (friendCode: string) => {
     },
   });
   const responseData = await response.json();
-  console.log('get by code response', responseData)
   return responseData;
 };
 

@@ -16,7 +16,6 @@ export const UserDataProvider = ({ children }: any) => {
 
   useEffect(() => {
     const storedUserId = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT);
-    console.log("storedUserId", storedUserId);
     async function fetchUserById(userId: string | null) {
       if (userId) {
         const data = await getUserByIdMutation.mutateAsync(
