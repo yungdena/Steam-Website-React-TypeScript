@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import { signInValidationSchema } from "../common/utils/validation";
 import { IAccount } from "../common/types/Account.interface";
 import { useSignIn } from "../common/services/auth.service";
-import { Header } from "../header";
+import { Header } from "../components/header";
 import {
   Form,
   Container,
@@ -15,8 +15,8 @@ import {
   InputContainer,
   FieldText,
   Button,
-  FieldLink } from '../auth/sign-in/index.styled'
-import { Footer } from "../auth/sign-in/footer";
+  FieldLink } from '../components/auth/sign-in/index.styled'
+import { Footer } from "../components/auth/sign-in/footer";
 import { Loader } from "../common/loader/loader";
 import { useGetAppById, usePostApp, useUpdateApp } from "../common/services/apps.service";
 import { IApp } from "../common/types/app.interface";

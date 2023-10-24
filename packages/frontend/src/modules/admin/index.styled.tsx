@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { COLORS } from "../theme";
+import { COLORS } from "../common/theme";
 
 export const AdminContainer = styled.div`
   display: flex;

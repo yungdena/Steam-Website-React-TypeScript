@@ -1,21 +1,21 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import { SignUp } from '../auth/sign-up';
-import { SignIn } from '../auth/sign-in';
+import { SignUp } from '../components/auth/sign-up';
+import { SignIn } from '../components/auth/sign-in';
 import { APP_KEYS } from '../common/consts';
-import { StorePage } from '../store';
-import { AppPage } from '../app-page';
-import { AboutPage } from '../about';
-import { HomePage } from '../home';
+import { StorePage } from '../components/store';
+import { AppPage } from '../components/app-page';
+import { AboutPage } from '../components/about';
+import { HomePage } from '../components/home';
 import { AdminPanel } from '../admin';
-import { Wishlist } from '../wishlist';
-import { Library } from '../library';
+import { Wishlist } from '../components/wishlist';
+import { Library } from '../components/library';
 import { AppsDataProvider } from '../common/context/apps-context';
 import { BannersDataProvider } from '../common/context/banners-context';
-import { FriendList } from '../friend-list';
-import { Profile } from '../profile';
-import { NotFound } from '../NotFound';
-import { Support } from '../support';
+import { FriendList } from '../components/friend-list';
+import { Profile } from '../components/profile';
+import { NotFound } from '../components/NotFound';
+import { Support } from '../components/support';
 
 export const MainRouter = () => (
   <Router>

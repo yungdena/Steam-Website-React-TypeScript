@@ -1,5 +1,4 @@
 import { IApp } from "../common/types/app.interface";
-
 export const handleAddReviewContainer = (setReviewContainers: any) => {
   setReviewContainers((prevContainers: any) => [...prevContainers, Date.now()]);
 };
