@@ -52,18 +52,6 @@ export const DROPDOWN_DATA = [
         linkTo: "/wishlist",
       },
       {
-        title: "POINTS SHOP",
-        linkTo: "/store",
-      },
-      {
-        title: "NEWS",
-        linkTo: "/store",
-      },
-      {
-        title: "STATS",
-        linkTo: "/store",
-      },
-      {
         title: "ABOUT",
         linkTo: "/about",
       },
@@ -77,20 +65,8 @@ export const DROPDOWN_DATA = [
         linkTo: "/store",
       },
       {
-        title: "DISCUSSIONS",
-        linkTo: "/store",
-      },
-      {
-        title: "WORKSHOP",
-        linkTo: "/store",
-      },
-      {
-        title: "MARKET",
-        linkTo: "/store",
-      },
-      {
-        title: "BROADCASTS",
-        linkTo: "/store",
+        title: "ABOUT",
+        linkTo: "/about",
       },
     ],
   },

@@ -15,6 +15,7 @@ import { BannersDataProvider } from '../common/context/banners-context';
 import { FriendList } from '../friend-list';
 import { Profile } from '../profile';
 import { NotFound } from '../NotFound';
+import { Support } from '../support';
 
 export const MainRouter = () => (
   <Router>
@@ -78,6 +79,10 @@ export const MainRouter = () => (
       <Route
         component={FriendList}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.FRIENDS + "/:id"}
+      />
+      <Route
+        component={Support}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SUPPORT}
       />
       <Route
         component={() => (
