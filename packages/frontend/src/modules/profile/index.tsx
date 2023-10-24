@@ -156,7 +156,7 @@ export const Profile = () => {
                 <ProfileInfoTitle>Games</ProfileInfoTitle>
                 <ProfileInfoValue>{userData?.apps.length}</ProfileInfoValue>
               </InfoWrap>
-              <InfoWrap>
+              <InfoWrap onClick={() => history.push('/friends' +  '/' + userData?._id)}>
                 <ProfileInfoTitle>Friends</ProfileInfoTitle>
                 <ProfileInfoValue>{userData?.friends.length}</ProfileInfoValue>
               </InfoWrap>

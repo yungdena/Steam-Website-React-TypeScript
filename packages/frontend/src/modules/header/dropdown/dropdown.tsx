@@ -26,20 +26,26 @@ export const Dropdown = ({ linkId, hoveredLink, content }: { linkId: string, hov
     history.push(route);
   };
 
+  console.log(content)
+
     return (
       <DropdownContainer>
-        {content && content.map((item) => (
-          <DropdownLink
-            key={item.title}
-            onClick={
-              item.title === "LOG OUT"
-                ? () => handleLogOut(item.linkTo)
-                : () => handleNavigate(item.linkTo)
-            }
-          >
-            {item.title}
-          </DropdownLink>
-        ))}
+        {content &&
+          content.map((item) => (
+            <DropdownLink
+              key={item.title}
+              onClick={
+                item.title === "LOG OUT"
+                  ? () => handleLogOut(item.linkTo)
+                  : item.title === "FRIENDS"
+                  ? () =>
+                      history.push("/friends" + '/' + UserDataContext?.userData?._id)
+                  : () => handleNavigate(item.linkTo)
+              }
+            >
+              {item.title}
+            </DropdownLink>
+          ))}
       </DropdownContainer>
     );
 };
