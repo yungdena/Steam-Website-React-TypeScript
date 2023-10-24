@@ -8,7 +8,7 @@ import {
 } from "./index.styled";
 
 const options = [
-  { id: 1, name: "Your Rank" },
+  { id: 1, name: "Default" },
   { id: 2, name: "Name" },
   { id: 7, name: "Release Date" },
   { id: 8, name: "Review Score" },

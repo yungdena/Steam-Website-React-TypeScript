@@ -73,7 +73,7 @@ export const MainRouter = () => (
             <Library />
           </AppsDataProvider>
         )}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY + "/:id"}
       />
       <Route
         component={FriendList}

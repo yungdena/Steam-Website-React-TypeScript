@@ -108,6 +108,8 @@ export const LibraryContainer = styled.div`
 
 export const NoItems = styled.div`
   color: ${COLORS.greyishWhite};
+  font-size: 28px;
+  margin-top: 1rem;
 `;
 
 export const TagsContainer = styled.div`

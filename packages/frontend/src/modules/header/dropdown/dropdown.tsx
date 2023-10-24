@@ -26,23 +26,28 @@ export const Dropdown = ({ linkId, hoveredLink, content }: { linkId: string, hov
     history.push(route);
   };
 
-  console.log(content)
+  const handleItemClick = (item: any) => {
+    switch (item.title) {
+      case "LOG OUT":
+        handleLogOut(item.linkTo);
+        break;
+      case "FRIENDS":
+        handleNavigate(`/friends/${UserDataContext?.userData?._id}`);
+        break;
+      case "LIBRARY":
+        handleNavigate(`/library/${UserDataContext?.userData?._id}`);
+        break;
+      default:
+        handleNavigate(item.linkTo);
+    }
+    console.log(`Item clicked: ${item.title}`);
+  };
 
     return (
       <DropdownContainer>
         {content &&
           content.map((item) => (
-            <DropdownLink
-              key={item.title}
-              onClick={
-                item.title === "LOG OUT"
-                  ? () => handleLogOut(item.linkTo)
-                  : item.title === "FRIENDS"
-                  ? () =>
-                      history.push("/friends" + '/' + UserDataContext?.userData?._id)
-                  : () => handleNavigate(item.linkTo)
-              }
-            >
+            <DropdownLink key={item.title} onClick={() => handleItemClick(item)}>
               {item.title}
             </DropdownLink>
           ))}

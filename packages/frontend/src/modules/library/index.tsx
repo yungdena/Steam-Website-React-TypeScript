@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import { APP_KEYS } from "../common/consts";
 import { useAppsData } from "../common/context/apps-context";
 import { useUserData } from "../common/context/user-context";
 import { LoaderBig } from "../common/loader/loader";
-import { useDeleteFromLibrary } from "../common/services/user.service";
+import { useDeleteFromLibrary, useGetUserById } from "../common/services/user.service";
 import { IApp } from "../common/types/app.interface";
 import { calculateReviewTitle } from "../common/utils/calculateReviewRate";
 import { formatDate } from "../common/utils/formatDate";
@@ -13,21 +13,42 @@ import { Header } from "../header"
 import { Footer } from "../home/footer"
 import { handleSearch } from "../store/app-list/utils/handlers";
 import { sortAppsByDiscount, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from "../store/app-list/utils/sort-apps";
+import { IUser } from "../types/User";
 import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NicknameSpan, NoItems, SearchBar, SearchContainer, Stats, StatsLabel, Tag, TagsContainer, LibraryContainer, LibraryItem, LibraryTitle, RemoveButton } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
 
 export const Library = () => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
-  const [sortBy, setSortBy] = useState("Your Rank");
+  const [user, setUser] = useState<IUser | null>(null)
+  const [sortBy, setSortBy] = useState("Default");
   const [searchInput, setSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
+  const { id } = useParams<{ id: string }>();
 
   const deleteFromLibraryMutation = useDeleteFromLibrary();
   const UserDataContext = useUserData();
   const { appsData } = useAppsData();
   const history = useHistory();
+  const getUserByIdMutation = useGetUserById()
 
-  const userLibraryIds = UserDataContext?.userData?.apps || [];
+  const fetchFriendsData = async () => {
+    try {
+      const user = await getUserByIdMutation.mutateAsync(id);
+      setUser(user);
+    } catch (error) {
+      console.error("Error fetching friends' data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (UserDataContext?.userData?._id !== id) {
+      fetchFriendsData();
+    } else {
+      setUser(UserDataContext.userData)
+    }
+  }, [id]);
+
+  const userLibraryIds = user?.apps || [];
   const userLibraryApps = appsData.filter((app) =>
     userLibraryIds.includes(app._id)
   );
@@ -41,7 +62,7 @@ export const Library = () => {
     let sortedAppsCopy = [...userLibraryApps];
 
     switch (sortBy) {
-      case "Your Rank":
+      case "Default":
         break;
       case "Release Date":
         sortAppsByReleaseDate(sortedAppsCopy);
@@ -77,7 +98,6 @@ export const Library = () => {
   const handleDeleteFromLibrary = (appId: string) => {
     if (UserDataContext?.userData) {
       const userId = UserDataContext?.userData._id;
-      console.log(`deleting ${appId} from user ${userId}`)
       deleteFromLibraryMutation.mutateAsync({ userId, appId });
       setSortedApps(sortedApps.filter((app) => app._id !== appId));
     }
@@ -92,15 +112,13 @@ export const Library = () => {
     handleSearch(inputValue, setSortedApps, sortedApps);
   };
 
-  console.log('userData in library', UserDataContext?.userData)
-
   return (
     <>
       <Header />
       <Background>
         <MainContainer>
           <LibraryTitle>
-            {UserDataContext?.userData && UserDataContext?.userData.name}
+            {user && user.name}
             <NicknameSpan>
               {">"}
               {">"} games
@@ -157,17 +175,21 @@ export const Library = () => {
                           <Tag key={tag}>{tag}</Tag>
                         ))}
                       </div>
-                      <RemoveButton
-                        onClick={() => handleDeleteFromLibrary(item._id)}
-                      >
-                        Remove
-                      </RemoveButton>
+                      {UserDataContext?.userData?._id === id && (
+                        <RemoveButton
+                          onClick={() => handleDeleteFromLibrary(item._id)}
+                        >
+                          Remove
+                        </RemoveButton>
+                      )}
                     </TagsContainer>
                   </Capsule>
                 </LibraryItem>
               ))
-            ) : (
+            ) : UserDataContext?.userData?._id === id ? (
               <NoItems>No apps in your Library.</NoItems>
+            ) : (
+              <NoItems>{user?.name}'s Library is empty</NoItems>
             )}
           </LibraryContainer>
         </MainContainer>

@@ -152,17 +152,24 @@ export const Profile = () => {
               })}
             </ActivityContainer>
             <ProfileInfoContainer>
-              <InfoWrap>
+              <InfoWrap
+                onClick={() => history.push("/library" + "/" + userData?._id)}
+              >
                 <ProfileInfoTitle>Games</ProfileInfoTitle>
                 <ProfileInfoValue>{userData?.apps.length}</ProfileInfoValue>
               </InfoWrap>
-              <InfoWrap onClick={() => history.push('/friends' +  '/' + userData?._id)}>
+              <InfoWrap
+                onClick={() => history.push("/friends" + "/" + userData?._id)}
+              >
                 <ProfileInfoTitle>Friends</ProfileInfoTitle>
                 <ProfileInfoValue>{userData?.friends.length}</ProfileInfoValue>
               </InfoWrap>
               <ProfileFriendsContainer>
                 {friendsData.map((friend) => (
-                  <FriendInfo onClick={() => history.push('/' + 'profile/' + friend._id)} key={friend._id}>
+                  <FriendInfo
+                    onClick={() => history.push("/" + "profile/" + friend._id)}
+                    key={friend._id}
+                  >
                     <FriendAvatar src={friend.avatar || defaultAvatar} />
                     <FriendName>{friend.name}</FriendName>
                   </FriendInfo>

@@ -52,8 +52,6 @@ export const FriendList = () => {
             sentInvites={UserDataContext?.userData?.sentFriendRequests}
           />
         );
-      case "Blocked":
-        return;
       default:
         return;
     }
@@ -84,9 +82,6 @@ export const FriendList = () => {
                         </ButtonWrapper>
                         <ButtonWrapper onClick={() => setActiveComponent("PendingInvites")}>
                           <Button backgroundPosition="0 -32px">Pending invites</Button>
-                        </ButtonWrapper>
-                        <ButtonWrapper>
-                          <Button backgroundPosition="0 -64px">Blocked</Button>
                         </ButtonWrapper>
                       </ButtonsMenu>
                       {renderComponent()}
