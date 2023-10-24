@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Redirect, useHistory, useParams } from "react-router-dom";
+
+import { ImageSlider } from "./swiper";
 import { APP_KEYS } from "../../common/consts";
 import { useUserData } from "../../common/context/user-context";
 import { LoaderBig } from "../../common/loader/loader";
-
 import { useGetAppById } from "../../common/services/apps.service";
 import { useAddToLibrary, useAddToWishlist } from "../../common/services/user.service";
 import { IApp } from "../../common/types/app.interface";
@@ -16,7 +17,6 @@ import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent }
 import { AppPrice } from "../store/app-list/index.styled";
 import { IUser } from "../../common/types/User";
 import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton } from "./index.styled";
-import { ImageSlider } from "./swiper";
 
 interface AppRouteParams {
   id: string;

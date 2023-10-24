@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { IUser } from "../../types/User";
+import { IUser } from "../types/User";
 import { APP_KEYS } from "../consts";
 import { useGetUserById } from "../services/user.service";
 
