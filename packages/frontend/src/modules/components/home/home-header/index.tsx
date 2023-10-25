@@ -33,7 +33,7 @@ export const HomepageHeader = ({ onSearch }: any) => {
       <LinkGroup>
         {HOME_HEADER_LINKS.map((link) => {
           return (
-            <Link id={link.id} key={link.id}>
+            <Link onClick={() => history.push(link.link)} id={link.id} key={link.id}>
               {link.label}
             </Link>
           );

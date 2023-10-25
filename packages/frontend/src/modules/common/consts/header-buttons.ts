@@ -103,9 +103,9 @@ export const HOME_HEADER_LABELS = {
   STORE: "Your Store",
   NEW: "New & Noteworthy",
   CATEGORIES: "Categories",
-  POINTS: "Points Shop",
-  NEWS: "News",
-  LABS: "Labs",
+  WISHLIST: "Wishlist",
+  ABOUT: "About",
+  SUPPORT: "Support",
 };
 
 export const HOME_HEADER_LINKS = [
@@ -115,28 +115,28 @@ export const HOME_HEADER_LINKS = [
     link: "/store",
   },
   {
-    id: "community",
+    id: "store2",
     label: HOME_HEADER_LABELS.NEW,
-    link: "/community",
+    link: "/store",
   },
   {
-    id: "about",
+    id: "store3",
     label: HOME_HEADER_LABELS.CATEGORIES,
+    link: "/store",
+  },
+  {
+    id: "wishlist",
+    label: HOME_HEADER_LABELS.WISHLIST,
+    link: "/wishlist",
+  },
+  {
+    id: "news",
+    label: HOME_HEADER_LABELS.ABOUT,
     link: "/about",
   },
   {
     id: "support",
-    label: HOME_HEADER_LABELS.POINTS,
-    link: "/support",
-  },
-  {
-    id: "news",
-    label: HOME_HEADER_LABELS.NEWS,
-    link: "/support",
-  },
-  {
-    id: "labs",
-    label: HOME_HEADER_LABELS.LABS,
+    label: HOME_HEADER_LABELS.SUPPORT,
     link: "/support",
   },
 ];
