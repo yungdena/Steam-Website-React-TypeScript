@@ -64,11 +64,9 @@ export function sortAppsByReviews(apps: IApp[]) {
 
 export function sortAppsByDiscount(apps: IApp[]) {
   apps.sort((a, b) => {
-    // Parse the newPrice values as numbers
     const newPriceA = Number(a.newPrice);
     const newPriceB = Number(b.newPrice);
 
-    // Calculate the percentage decrease
     const discountA = calculatePercentageDecrease(
       Number(a.price),
       newPriceA,
@@ -80,7 +78,6 @@ export function sortAppsByDiscount(apps: IApp[]) {
       0
     );
 
-    // Sort in descending order (highest discount first)
     return discountB - discountA;
   });
 }

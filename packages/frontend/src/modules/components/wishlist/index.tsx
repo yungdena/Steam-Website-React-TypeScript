@@ -6,23 +6,20 @@ import { APP_KEYS } from "../../common/consts";
 import { useAppsData } from "../../common/context/apps-context";
 import { useUserData } from "../../common/context/user-context";
 import { LoaderBig } from "../../common/loader/loader";
-import { useGetAppById } from "../../common/services/apps.service";
 import { useAddToLibrary, useDeleteFromWishlist } from "../../common/services/user.service";
 import { IApp } from "../../common/types/app.interface";
 import { calculateReviewTitle } from "../../common/utils/calculateReviewRate";
 import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
 import { formatDate } from "../../common/utils/formatDate";
-import { handleNavigate } from "../../common/utils/handleNavigate";
 import { Header } from "../header"
 import { Footer } from "../home/footer"
 import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "../home/offers/index.styled";
 import { AppPrice } from "../store/app-list/index.styled";
-import { handleSearch } from "../store/app-list/utils/handlers";
 import { sortAppsByDiscount, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from "../store/app-list/utils/sort-apps";
-import { IUser } from "../../common/types/User";
 import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NoItems, RemoveButton, SearchBar, SearchContainer,  Stats, StatsLabel, Tag, TagsContainer, WishlistContainer, WishlistItem, WishlistTitle } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
 import Toast from "./toast";
+import { handleAddToLibrary, handleDeleteFromWishlist, handleInputChange, handleSortChange } from "./utils/functions";
 
 export const Wishlist = () => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
@@ -84,57 +81,6 @@ export const Wishlist = () => {
     setIsLoading(false);
   }, [appsData, userWishlistIds, sortBy, searchInput]);
 
-  const handleSortChange = (selectedOption: string, setSortBy: any) => {
-    setSortBy(selectedOption);
-  };
-
-  const handleDeleteFromWishlist = (appId: string) => {
-    if (UserDataContext?.userData) {
-      const userId = UserDataContext.userData._id;
-      deleteAppFromWishlistMutation.mutateAsync({ userId, appId });
-
-      setSortedApps((prevSortedApps) =>
-        prevSortedApps.filter((app) => app._id !== appId)
-      );
-
-      if (UserDataContext?.userData) {
-        const updatedUserData = { ...UserDataContext.userData } as IUser;
-        updatedUserData.wishlist = updatedUserData.wishlist.filter(
-          (id) => id !== appId
-        );
-        UserDataContext.setUser(updatedUserData);
-      }
-    }
-  };
-
-  const handleAddToLibrary = async (appId: string) => {
-    const user = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT);
-    if (user) {
-      const userId: string = JSON.parse(user);
-      await addToLibraryMutation.mutateAsync({ userId, appId });
-      setShowToast(true);
-
-      const updatedUserData = { ...UserDataContext?.userData } as IUser | null;
-      if (updatedUserData) {
-        updatedUserData.apps.push(appId);
-        UserDataContext?.setUser(updatedUserData);
-        handleDeleteFromWishlist(appId);
-      }
-    } else {
-      handleNavigate(
-        history,
-        APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
-      );
-    }
-  };
-
-  const handleInputChange = (inputValue: string) => {
-    setSearchInput(inputValue);
-    handleSearch(inputValue, setSortedApps, sortedApps);
-  };
-
-  console.log("userData in Wishlist", UserDataContext?.userData);
-
   return (
     <>
       <Header />
@@ -146,7 +92,7 @@ export const Wishlist = () => {
           <SearchContainer>
             <SearchBar
               onChange={(event) => {
-                handleInputChange(event.target.value);
+                handleInputChange(event.target.value, setSearchInput, setSortedApps, sortedApps);
               }}
               placeholder="Search by name"
             />
@@ -214,7 +160,7 @@ export const Wishlist = () => {
                         )}
                         <PurchaseButton
                           className="to-cart-button"
-                          onClick={() => handleAddToLibrary(item._id)}
+                          onClick={() => handleAddToLibrary(item._id, UserDataContext, addToLibraryMutation, deleteAppFromWishlistMutation, setShowToast, setSortedApps, history)}
                         >
                           Add to Cart
                         </PurchaseButton>
@@ -227,7 +173,7 @@ export const Wishlist = () => {
                         ))}
                       </div>
                       <RemoveButton
-                        onClick={() => handleDeleteFromWishlist(item._id)}
+                        onClick={() => handleDeleteFromWishlist(item._id, UserDataContext, deleteAppFromWishlistMutation, setSortedApps)}
                       >
                         Remove
                       </RemoveButton>

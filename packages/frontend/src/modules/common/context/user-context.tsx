@@ -3,7 +3,7 @@ import { IUser } from "../types/User";
 import { APP_KEYS } from "../consts";
 import { useGetUserById } from "../services/user.service";
 
-interface IUserContext {
+export interface IUserContext {
   userData: IUser | null;
   setUser: (user: IUser | null) => void;
 }

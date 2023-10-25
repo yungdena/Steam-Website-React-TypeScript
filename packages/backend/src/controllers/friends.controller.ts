@@ -22,9 +22,9 @@ export class FriendsController {
   }
 
   async removeFriend(req: Request, res: Response) {
-    const { userId, friendId } = req.body;
-
-    await this.friendsService.removeFriend(userId, friendId, res);
+    const { senderId, receiverId } = req.body;
+    console.log(senderId, receiverId);
+    await this.friendsService.removeFriend(senderId, receiverId, res);
   }
 }
 
