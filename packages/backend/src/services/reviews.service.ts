@@ -1,7 +1,7 @@
 import { IApp, IReview } from "../types/app.type";
 import { AppModel } from "../models/App";
 
-class ReviewService {
+export class ReviewsService {
   async createReview(appId: string, userId: string, reviewData: IReview) {
     const app = await AppModel.findById(appId);
 
@@ -93,4 +93,3 @@ class ReviewService {
   }
 }
 
-export default new ReviewService();
