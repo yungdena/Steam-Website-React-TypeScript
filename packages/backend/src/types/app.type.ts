@@ -9,12 +9,13 @@ export interface ILanguage {
 export interface IReview {
   rate: boolean;
   description: string;
+  user: string;
 }
 
 export interface IApp extends Document {
   title: string;
   description: string;
-  reviews: IReview;
+  reviews: IReview[];
   price: string;
   releaseDate: string;
   publisher: string;
