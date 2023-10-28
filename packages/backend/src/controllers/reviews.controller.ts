@@ -7,6 +7,7 @@ export class ReviewsController {
 
   async createReview(req: Request, res: Response) {
     const { appId, userId, reviewData } = req.body;
+    console.log('body', req.body);
 
     try {
       const updatedReviews = await this.reviewService.createReview(

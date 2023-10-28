@@ -10,7 +10,7 @@ export class ReviewsService {
     }
 
     const existingReview = app.reviews.find(
-      (review) => review.user.toString() === userId
+      (review) => review.user && review.user.toString() === userId
     );
 
     if (existingReview) {

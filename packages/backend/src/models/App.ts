@@ -3,6 +3,7 @@ import { IApp, ILanguage } from "../types/app.type";
 import { IReview } from "../types/app.type";
 
 const reviewSchema = new Schema<IReview>({
+  user: { type: String, required: true },
   rate: { type: Boolean, required: true },
   description: { type: String, required: true },
 });
