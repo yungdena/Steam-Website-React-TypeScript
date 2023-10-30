@@ -1,4 +1,5 @@
 import { Response } from "express";
+
 import { UserModel } from "../models/User";
 
 export class UserService {
@@ -78,21 +79,6 @@ export class UserService {
       res.send(userWithoutPassword);
     } catch (error) {
       res.status(500).send({ message: "Internal server error" });
-    }
-  }
-
-  async updateAvatar(userId: string, avatarPath: string, res: Response) {
-    try {
-      const user = await UserModel.findById(userId);
-      if (user) {
-        user.avatar = avatarPath;
-        await user.save();
-        res.status(200).json({ message: "Avatar updated successfully" });
-      } else {
-        res.status(404).json({ message: "User not found" });
-      }
-    } catch (error) {
-      res.status(500).json({ message: "Internal server error" });
     }
   }
 }

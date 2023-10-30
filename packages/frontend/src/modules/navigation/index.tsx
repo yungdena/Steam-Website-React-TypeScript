@@ -16,6 +16,7 @@ import { FriendList } from '../components/friend-list';
 import { Profile } from '../components/profile';
 import { NotFound } from '../components/NotFound';
 import { Support } from '../components/support';
+import { EditProfile } from '../components/profile/edit';
 
 export const MainRouter = () => (
   <Router>
@@ -91,6 +92,10 @@ export const MainRouter = () => (
           </AppsDataProvider>
         )}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.PROFILE + "/:id"}
+      />
+      <Route
+        component={EditProfile}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.EDIT + "/:id"}
       />
       <Route component={NotFound} />
     </Switch>

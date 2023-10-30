@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { IUser } from "../types/User";
 import { BASE_URL } from "./base-url";
 
 type IBody = {
@@ -139,6 +140,18 @@ const removeFriend = async (data: IFriendRemove) => {
   return responseData;
 };
 
+const updateUser = async (data: IUser) => {
+  const response = await fetch(`${BASE_URL}/user/update/${data._id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const responseData = await response.json();
+  return responseData;
+}
+
 export const useRemoveFriend = () => useMutation(removeFriend);
 export const useRespondToFriendRequest = () => useMutation(respondToFriendRequest);
 export const useSendFriendRequest = () => useMutation(sendFriendRequest);
@@ -149,3 +162,4 @@ export const useDeleteFromWishlist = () => useMutation(deleteFromWishlist);
 export const useGetUserById = () => useMutation(getUserById);
 export const useGetUserByName = () => useMutation(getUserByName);
 export const useGetUserByFriendCode = () => useMutation(getUserByFriendCode);
+export const useUpdateUser = () => useMutation(updateUser);

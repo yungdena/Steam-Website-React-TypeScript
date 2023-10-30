@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { UserModel } from "../models/User";
 import { UserService } from "../services/user.service";
 
 export class UserController {
@@ -29,25 +28,6 @@ export class UserController {
 
     await this.userService.updateUser(id, updatedFields, res);
   }
-
-  async updateAvatar(req: Request, res: Response) {
-    const { id } = req.params;
-
-    console.log('controller check')
-
-    if (!req.file) {
-      return res.status(400).json({ message: "No avatar file uploaded" });
-    }
-
-    const avatarFile = req.file;
-
-    try {
-      await this.userService.updateAvatar(id, avatarFile.path, res);
-    } catch (error) {
-      res.status(500).json({ message: "Internal server error" });
-    }
-  }
 }
-
 const userController = new UserController(new UserService());
 export default userController;

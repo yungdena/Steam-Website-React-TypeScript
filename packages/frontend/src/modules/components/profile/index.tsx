@@ -32,6 +32,7 @@ import {
   FriendName,
 } from "./index.styled";
 import { fetchFriendData, fetchUserDataById, getAppById, handleRemoveFriend, handleSendFriendRequest } from "./utils/functions";
+import { APP_KEYS } from "../../common/consts";
 
 export const Profile = () => {
   const [userData, setUserData] = useState<IUser | null>(null);
@@ -70,7 +71,17 @@ export const Profile = () => {
             <Avatar src={userData?.avatar || defaultAvatar} />
             <Username>{userData?.name}</Username>
             {isOwnProfile ? (
-              <Button>Edit Profile</Button>
+              <Button
+                onClick={() =>
+                  history.push(
+                    '/' +
+                    APP_KEYS.ROUTER_KEYS.EDIT +
+                    "/" + id
+                  )
+                }
+              >
+                Edit Profile
+              </Button>
             ) : requestSent ? (
               <Button>Request Sent</Button>
             ) : isFriend ? (

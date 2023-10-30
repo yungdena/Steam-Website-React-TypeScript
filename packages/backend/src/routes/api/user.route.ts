@@ -1,32 +1,14 @@
 import { Router } from "express";
-import multer from "multer";
 
 import libraryController from "../../controllers/library.controller";
 import userController from "../../controllers/user.controller";
 import friendsController from "../../controllers/friends.controller";
 import { userExistsByName } from "../..//middlewares/validate.middleware";
-import path from "path";
 
 const userRouter: Router = Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "../../../uploads/avatars"));
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${file.fieldname}-${Date.now()}-${file.originalname}`);
-  },
-});
-
-const upload = multer({ storage: storage });
-
 userRouter.post("/library", libraryController.addToLibrary.bind(libraryController));
 userRouter.post("/wishlist", libraryController.addToWishlist.bind(libraryController));
-userRouter.post(
-  "/update-avatar/:id",
-  upload.single("avatar"),
-  userController.updateAvatar.bind(userController)
-);
 
 userRouter.get("/library/:id", libraryController.getLibrary.bind(libraryController));
 userRouter.get("/wishlist/:id", libraryController.getWishlist.bind(libraryController));

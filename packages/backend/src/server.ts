@@ -2,7 +2,6 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
-import axios from 'axios';
 
 import AppRouter from './routes';
 import connectDB from './config/database';
@@ -11,10 +10,10 @@ import { apiConfig } from './config/api';
 const app = express();
 
 const corsOptions = {
-      origin: '*',
-      exposedHeaders: ["Access-Control-Allow-Origin"],
-      credentials: true,
-  };
+  origin: '*',
+  exposedHeaders: ["Access-Control-Allow-Origin"],
+  credentials: true,
+};
 
 app.use(cors(corsOptions));
 

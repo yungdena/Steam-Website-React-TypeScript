@@ -38,4 +38,5 @@ export const ROUTER_KEYS = {
   FRIENDS: 'friends',
   PROFILE: 'profile',
   SUPPORT: 'support',
+  EDIT: 'edit',
 };
