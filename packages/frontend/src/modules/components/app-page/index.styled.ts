@@ -4,6 +4,8 @@ import { COLORS } from "../../common/theme";
 export const Background = styled.div`
   background-color: ${COLORS.storeBlue};
   width: 100%;
+  overflow: hidden;
+  padding-bottom: 10rem;
 `;
 
 export const PageContainer = styled.div`
@@ -12,7 +14,6 @@ export const PageContainer = styled.div`
   align-items: center;
   background-color: ${COLORS.storeBlue};
   width: 58.75rem;
-  height: 100vh;
   margin: 0 auto;
 `;
 
@@ -239,4 +240,80 @@ export const QueueButton = styled.button`
     color: white;
     background: linear-gradient( -60deg, #417a9b 5%,#67c1f5 95%);
   }
+`;
+
+export const ReviewsTitle = styled.div`
+  font-family: "Motiva Sans", Sans-serif;
+  font-weight: 300;
+  font-weight: normal;
+  font-size: 14px;
+  color: #ffffff;
+  text-transform: uppercase;
+  padding-bottom: 5px;
+  letter-spacing: 1px;
+`
+
+export const ReviewsContainer = styled.div`
+  width: 616px;
+  min-height: 10rem;
+  border-top: 1px solid black;
+  padding-top: 1rem;
+  margin-top: 3rem;
+  align-self: start;
+`
+
+export const Review = styled.div`
+  display: flex;
+  min-height: 220px;
+  background-color: rgba( 0, 0, 0, 0.2 );
+  margin-bottom: 26px;
+  background-image: url('https://store.akamai.steamstatic.com/public/images/v6/maincol_gradient_rule.png');
+  background-repeat: no-repeat;
+  background-position: top left;
+`
+
+export const ReviewRightBlock = styled.div`
+  width: 100%;
+  padding-top: 8px;
+  padding-right: 4px;
+`
+
+export const ReviewLeftBlock = styled.div`
+  width: 200px;
+  height: 100%;
+`;
+
+export const ReviewDescription = styled.div`
+  margin-top: 1rem;
+  margin-right: 8px;
+  font-family: "Motiva Sans", Sans-serif;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 17px;
+  color: #acb2b8;
+  overflow-wrap: break-word;
+  overflow: hidden;
+`;
+
+export const RecommendationContainer = styled.div`
+  width: 100%;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+`;
+
+export const RecommendationRate = styled.img`
+  width: 40px;
+  height: 40px;
+`
+
+export const RecommendationRateText = styled.div`
+  font-family: "Motiva Sans", Sans-serif;
+  font-weight: 300;
+  font-weight: normal;
+  font-size: 14px;
+  color: #ffffff;
+  padding-bottom: 5px;
+  letter-spacing: 1px;
+  margin-left: 0.5rem;
 `;

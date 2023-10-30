@@ -16,7 +16,8 @@ import { Header } from "../header";
 import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "../home/offers/index.styled";
 import { AppPrice } from "../store/app-list/index.styled";
 import { IUser } from "../../common/types/User";
-import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton } from "./index.styled";
+import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton, ReviewsContainer, Review, ReviewsTitle, ReviewLeftBlock, ReviewRightBlock, ReviewDescription, RecommendationContainer, RecommendationRate, RecommendationRateText } from "./index.styled";
+import { Footer } from "../home/footer";
 
 interface AppRouteParams {
   id: string;
@@ -37,7 +38,10 @@ export const AppPage = () => {
   const history = useHistory();
 
   const { id } = useParams<AppRouteParams>()
-  
+
+  const thumbUp = 'https://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsUp_v6.png'
+  const thumbDown = 'https://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsDown_v6.png'
+
   useEffect(() => {
     async function fetchById() {
       const data = await getAppByIdMutation.mutateAsync(id);
@@ -114,145 +118,174 @@ const handleAddToLibrary = async () => {
 };
 
   return (
-    <Background>
-      <Header />
-      <PageContainer>
-        <InfoContainer>
-          {isLoading ? (
-            <LoaderBig marginTop="10rem" marginBottom="10rem" />
-          ) : (
-            <>
-              {app && (
-                <>
-                  <AppTitle>{app?.title}</AppTitle>
-                  <InfoWrapper>
-                    <BigInfoContainer>
-                      <ImageSlider images={app?.imagesUrl} />
-                    </BigInfoContainer>
-                    <SmallInfoContainer>
-                      <SmallInfoTextContainer>
-                        <ImageContainer>
-                          <TitleImage src={app?.titleImage} />
-                        </ImageContainer>
-                        {app?.description}
-                      </SmallInfoTextContainer>
-                      <AdditionalInfoContainer>
-                        <AdditionalInfoTitleColumn>
-                          <AdditionalInfoTitle>ALL REVIEWS</AdditionalInfoTitle>
+    <>
+      <Background>
+        <Header />
+        <PageContainer>
+          <InfoContainer>
+            {isLoading ? (
+              <LoaderBig marginTop="10rem" marginBottom="10rem" />
+            ) : (
+              <>
+                {app && (
+                  <>
+                    <AppTitle>{app?.title}</AppTitle>
+                    <InfoWrapper>
+                      <BigInfoContainer>
+                        <ImageSlider images={app?.imagesUrl} />
+                      </BigInfoContainer>
+                      <SmallInfoContainer>
+                        <SmallInfoTextContainer>
+                          <ImageContainer>
+                            <TitleImage src={app?.titleImage} />
+                          </ImageContainer>
+                          {app?.description}
+                        </SmallInfoTextContainer>
+                        <AdditionalInfoContainer>
+                          <AdditionalInfoTitleColumn>
+                            <AdditionalInfoTitle>
+                              ALL REVIEWS
+                            </AdditionalInfoTitle>
+                            <AdditionalInfoTitle>
+                              RELEASE DATE
+                            </AdditionalInfoTitle>
+                            <AdditionalInfoTitle>DEVELOPER</AdditionalInfoTitle>
+                            <AdditionalInfoTitle>PUBLISHER</AdditionalInfoTitle>
+                          </AdditionalInfoTitleColumn>
+                          <AdditionalInfoDescriptionColumn>
+                            <AdditionalInfoDescription
+                              style={{
+                                color: calculateReviewTitle(app?.reviews).color,
+                              }}
+                            >
+                              {app?.reviews &&
+                                calculateReviewTitle(app?.reviews).title}
+                              ({app?.reviews.length})
+                            </AdditionalInfoDescription>
+                            <AdditionalInfoDescription>
+                              {formatDate(app?.releaseDate)}
+                            </AdditionalInfoDescription>
+                            <AdditionalInfoDescription>
+                              {app?.developer}
+                            </AdditionalInfoDescription>
+                            <AdditionalInfoDescription>
+                              {app?.publisher}
+                            </AdditionalInfoDescription>
+                          </AdditionalInfoDescriptionColumn>
+                        </AdditionalInfoContainer>
+                        <TagsContainer>
                           <AdditionalInfoTitle>
-                            RELEASE DATE
+                            Popular user-defined tags for this product:
                           </AdditionalInfoTitle>
-                          <AdditionalInfoTitle>DEVELOPER</AdditionalInfoTitle>
-                          <AdditionalInfoTitle>PUBLISHER</AdditionalInfoTitle>
-                        </AdditionalInfoTitleColumn>
-                        <AdditionalInfoDescriptionColumn>
-                          <AdditionalInfoDescription
-                            style={{
-                              color: calculateReviewTitle(app?.reviews).color,
-                            }}
-                          >
-                            {app?.reviews &&
-                              calculateReviewTitle(app?.reviews).title}
-                            ({app?.reviews.length})
-                          </AdditionalInfoDescription>
-                          <AdditionalInfoDescription>
-                            {formatDate(app?.releaseDate)}
-                          </AdditionalInfoDescription>
-                          <AdditionalInfoDescription>
-                            {app?.developer}
-                          </AdditionalInfoDescription>
-                          <AdditionalInfoDescription>
-                            {app?.publisher}
-                          </AdditionalInfoDescription>
-                        </AdditionalInfoDescriptionColumn>
-                      </AdditionalInfoContainer>
-                      <TagsContainer>
-                        <AdditionalInfoTitle>
-                          Popular user-defined tags for this product:
-                        </AdditionalInfoTitle>
-                        <Tags>
-                          {app?.tags.map((tag) => (
-                            <Tag key={tag}>{tag}</Tag>
-                          ))}
-                        </Tags>
-                      </TagsContainer>
-                    </SmallInfoContainer>
-                  </InfoWrapper>
-                </>
-              )}
-            </>
-          )}
-        </InfoContainer>
-        <QueueContainer>
-          {addedToWishlist ? (
+                          <Tags>
+                            {app?.tags.map((tag) => (
+                              <Tag key={tag}>{tag}</Tag>
+                            ))}
+                          </Tags>
+                        </TagsContainer>
+                      </SmallInfoContainer>
+                    </InfoWrapper>
+                  </>
+                )}
+              </>
+            )}
+          </InfoContainer>
+          <QueueContainer>
+            {addedToWishlist ? (
+              <QueueButton
+                onClick={handleNavigate(
+                  history,
+                  APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.WISHLIST
+                )}
+              >
+                ✔ In Wishlist
+              </QueueButton>
+            ) : (
+              <QueueButton onClick={handleAddToWishlist}>
+                Add to your wishlist
+              </QueueButton>
+            )}
             <QueueButton
               onClick={handleNavigate(
                 history,
-                APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.WISHLIST
+                APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.STORE
               )}
             >
-              ✔ In Wishlist
+              Back to Store
             </QueueButton>
-          ) : (
-            <QueueButton onClick={handleAddToWishlist}>
-              Add to your wishlist
-            </QueueButton>
-          )}
-          <QueueButton
-            onClick={handleNavigate(
-              history,
-              APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.STORE
-            )}
-          >
-            Back to Store
-          </QueueButton>
-        </QueueContainer>
-        <PurchaseMenu>
-          <PurchaseTitle>
-            {app?.price === "Free to Play"
-              ? `Play ${app?.title}`
-              : `Buy ${app?.title}`}
-          </PurchaseTitle>
-          <ButtonWrapper>
-            {app?.newPrice ? (
-              <PriceContainer className="New-Price">
-                <PricePercent>
-                  -
-                  {calculatePercentageDecrease(
-                    Number(app?.price),
-                    Number(app?.newPrice),
-                    0
+          </QueueContainer>
+          <PurchaseMenu>
+            <PurchaseTitle>
+              {app?.price === "Free to Play"
+                ? `Play ${app?.title}`
+                : `Buy ${app?.title}`}
+            </PurchaseTitle>
+            <ButtonWrapper>
+              {app?.newPrice ? (
+                <PriceContainer className="New-Price">
+                  <PricePercent>
+                    -
+                    {calculatePercentageDecrease(
+                      Number(app?.price),
+                      Number(app?.newPrice),
+                      0
+                    )}
+                    %
+                  </PricePercent>
+                  <PriceAmounts>
+                    <OriginalPrice>{app?.price}$</OriginalPrice>
+                    <FinalPrice>{app?.newPrice}$</FinalPrice>
+                  </PriceAmounts>
+                </PriceContainer>
+              ) : (
+                <AppPrice className="appstore-prices">
+                  {app?.price}
+                  {app?.price === "Free to Play" ? "" : "$"}
+                </AppPrice>
+              )}
+              {addedToLibrary ? (
+                <PurchaseButton
+                  onClick={handleNavigate(
+                    history,
+                    APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY
                   )}
-                  %
-                </PricePercent>
-                <PriceAmounts>
-                  <OriginalPrice>{app?.price}$</OriginalPrice>
-                  <FinalPrice>{app?.newPrice}$</FinalPrice>
-                </PriceAmounts>
-              </PriceContainer>
-            ) : (
-              <AppPrice className="appstore-prices">
-                {app?.price}
-                {app?.price === "Free to Play" ? "" : "$"}
-              </AppPrice>
-            )}
-            {addedToLibrary ? (
-              <PurchaseButton
-                onClick={handleNavigate(
-                  history,
-                  APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY
-                )}
-              >
-                ✔ In Library
-              </PurchaseButton>
-            ) : (
-              <PurchaseButton onClick={handleAddToLibrary}>
-                Add to Library
-              </PurchaseButton>
-            )}
-          </ButtonWrapper>
-        </PurchaseMenu>
-      </PageContainer>
-    </Background>
+                >
+                  ✔ In Library
+                </PurchaseButton>
+              ) : (
+                <PurchaseButton onClick={handleAddToLibrary}>
+                  Add to Library
+                </PurchaseButton>
+              )}
+            </ButtonWrapper>
+          </PurchaseMenu>
+          <ReviewsContainer>
+            <ReviewsTitle>REVIEWS</ReviewsTitle>
+            {app?.reviews.map((review) => (
+              <Review>
+                <ReviewLeftBlock></ReviewLeftBlock>
+                <ReviewRightBlock>
+                  <RecommendationContainer>
+                    {review.rate === true ? (
+                      <>
+                        <RecommendationRate src={thumbUp} />
+                        <RecommendationRateText>Recommended</RecommendationRateText>
+                      </>
+                    ) : (
+                      <>
+                        <RecommendationRate src={thumbDown} />
+                        <RecommendationRateText>Not Recommended</RecommendationRateText>
+                      </>
+                    )}
+                  </RecommendationContainer>
+                  <ReviewDescription>{review.description}</ReviewDescription>
+                </ReviewRightBlock>
+              </Review>
+            ))}
+          </ReviewsContainer>
+        </PageContainer>
+      </Background>
+      <Footer />
+    </>
   );
 }
