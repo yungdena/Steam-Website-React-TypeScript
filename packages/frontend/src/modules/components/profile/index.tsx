@@ -59,6 +59,8 @@ export const Profile = () => {
       }
     }, [id]);
 
+    console.log(userData?.avatar)
+
   return (
     <>
       <Header />
