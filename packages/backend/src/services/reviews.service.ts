@@ -34,7 +34,7 @@ export class ReviewsService {
     appId: string,
     userId: string,
     reviewId: string,
-    updatedReviewData: Partial<IReview>
+    updatedReviewData: any
   ) {
     const app = await AppModel.findById(appId);
 
@@ -43,9 +43,17 @@ export class ReviewsService {
     }
 
     const reviewIndex = app.reviews.findIndex(
-      (review: IReview & { _id?: string }) =>
-        review.user.toString() === userId &&
-        review._id && review._id.toString() === reviewId
+      (review: IReview & { _id?: string }) => {
+        if (
+          review.user &&
+          review.user.toString() === userId &&
+          review._id &&
+          review._id.toString() === reviewId
+        ) {
+          return true;
+        }
+        return false;
+      }
     );
 
     if (reviewIndex === -1) {
@@ -54,16 +62,20 @@ export class ReviewsService {
       );
     }
 
-    const updatedReview = {
-      ...app.reviews[reviewIndex],
-      ...updatedReviewData,
-    };
+    const updatedReview = app.reviews[reviewIndex];
+    if (updatedReviewData.reviewData.rate !== undefined) {
+      updatedReview.rate = updatedReviewData.reviewData.rate;
+    }
+    if (updatedReviewData.reviewData.description !== undefined) {
+      updatedReview.description = updatedReviewData.reviewData.description;
+    }
 
     app.reviews[reviewIndex] = updatedReview;
-
+    console.log(updatedReviewData);
+    console.log(app.reviews[reviewIndex]);
     await app.save();
 
-    return app.reviews;
+    return updatedReview;
   }
 
   async deleteReview(appId: string, userId: string, reviewId: string) {
@@ -75,7 +87,8 @@ export class ReviewsService {
 
     const reviewIndex = app.reviews.findIndex(
       (review: IReview & { _id?: string }) =>
-        review._id && review._id.toString() === reviewId &&
+        review._id &&
+        review._id.toString() === reviewId &&
         review.user.toString() === userId
     );
 
