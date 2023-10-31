@@ -10,12 +10,6 @@ export const AboutPage = () => {
           Hello! This is my mock-up version of Steam website.
         </TextContainer>
         <TextContainer>
-          I've used a lot of different technologies and libraries to copy visual
-          and functionality of original website. Hope you enjoy using my project
-          and I would like to be applied :D
-        </TextContainer>
-        <br />
-        <TextContainer>
           P.S. If you have any questions or comments please contact me via email
           or Telegram:
         </TextContainer>

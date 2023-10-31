@@ -1,6 +1,8 @@
 export interface IReview {
   rate: boolean;
   description: string;
+  user: string;
+  _id: string;
 }
 
 export interface ILanguage {

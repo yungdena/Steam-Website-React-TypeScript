@@ -148,7 +148,7 @@ export const Library = () => {
                   <Capsule>
                     <ItemTitle
                       onClick={() =>
-                        history.push(APP_KEYS.ROUTER_KEYS.APPS + `/${item._id}`)
+                        history.push('/' + APP_KEYS.ROUTER_KEYS.APPS + `/${item._id}`)
                       }
                     >
                       {item.title}

@@ -6,8 +6,8 @@ import { APP_KEYS } from "../../common/consts";
 import { useUserData } from "../../common/context/user-context";
 import { LoaderBig } from "../../common/loader/loader";
 import { useGetAppById } from "../../common/services/apps.service";
-import { useAddToLibrary, useAddToWishlist } from "../../common/services/user.service";
-import { IApp } from "../../common/types/app.interface";
+import { useAddToLibrary, useAddToWishlist, useGetUserById } from "../../common/services/user.service";
+import { IApp, IReview } from "../../common/types/app.interface";
 import { calculateReviewTitle } from "../../common/utils/calculateReviewRate";
 import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
 import { formatDate } from "../../common/utils/formatDate";
@@ -16,8 +16,9 @@ import { Header } from "../header";
 import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "../home/offers/index.styled";
 import { AppPrice } from "../store/app-list/index.styled";
 import { IUser } from "../../common/types/User";
-import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton, ReviewsContainer, Review, ReviewsTitle, ReviewLeftBlock, ReviewRightBlock, ReviewDescription, RecommendationContainer, RecommendationRate, RecommendationRateText } from "./index.styled";
+import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton, ReviewsContainer, Review, ReviewsTitle, ReviewLeftBlock, ReviewRightBlock, ReviewDescription, RecommendationContainer, RecommendationRate, RecommendationRateText, UserAvatar, UserName } from "./index.styled";
 import { Footer } from "../home/footer";
+import { defaultAvatar } from "../../common/consts/avatar";
 
 interface AppRouteParams {
   id: string;
@@ -30,17 +31,54 @@ export const AppPage = () => {
   const [addedToWishlist, setAddedToWishlist] = useState(false);
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [libraryIds, setLibraryIds] = useState<string[]>([]);
+  const [usersData, setUsersData] = useState<Record<string, IUser | null>>(
+    {}
+  );
 
   const UserDataContext = useUserData()
   const getAppByIdMutation = useGetAppById();
   const addToWishlistMutation = useAddToWishlist();
   const addToLibraryMutation = useAddToLibrary();
+  const getUserByIdMutation = useGetUserById()
   const history = useHistory();
-
   const { id } = useParams<AppRouteParams>()
 
   const thumbUp = 'https://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsUp_v6.png'
   const thumbDown = 'https://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsDown_v6.png'
+
+  const getUserDataById = async (userId: string) => {
+    try {
+      const userData = await getUserByIdMutation.mutateAsync(userId);
+      return userData;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    async function fetchReviewsData() {
+      const reviewsData = app?.reviews || [];
+      const usersDataPromises = reviewsData.map((review) =>
+        getUserDataById(review.user)
+      );
+
+      try {
+        const usersData = await Promise.all(usersDataPromises);
+        const userDataMap: Record<string, IUser | null> = {};
+
+        usersData.forEach((userData, index) => {
+          userDataMap[reviewsData[index].user] = userData;
+        });
+
+        setUsersData(userDataMap);
+      } catch (error) {
+        console.error("Error fetching user data for reviews:", error);
+      }
+    }
+
+    fetchReviewsData();
+  }, [app]);
 
   useEffect(() => {
     async function fetchById() {
@@ -77,45 +115,45 @@ export const AppPage = () => {
     getUsersWishlist();
   }, [wishlistIds]);
 
-const handleAddToWishlist = async () => {
-  if (UserDataContext?.userData) {
-    const appId = id;
-    const userId = UserDataContext.userData._id;
-    await addToWishlistMutation.mutateAsync({ userId, appId });
-    setAddedToWishlist(true);
-
+  const handleAddToWishlist = async () => {
     if (UserDataContext?.userData) {
-      const updatedUserData = { ...UserDataContext.userData } as IUser;
-      updatedUserData.wishlist.push(appId);
-      UserDataContext.setUser(updatedUserData);
+      const appId = id;
+      const userId = UserDataContext.userData._id;
+      await addToWishlistMutation.mutateAsync({ userId, appId });
+      setAddedToWishlist(true);
+
+      if (UserDataContext?.userData) {
+        const updatedUserData = { ...UserDataContext.userData } as IUser;
+        updatedUserData.wishlist.push(appId);
+        UserDataContext.setUser(updatedUserData);
+      }
+    } else {
+      handleNavigate(
+        history,
+        APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
+      );
     }
-  } else {
-    handleNavigate(
-      history,
-      APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
-    );
-  }
-};
+  };
 
-const handleAddToLibrary = async () => {
-  if (UserDataContext?.userData) {
-    const appId = id;
-    const userId = UserDataContext.userData._id;
-    await addToLibraryMutation.mutateAsync({ userId, appId });
-    setAddedToLibrary(true);
-
+  const handleAddToLibrary = async () => {
     if (UserDataContext?.userData) {
-      const updatedUserData = { ...UserDataContext.userData } as IUser;
-      updatedUserData.apps.push(appId);
-      UserDataContext.setUser(updatedUserData);
+      const appId = id;
+      const userId = UserDataContext.userData._id;
+      await addToLibraryMutation.mutateAsync({ userId, appId });
+      setAddedToLibrary(true);
+
+      if (UserDataContext?.userData) {
+        const updatedUserData = { ...UserDataContext.userData } as IUser;
+        updatedUserData.apps.push(appId);
+        UserDataContext.setUser(updatedUserData);
+      }
+    } else {
+      handleNavigate(
+        history,
+        APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
+      );
     }
-  } else {
-    handleNavigate(
-      history,
-      APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
-    );
-  }
-};
+  };
 
   return (
     <>
@@ -247,7 +285,9 @@ const handleAddToLibrary = async () => {
                 <PurchaseButton
                   onClick={handleNavigate(
                     history,
-                    APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY
+                    APP_KEYS.ROUTER_KEYS.ROOT +
+                    APP_KEYS.ROUTER_KEYS.LIBRARY + '/' +
+                    UserDataContext?.userData?._id
                   )}
                 >
                   ✔ In Library
@@ -262,19 +302,30 @@ const handleAddToLibrary = async () => {
           <ReviewsContainer>
             <ReviewsTitle>REVIEWS</ReviewsTitle>
             {app?.reviews.map((review) => (
-              <Review>
-                <ReviewLeftBlock></ReviewLeftBlock>
+              <Review key={review._id}>
+                <ReviewLeftBlock>
+                  {usersData[review.user] && usersData[review.user]?.avatar ? (
+                    <UserAvatar src={usersData[review.user]?.avatar} />
+                  ) : (
+                    <UserAvatar src={defaultAvatar} />
+                  )}
+                  <UserName>{usersData[review.user]?.name}</UserName>
+                </ReviewLeftBlock>
                 <ReviewRightBlock>
                   <RecommendationContainer>
                     {review.rate === true ? (
                       <>
                         <RecommendationRate src={thumbUp} />
-                        <RecommendationRateText>Recommended</RecommendationRateText>
+                        <RecommendationRateText>
+                          Recommended
+                        </RecommendationRateText>
                       </>
                     ) : (
                       <>
                         <RecommendationRate src={thumbDown} />
-                        <RecommendationRateText>Not Recommended</RecommendationRateText>
+                        <RecommendationRateText>
+                          Not Recommended
+                        </RecommendationRateText>
                       </>
                     )}
                   </RecommendationContainer>

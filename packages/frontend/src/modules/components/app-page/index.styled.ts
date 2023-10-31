@@ -281,6 +281,8 @@ export const ReviewRightBlock = styled.div`
 export const ReviewLeftBlock = styled.div`
   width: 200px;
   height: 100%;
+  padding: 0.5rem;
+  display: flex;
 `;
 
 export const ReviewDescription = styled.div`
@@ -317,3 +319,20 @@ export const RecommendationRateText = styled.div`
   letter-spacing: 1px;
   margin-left: 0.5rem;
 `;
+
+export const UserName = styled.div`
+  color: #c1dbf4;
+  margin-left: 0.5rem;
+  font-size: 13px;
+  font-family: "Motiva Sans", Sans-serif;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 6rem;
+`;
+
+export const UserAvatar = styled.img`
+  width: 34px;
+  height: 34px;
+`
