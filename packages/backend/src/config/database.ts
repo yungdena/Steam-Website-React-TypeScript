@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
 import { ConnectionOptions, connect } from 'mongoose';
 
-import { ErrorMessage } from '../types/error-message';
-
 const connectDB = async () => {
   try {
     const options: ConnectionOptions = {
@@ -14,8 +12,7 @@ const connectDB = async () => {
     await connect(process.env.MONGO_URI, options);
     console.log('MongoDB Connected...');
   } catch (err) {
-    console.error(ErrorMessage.Connection);
-    // Exit process with failure
+    console.error(`Encountered error while connecting to database ${err}`);
     process.exit(1);
   }
 };
