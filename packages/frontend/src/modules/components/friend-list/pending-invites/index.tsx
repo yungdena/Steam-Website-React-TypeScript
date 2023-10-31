@@ -108,27 +108,15 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
         )}
         {foundReceivedUsers.map((user: IUser) => (
           <InviteContainer key={user._id}>
-            <Avatar src={avatar} />
+            <Avatar src={user.avatar || avatar} />
             <InviteSender>{user.name}</InviteSender>
             <ButtonAccept
-              onClick={() =>
-                handleRequest(
-                  user._id,
-                  userDataId,
-                  "accepted"
-                )
-              }
+              onClick={() => handleRequest(user._id, userDataId, "accepted")}
             >
               Accept
             </ButtonAccept>
             <ButtonDecline
-              onClick={() =>
-                handleRequest(
-                  user._id,
-                  userDataId,
-                  "declined"
-                )
-              }
+              onClick={() => handleRequest(user._id, userDataId, "declined")}
               style={{ margin: "1.5rem 0 0 0.5rem" }}
             >
               X
@@ -147,16 +135,10 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
         )}
         {foundSentUsers.map((user: IUser) => (
           <InviteContainer key={user._id}>
-            <Avatar src={avatar} />
+            <Avatar src={user.avatar || avatar} />
             <InviteSender>{user.name}</InviteSender>
             <ButtonDecline
-              onClick={() =>
-                handleRequest(
-                  user._id,
-                  userDataId,
-                  "declined"
-                )
-              }
+              onClick={() => handleRequest(user._id, userDataId, "declined")}
             >
               Cancel
             </ButtonDecline>

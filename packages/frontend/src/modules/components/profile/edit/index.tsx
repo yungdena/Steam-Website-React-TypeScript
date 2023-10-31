@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { APP_KEYS } from "../../../common/consts";
 import { useUserData } from "../../../common/context/user-context";
 import { useUpdateUser } from "../../../common/services/user.service";
-import { IUser } from "../../../common/types/User";
 import { Header } from "../../header"
 import { Footer } from "../footer"
-import { Background } from "./index.styled";
+import { About, AboutSection, AboutTitle, Avatar, AvatarSection, AvatarWrapper, Background, ButtonWrapper, CancelButton, EditAvatar, EditAvatarDescription, Form, FormTitle, MainContainer, ProfileHeading, ProfileName, SaveButton, StyledInput, StyledLabel } from "./index.styled";
 
 export const EditProfile = () => {
   const UserDataContext = useUserData();
+  const history = useHistory();
   const [user, setUser] = useState(UserDataContext?.userData);
   const [initialCloudinaryImageURL, setInitialCloudinaryImageURL] = useState<
     string | null
@@ -15,7 +17,6 @@ export const EditProfile = () => {
   const [cloudinaryImageURL, setCloudinaryImageURL] = useState<string | null>(
     initialCloudinaryImageURL
   );
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const updateUserMutation = useUpdateUser();
   const cloudinaryRef = useRef();
   const widgetRef = useRef<CloudinaryWidget | null>(null);
@@ -39,68 +40,92 @@ export const EditProfile = () => {
         uploadPreset: "deul5wc5",
       },
       function (err: any, result: any) {
-        console.log("result", result);
         if (!err && result && result.info && result.info.secure_url) {
           setCloudinaryImageURL(result.info.secure_url);
         }
       }
     );
   }, []);
-const handleUpdateUser = async () => {
-  try {
-    if (user && cloudinaryImageURL) {
-      console.log("avatar should change ", cloudinaryImageURL);
-      setUser({ ...user, avatar: cloudinaryImageURL });
-      console.log("user", user);
 
-      const updatedUser = await updateUserMutation.mutateAsync(user);
-      console.log("User updated:", updatedUser);
+  const handleUpdateUser = async () => {
+    try {
+      if (user && cloudinaryImageURL) {
+        setUser({ ...user, avatar: cloudinaryImageURL });
+
+        const updatedUser = await updateUserMutation.mutateAsync(user);
+        history.push(`/${APP_KEYS.ROUTER_KEYS.PROFILE}/${user._id}`)
+      }
+    } catch (error) {
+      console.error("Error updating user:", error);
     }
-  } catch (error) {
-    console.error("Error updating user:", error);
-  }
-};
+  };
 
   useEffect(() => {
     setUser(UserDataContext?.userData);
   }, [UserDataContext]);
 
-  console.log("CloudinaryURL:", cloudinaryImageURL);
-
   return (
     <>
       <Header />
       <Background>
-        {user && (
-          <form>
-            <input
-              type="text"
-              value={user.name}
-              onChange={(e) => setUser({ ...user, name: e.target.value })}
-            />
-            {widgetRef.current && (
-              <button
-                type="button"
-                onClick={() => (widgetRef.current as CloudinaryWidget).open()}
-              >
-                Change Avatar
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={handleUpdateUser}
-            >
-              Update Profile
-            </button>
-            {cloudinaryImageURL && (
-              <img
-                src={cloudinaryImageURL}
-                alt="Avatar"
-                style={{ maxWidth: "100px" }}
+        <MainContainer>
+          <ProfileHeading>
+            <Avatar src={user?.avatar} />
+            <ProfileName>{UserDataContext?.userData?.name}</ProfileName>
+          </ProfileHeading>
+          <About>
+            <AboutTitle>ABOUT</AboutTitle>
+            <AboutSection>
+              Set your profile name and details. Providing additional
+              information like your real name can help friends find you on the
+              "Steam" Community
+            </AboutSection>
+          </About>
+          <FormTitle>GENERAL</FormTitle>
+          {user && (
+            <Form>
+              <StyledLabel>Profile name</StyledLabel>
+              <StyledInput
+                type="text"
+                value={user.name}
+                onChange={(e) => setUser({ ...user, name: e.target.value })}
               />
-            )}
-          </form>
-        )}
+              <AvatarSection>
+                <AboutTitle>AVATAR</AboutTitle>
+                <AvatarWrapper>
+                  <EditAvatar src={cloudinaryImageURL || user.avatar} />
+                  <div>
+                    <CancelButton
+                      type="button"
+                      onClick={() =>
+                        (widgetRef.current as CloudinaryWidget).open()
+                      }
+                      style={{ marginLeft: "2rem" }}
+                    >
+                      Upload your avatar
+                    </CancelButton>
+                    <EditAvatarDescription style={{ marginLeft: "2rem" }}>
+                      Upload a file from your device. Image should be square, at
+                      least 184px x 184px.
+                    </EditAvatarDescription>
+                  </div>
+                </AvatarWrapper>
+              </AvatarSection>
+              <ButtonWrapper>
+                <CancelButton
+                  onClick={() =>
+                    history.push(`/${APP_KEYS.ROUTER_KEYS.PROFILE}/${user._id}`)
+                  }
+                >
+                  Cancel
+                </CancelButton>
+                <SaveButton type="button" onClick={handleUpdateUser}>
+                  Save
+                </SaveButton>
+              </ButtonWrapper>
+            </Form>
+          )}
+        </MainContainer>
       </Background>
       <Footer />
     </>

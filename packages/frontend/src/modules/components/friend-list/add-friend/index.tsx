@@ -77,7 +77,7 @@ export const AddFriend = () => {
         />
         {foundUser && (
           <UserContainer>
-            <UserAvatar src={avatar} />
+            <UserAvatar src={foundUser.avatar || avatar} />
             <UserName>{foundUser.name}</UserName>
             {!requestSent && (
               <Button onClick={() => handleSendFriendRequest(foundUser._id)}>

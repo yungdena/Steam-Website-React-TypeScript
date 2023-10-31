@@ -162,7 +162,7 @@ export const Profile = () => {
                 <ProfileInfoValue>{userData?.friends.length}</ProfileInfoValue>
               </InfoWrap>
               <ProfileFriendsContainer>
-                {friendsData.map((friend) => (
+                {friendsData.slice(0, 9).map((friend) => (
                   <FriendInfo
                     onClick={() => history.push("/" + "profile/" + friend._id)}
                     key={friend._id}

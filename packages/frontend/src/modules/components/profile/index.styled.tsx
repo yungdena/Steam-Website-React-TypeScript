@@ -47,6 +47,7 @@ export const ProfileHeading = styled.div`
 export const Avatar = styled.img`
   width: 164px;
   height: 164px;
+  border: 2px solid ${COLORS.tagBlue}
 `
 
 export const Username = styled.div`
@@ -208,6 +209,7 @@ export const FriendInfo = styled.div`
 export const FriendAvatar = styled.img`
   width: 36px;
   height: 36px;
+  border: 1px solid ${COLORS.tagBlue};
 `
 
 export const FriendName = styled.div`

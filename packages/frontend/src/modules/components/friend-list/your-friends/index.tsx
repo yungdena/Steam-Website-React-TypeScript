@@ -70,7 +70,7 @@ export const YourFriends = ({ setComponent }: IComponent) => {
               onClick={() => navigateToProfile(friend._id)}
               key={index}
             >
-              <Avatar src={avatar} />
+              <Avatar src={friend.avatar || avatar} />
               <FriendName>{friend.name}</FriendName>
             </FriendContainer>
           ))}

@@ -67,7 +67,7 @@ export const FriendList = () => {
               ? (            
                 <>
                   <UserContainer>
-                    <Avatar src={avatar} />
+                    <Avatar src={UserDataContext?.userData?.avatar || avatar} />
                     <UserName>{UserDataContext?.userData?.name}</UserName>
                   </UserContainer><MenuContainer>
                       <ButtonsMenu>
@@ -107,7 +107,6 @@ export const FriendList = () => {
                 </>
               )
             }
-
           </MainContainer>
         </BackgroundImage>
       </Background>
