@@ -35,7 +35,7 @@ export const AppPage = () => {
   const [libraryIds, setLibraryIds] = useState<string[]>([]);
   const [userReviewed, setUserReviewed] = useState(true);
   const [descriptionError, setDescriptionError] = useState(null);
-  const [isRecommended, setIsRecommended] = useState<boolean | null>(null);
+  const [isRecommended, setIsRecommended] = useState<boolean>(true);
   const [usersData, setUsersData] = useState<Record<string, IUser | null>>(
     {}
   );
