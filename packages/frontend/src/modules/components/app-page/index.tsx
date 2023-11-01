@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { Redirect, useHistory, useParams } from "react-router-dom";
 
 import { ImageSlider } from "./swiper";
@@ -16,9 +16,11 @@ import { Header } from "../header";
 import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "../home/offers/index.styled";
 import { AppPrice } from "../store/app-list/index.styled";
 import { IUser } from "../../common/types/User";
-import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton, ReviewsContainer, Review, ReviewsTitle, ReviewLeftBlock, ReviewRightBlock, ReviewDescription, RecommendationContainer, RecommendationRate, RecommendationRateText, UserAvatar, UserName } from "./index.styled";
+import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton, ReviewsContainer, Review, ReviewsTitle, ReviewLeftBlock, ReviewRightBlock, ReviewDescription, RecommendationContainer, RecommendationRate, RecommendationRateText, UserAvatar, UserName, OwnReviewContainer, AlreadyInLibrary, OwnReviewTitle, OwnReviewDescription, FormWrapper, StyledTextArea, RecommendButton, IconThumbsUp, IconThumbsDown, RecommendButtonsContainer, PostReviewButton, RecommendButtonWrapper, ButtonWithIcon } from "./index.styled";
 import { Footer } from "../home/footer";
 import { defaultAvatar } from "../../common/consts/avatar";
+import { COLORS } from "../../common/theme";
+import { usePostReview } from "../../common/services/reviews.service";
 
 interface AppRouteParams {
   id: string;
@@ -31,11 +33,30 @@ export const AppPage = () => {
   const [addedToWishlist, setAddedToWishlist] = useState(false);
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [libraryIds, setLibraryIds] = useState<string[]>([]);
+  const [userReviewed, setUserReviewed] = useState(true);
+  const [descriptionError, setDescriptionError] = useState(null);
+  const [isRecommended, setIsRecommended] = useState<boolean | null>(null);
   const [usersData, setUsersData] = useState<Record<string, IUser | null>>(
     {}
   );
+  const UserDataContext = useUserData();
+  const initialReviewData =
+    UserDataContext && UserDataContext.userData
+      ? {
+          rate: true,
+          description: "",
+          user: UserDataContext.userData._id,
+        }
+      : {
+          rate: true,
+          description: "",
+          user: "",
+        };
 
-  const UserDataContext = useUserData()
+  const [reviewData, setReviewData] =
+    useState<Partial<IReview>>(initialReviewData);
+
+  const postReviewMutation = usePostReview()
   const getAppByIdMutation = useGetAppById();
   const addToWishlistMutation = useAddToWishlist();
   const addToLibraryMutation = useAddToLibrary();
@@ -55,6 +76,55 @@ export const AppPage = () => {
       return null;
     }
   };
+
+  const handleTextAreaChange = (e: any) => {
+    const description = e.target.value;
+    setReviewData((prevReviewData) => ({
+      ...prevReviewData,
+      description,
+    }));
+  };
+
+  const handleRecommendClick = (isRecommended: boolean) => {
+    setReviewData((prevReviewData) => ({
+      ...prevReviewData,
+      rate: isRecommended,
+    }));
+    setIsRecommended(isRecommended);
+  };
+
+  const handlePostReview = () => {
+    if (!reviewData?.description?.trim()) {
+      alert("Please enter a review description.");
+      return;
+    }
+
+    const userReviewExists = app?.reviews.some(
+      (review: IReview) => review.user === reviewData.user
+    );
+
+    if (userReviewExists) {
+      alert("You have already posted a review.");
+      return;
+    }
+    if (app && UserDataContext && UserDataContext.userData) {
+        const data = {
+          appId: app._id,
+          userId: UserDataContext?.userData._id,
+          reviewData: reviewData,
+        }
+        console.log(data);
+        postReviewMutation.mutateAsync(data)
+    }
+  };
+
+  useEffect(() => {
+    if (app?.reviews.some((review: IReview) => review.user === reviewData.user)) {
+      setUserReviewed(true);
+    } else {
+      setUserReviewed(false);
+    }
+  }, [app])
 
   useEffect(() => {
     async function fetchReviewsData() {
@@ -83,7 +153,7 @@ export const AppPage = () => {
   useEffect(() => {
     async function fetchById() {
       const data = await getAppByIdMutation.mutateAsync(id);
-      console.log("response on front: ", data);
+
       setApp(data);
       setIsLoading(false);
 
@@ -252,6 +322,72 @@ export const AppPage = () => {
               Back to Store
             </QueueButton>
           </QueueContainer>
+          {addedToLibrary && !userReviewed && (
+            <>
+              <AlreadyInLibrary>
+                {app?.title} is already in your library
+              </AlreadyInLibrary>
+              <OwnReviewContainer>
+                <OwnReviewTitle>Write a review for {app?.title}</OwnReviewTitle>
+                <OwnReviewDescription>
+                  Please describe what you liked or disliked about this game and
+                  whether you recommend it to others.
+                </OwnReviewDescription>
+                <OwnReviewDescription>
+                  Please remember to be polite and follow the Rules and
+                  Guidelines.
+                </OwnReviewDescription>
+                <FormWrapper>
+                  <UserAvatar
+                    style={{
+                      width: "92px",
+                      height: "92px",
+                      border: `1px solid ${COLORS.tagBlue}`,
+                    }}
+                    src={UserDataContext?.userData?.avatar}
+                  />
+                  <StyledTextArea
+                    maxLength={2000}
+                    onChange={handleTextAreaChange}
+                  />
+                </FormWrapper>
+                <RecommendButtonsContainer>
+                  Do you recommend this game?
+                  <RecommendButtonWrapper>
+                    <div>
+                      <ButtonWithIcon
+                        onClick={() => handleRecommendClick(true)}
+                      >
+                        <RecommendButton
+                          style={
+                            isRecommended ? { border: "1px solid #67c1f5" } : {}
+                          }
+                        >
+                          <IconThumbsUp />
+                          Yes
+                        </RecommendButton>
+                      </ButtonWithIcon>
+                      <ButtonWithIcon
+                        onClick={() => handleRecommendClick(false)}
+                      >
+                        <RecommendButton
+                          style={
+                            isRecommended ? {} : { border: "1px solid #67c1f5" }
+                          }
+                        >
+                          <IconThumbsDown />
+                          No
+                        </RecommendButton>
+                      </ButtonWithIcon>
+                    </div>
+                    <PostReviewButton onClick={handlePostReview}>
+                      Post Review
+                    </PostReviewButton>
+                  </RecommendButtonWrapper>
+                </RecommendButtonsContainer>
+              </OwnReviewContainer>
+            </>
+          )}
           <PurchaseMenu>
             <PurchaseTitle>
               {app?.price === "Free to Play"
@@ -286,8 +422,9 @@ export const AppPage = () => {
                   onClick={handleNavigate(
                     history,
                     APP_KEYS.ROUTER_KEYS.ROOT +
-                    APP_KEYS.ROUTER_KEYS.LIBRARY + '/' +
-                    UserDataContext?.userData?._id
+                      APP_KEYS.ROUTER_KEYS.LIBRARY +
+                      "/" +
+                      UserDataContext?.userData?._id
                   )}
                 >
                   ✔ In Library

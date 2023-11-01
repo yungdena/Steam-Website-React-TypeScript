@@ -298,8 +298,10 @@ export const ReviewDescription = styled.div`
 `;
 
 export const RecommendationContainer = styled.div`
+  font-family: "Motiva Sans", Sans-serif;
   width: 100%;
   height: 40px;
+  color: #acb2b8;
   background: rgba(0, 0, 0, 0.2);
   display: flex;
 `;
@@ -335,4 +337,187 @@ export const UserName = styled.div`
 export const UserAvatar = styled.img`
   width: 34px;
   height: 34px;
+`
+
+export const OwnReviewContainer = styled.div`
+  padding: 1rem;
+  padding-bottom: 2rem;
+  padding-top: 0;
+  width: 100%;
+  min-height: 460px;
+  background: linear-gradient(
+    135deg,
+    rgba(97, 100, 101, 0.3) 0%,
+    rgba(226, 244, 255, 0.3) 100%
+  );
+`;
+
+export const AlreadyInLibrary = styled.div`
+  background: linear-gradient(
+    to right,
+    rgba(163, 207, 6, 0.6) 0%,
+    rgba(75, 106, 33, 0.6) 100%
+  );
+  width: 100%;
+  height: 40px;
+  font-size: 18px;
+  font-family: "Motiva Sans", Sans-serif;
+  font-weight: 300;
+  line-height: 40px;
+  color: #a3cf06;
+  padding-left: 1rem;
+  margin-top: 1rem;
+`;
+
+export const OwnReviewTitle = styled.div`
+  font-size: 18px;
+  font-weight: normal;
+  color: #66c0f4;
+  font-family: "Motiva Sans", Sans-serif;
+  font-weight: 300;
+  width: 100%;
+  border-top: 1px solid #212c3d;
+  padding-top: 1rem;
+`;
+
+export const OwnReviewDescription = styled.div`
+  font-size: 13px;
+  line-height: 17px;
+  color: #8f98a0;
+`;
+
+export const FormWrapper = styled.div`
+  display: flex;
+  margin-top: 1rem;
+`
+
+export const StyledTextArea = styled.textarea`
+  height: 160px;
+  border: 1px solid #233c51;
+  border-radius: 3px;
+  width: 800px;
+  background-color: #222b35;
+  color: #d6d7d8;
+  padding: 10px 11px;
+  font-size: 13px;
+  font-family: "Motiva Sans", Sans-serif;
+  font-weight: normal;
+  -webkit-box-shadow: inset 0px 0px 7px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: inset 0px 0px 7px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 7px rgba(0, 0, 0, 0.5);
+  margin-left: 1rem;
+  resize: vertical;
+`;
+
+export const RecommendButton = styled.div`
+  padding: 0 15px;
+  font-size: 15px;
+  line-height: 30px;
+  width: 78px;
+  height: 32px;
+  border-radius: 2px;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none !important;
+  color: #67c1f5;
+  background: rgba(103, 193, 245, 0.2);
+  margin-right: 4px;
+
+  &:hover {
+    background: linear-gradient(-60deg, #417a9b 5%, #67c1f5 95%);
+    color: white;
+  }
+`;
+
+export const IconThumbsUp = styled.i`
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin: 0 0px;
+  background: url(https://store.akamai.steamstatic.com/public/shared/images/buttons/icons_18.png?v=3);
+  vertical-align: text-top;
+  margin-right: 4px;
+
+  &:hover {
+    background-position: -72px 0px;
+  }
+`;
+
+export const IconThumbsDown = styled.i`
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin: 0 0px;
+  background: url(https://store.akamai.steamstatic.com/public/shared/images/buttons/icons_18.png?v=3);
+  vertical-align: text-top;
+  background-position: -18px 0px;
+  margin-right: 4px;
+`;
+
+export const ButtonWithIcon = styled.div`
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover {
+    ${RecommendButton} {
+      background: linear-gradient(-60deg, #417a9b 5%, #67c1f5 95%);
+      color: white;
+    }
+
+    ${IconThumbsUp} {
+      background-position: -72px 0px;
+    }
+
+    ${IconThumbsDown} {
+      background-position: -90px 0px;
+    }
+  }
+`;
+
+export const RecommendButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 110px;
+  margin-top: 120px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #c6d4df;
+  font-size: 12px;
+`
+
+export const PostReviewButton = styled.div`
+  width: 114px;
+  height: 36px;
+  border-radius: 2px;
+  border: none;
+  padding-left: 14px;
+  font-size: 15px;
+  line-height: 30px;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none !important;
+  color: #2b5066;
+  background: linear-gradient(
+    to bottom,
+    rgba(193, 228, 249, 1) 5%,
+    rgba(148, 183, 202, 1) 95%
+  );
+  border-radius: 4px;
+  border: 2px solid #17202f;
+
+  &:hover {
+    background: linear-gradient(
+      to bottom,
+      rgba(102, 192, 244, 1) 5%,
+      rgba(47, 137, 188, 1) 95%
+    );
+    color: white;
+  }
+`;
+
+export const RecommendButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `
