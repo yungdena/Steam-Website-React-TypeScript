@@ -113,8 +113,9 @@ export const AppPage = () => {
           userId: UserDataContext?.userData._id,
           reviewData: reviewData,
         }
-        console.log(data);
-        postReviewMutation.mutateAsync(data)
+        postReviewMutation.mutateAsync(data);
+        setUserReviewed(true);
+        alert("Review posted successfully");
     }
   };
 
