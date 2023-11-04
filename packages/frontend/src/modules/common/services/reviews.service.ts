@@ -25,7 +25,7 @@ interface IReviewPatchRequest {
   appId: string;
   userId: string;
   reviewId: string;
-  updatedReviewData: IReview
+  updatedReviewData: Partial<IReview>
 }
 
 const updateReview = async (data: IReviewPatchRequest) => {
@@ -45,7 +45,6 @@ interface IReviewDeleteRequest {
   appId: string;
   userId: string;
   reviewId: string;
-  updatedReviewData: IReview;
 }
 
 const deleteReview = async (data: IReviewDeleteRequest) => {

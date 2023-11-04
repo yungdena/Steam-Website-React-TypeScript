@@ -16,11 +16,11 @@ import { Header } from "../header";
 import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "../home/offers/index.styled";
 import { AppPrice } from "../store/app-list/index.styled";
 import { IUser } from "../../common/types/User";
-import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton, ReviewsContainer, Review, ReviewsTitle, ReviewLeftBlock, ReviewRightBlock, ReviewDescription, RecommendationContainer, RecommendationRate, RecommendationRateText, UserAvatar, UserName, OwnReviewContainer, AlreadyInLibrary, OwnReviewTitle, OwnReviewDescription, FormWrapper, StyledTextArea, RecommendButton, IconThumbsUp, IconThumbsDown, RecommendButtonsContainer, PostReviewButton, RecommendButtonWrapper, ButtonWithIcon } from "./index.styled";
+import { AdditionalInfoContainer, Tag, AdditionalInfoDescription, AdditionalInfoDescriptionColumn, AdditionalInfoTitle, AdditionalInfoTitleColumn, AppTitle, BigInfoContainer, ImageContainer, InfoContainer, InfoWrapper, PageContainer, SmallInfoContainer, SmallInfoTextContainer, TagsContainer, TitleImage, Tags, PurchaseMenu, PurchaseTitle, ButtonWrapper, PurchaseButton, Background, QueueContainer, QueueButton, ReviewsContainer, Review, ReviewsTitle, ReviewLeftBlock, ReviewRightBlock, ReviewDescription, RecommendationContainer, RecommendationRate, RecommendationRateText, UserAvatar, UserName, OwnReviewContainer, AlreadyInLibrary, OwnReviewTitle, OwnReviewDescription, FormWrapper, StyledTextArea, RecommendButton, IconThumbsUp, IconThumbsDown, RecommendButtonsContainer, PostReviewButton, RecommendButtonWrapper, ButtonWithIcon, EditIcon } from "./index.styled";
 import { Footer } from "../home/footer";
 import { defaultAvatar } from "../../common/consts/avatar";
 import { COLORS } from "../../common/theme";
-import { usePostReview } from "../../common/services/reviews.service";
+import { useDeleteReview, usePostReview, useUpdateReview } from "../../common/services/reviews.service";
 
 interface AppRouteParams {
   id: string;
@@ -36,6 +36,7 @@ export const AppPage = () => {
   const [userReviewed, setUserReviewed] = useState(true);
   const [descriptionError, setDescriptionError] = useState(null);
   const [isRecommended, setIsRecommended] = useState<boolean>(true);
+  const [reviewDataIdChanged, setReviewDataIdChanged] = useState(false);
   const [usersData, setUsersData] = useState<Record<string, IUser | null>>(
     {}
   );
@@ -46,17 +47,21 @@ export const AppPage = () => {
           rate: true,
           description: "",
           user: UserDataContext.userData._id,
+          _id: ""
         }
       : {
           rate: true,
           description: "",
           user: "",
+          _id: ""
         };
 
   const [reviewData, setReviewData] =
     useState<Partial<IReview>>(initialReviewData);
 
-  const postReviewMutation = usePostReview()
+  const postReviewMutation = usePostReview();
+  const updateReviewMutation = useUpdateReview();
+  const deleteReviewMutation = useDeleteReview();
   const getAppByIdMutation = useGetAppById();
   const addToWishlistMutation = useAddToWishlist();
   const addToLibraryMutation = useAddToLibrary();
@@ -116,6 +121,62 @@ export const AppPage = () => {
         postReviewMutation.mutateAsync(data);
         setUserReviewed(true);
         alert("Review posted successfully");
+    }
+  };
+
+  const handleUpdateReview = () => {
+    if (!reviewData?.description?.trim()) {
+      alert("Please enter a review description.");
+      return;
+    }
+
+    const userReviewExists = app?.reviews.some(
+      (review: IReview) => review.user === reviewData.user
+    );
+
+    if (!userReviewExists) {
+      alert("You haven't posted a review yet.");
+      return;
+    }
+
+    if (app && UserDataContext && UserDataContext.userData && reviewData._id) {
+      const data = {
+        appId: app._id,
+        userId: UserDataContext?.userData._id,
+        reviewId: reviewData._id,
+        updatedReviewData: reviewData,
+      };
+
+      updateReviewMutation.mutateAsync(data);
+      setUserReviewed(true);
+      alert(`Review updated successfully`);
+    }
+  };
+
+  const handleDeleteReview = () => {
+    const userReviewExists = app?.reviews.some(
+      (review: IReview) => review.user === reviewData.user
+    );
+
+    if (!userReviewExists) {
+      alert("You haven't posted a review yet.");
+      return;
+    }
+
+    if (
+      app &&
+      UserDataContext &&
+      UserDataContext.userData &&
+      reviewData._id
+    ) {
+      const data = {
+        appId: app._id,
+        userId: UserDataContext?.userData._id,
+        reviewId: reviewData._id,
+      };
+
+      deleteReviewMutation.mutateAsync(data);
+      alert(`Review deleted successfully`);
     }
   };
 
@@ -185,6 +246,13 @@ export const AppPage = () => {
 
     getUsersWishlist();
   }, [wishlistIds]);
+
+  useEffect(() => {
+    if (reviewDataIdChanged) {
+      handleDeleteReview();
+      setReviewDataIdChanged(false);
+    }
+  }, [reviewDataIdChanged, handleDeleteReview]);
 
   const handleAddToWishlist = async () => {
     if (UserDataContext?.userData) {
@@ -381,9 +449,21 @@ export const AppPage = () => {
                         </RecommendButton>
                       </ButtonWithIcon>
                     </div>
-                    <PostReviewButton onClick={handlePostReview}>
-                      Post Review
-                    </PostReviewButton>
+                    {UserDataContext?.userData?._id &&
+                    Object.keys(usersData).includes(
+                      UserDataContext?.userData?._id
+                    ) ? (
+                      <PostReviewButton
+                        style={{ padding: "1px" }}
+                        onClick={handleUpdateReview}
+                      >
+                        Update Review
+                      </PostReviewButton>
+                    ) : (
+                      <PostReviewButton onClick={handlePostReview}>
+                        Post Review
+                      </PostReviewButton>
+                    )}
                   </RecommendButtonWrapper>
                 </RecommendButtonsContainer>
               </OwnReviewContainer>
@@ -468,6 +548,25 @@ export const AppPage = () => {
                     )}
                   </RecommendationContainer>
                   <ReviewDescription>{review.description}</ReviewDescription>
+                  {review.user === UserDataContext?.userData?._id && (
+                    <RecommendButtonWrapper>
+                      <EditIcon
+                        onClick={() => {
+                          setReviewData({ ...reviewData, _id: review._id });
+                          setReviewDataIdChanged(true);
+                        }}
+                        style={{ border: "2px solid #ba1717", right: "4rem" }}
+                        src="https://res.cloudinary.com/didkbrlcz/image/upload/v1699083179/trashcan-svgrepo-com_1_r7kydk.svg"
+                      />
+                      <EditIcon
+                        onClick={() => {
+                          setReviewData({ ...reviewData, _id: review._id });
+                          setUserReviewed(false);
+                        }}
+                        src="https://res.cloudinary.com/didkbrlcz/image/upload/v1699078605/pencil-svgrepo-com_1_okyevu.svg"
+                      />
+                    </RecommendButtonWrapper>
+                  )}
                 </ReviewRightBlock>
               </Review>
             ))}

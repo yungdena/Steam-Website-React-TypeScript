@@ -276,6 +276,7 @@ export const ReviewRightBlock = styled.div`
   width: 100%;
   padding-top: 8px;
   padding-right: 4px;
+  position: relative;
 `
 
 export const ReviewLeftBlock = styled.div`
@@ -521,3 +522,20 @@ export const RecommendButtonWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
 `
+
+export const EditIcon = styled.img`
+  width: 32px;
+  height: 32px;
+  border: 2px solid darkGray;
+  padding: 4px;
+  border-radius: 4px;
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border: 2px solid gray;
+  }
+`;

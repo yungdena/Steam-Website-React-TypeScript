@@ -37,7 +37,6 @@ export class ReviewsService {
     updatedReviewData: any
   ) {
     const app = await AppModel.findById(appId);
-
     if (!app) {
       throw new Error("App not found");
     }
@@ -63,16 +62,16 @@ export class ReviewsService {
     }
 
     const updatedReview = app.reviews[reviewIndex];
-    if (updatedReviewData.reviewData.rate !== undefined) {
-      updatedReview.rate = updatedReviewData.reviewData.rate;
+
+    if (updatedReviewData.updatedReviewData.rate !== undefined) {
+      updatedReview.rate = updatedReviewData.updatedReviewData.rate;
     }
-    if (updatedReviewData.reviewData.description !== undefined) {
-      updatedReview.description = updatedReviewData.reviewData.description;
+    if (updatedReviewData.updatedReviewData.description !== undefined) {
+      updatedReview.description =
+        updatedReviewData.updatedReviewData.description;
     }
 
     app.reviews[reviewIndex] = updatedReview;
-    console.log(updatedReviewData);
-    console.log(app.reviews[reviewIndex]);
     await app.save();
 
     return updatedReview;

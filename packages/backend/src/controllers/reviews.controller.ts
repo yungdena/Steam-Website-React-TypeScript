@@ -7,8 +7,7 @@ export class ReviewsController {
 
   async createReview(req: Request, res: Response) {
     const { appId, userId, reviewData } = req.body;
-    console.log('body', req.body);
-
+    
     try {
       const updatedReviews = await this.reviewService.createReview(
         appId,
@@ -24,7 +23,6 @@ export class ReviewsController {
   async updateReview(req: Request, res: Response) {
     const { appId, userId, reviewId } = req.body;
     const updatedReviewData: Partial<IReview> = req.body;
-
     try {
       const updatedReviews = await this.reviewService.updateReview(
         appId,
