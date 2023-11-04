@@ -37,7 +37,10 @@ export const EditProfile = () => {
     widgetRef.current = (cloudinaryRef.current as any).createUploadWidget(
       {
         cloudName: "didkbrlcz",
-        uploadPreset: "deul5wc5",
+        uploadPreset: "ivqnjn7v",
+        cropping: "true",
+        croppingCoordinatesMode: "custom",
+        showSkipCropButton: false
       },
       function (err: any, result: any) {
         if (!err && result && result.info && result.info.secure_url) {
