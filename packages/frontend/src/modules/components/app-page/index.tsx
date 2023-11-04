@@ -34,7 +34,7 @@ export const AppPage = () => {
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [libraryIds, setLibraryIds] = useState<string[]>([]);
   const [userReviewed, setUserReviewed] = useState(true);
-  const [descriptionError, setDescriptionError] = useState(null);
+  const [descriptionError, setDescriptionError] = useState<string | null>(null);
   const [isRecommended, setIsRecommended] = useState<boolean>(true);
   const [reviewDataIdChanged, setReviewDataIdChanged] = useState(false);
   const [usersData, setUsersData] = useState<Record<string, IUser | null>>(
@@ -100,7 +100,7 @@ export const AppPage = () => {
 
   const handlePostReview = () => {
     if (!reviewData?.description?.trim()) {
-      alert("Please enter a review description.");
+      setDescriptionError("Please enter a review description.");
       return;
     }
 
@@ -120,13 +120,12 @@ export const AppPage = () => {
         }
         postReviewMutation.mutateAsync(data);
         setUserReviewed(true);
-        alert("Review posted successfully");
     }
   };
 
   const handleUpdateReview = () => {
     if (!reviewData?.description?.trim()) {
-      alert("Please enter a review description.");
+      setDescriptionError("Please enter a review description.");
       return;
     }
 
@@ -135,7 +134,7 @@ export const AppPage = () => {
     );
 
     if (!userReviewExists) {
-      alert("You haven't posted a review yet.");
+      setDescriptionError("You haven't posted a review yet.");
       return;
     }
 
@@ -149,7 +148,6 @@ export const AppPage = () => {
 
       updateReviewMutation.mutateAsync(data);
       setUserReviewed(true);
-      alert(`Review updated successfully`);
     }
   };
 
@@ -159,7 +157,7 @@ export const AppPage = () => {
     );
 
     if (!userReviewExists) {
-      alert("You haven't posted a review yet.");
+      setDescriptionError("You haven't posted a review yet.");
       return;
     }
 
@@ -449,6 +447,7 @@ export const AppPage = () => {
                         </RecommendButton>
                       </ButtonWithIcon>
                     </div>
+                    {descriptionError && <div>{descriptionError}</div>}
                     {UserDataContext?.userData?._id &&
                     Object.keys(usersData).includes(
                       UserDataContext?.userData?._id
