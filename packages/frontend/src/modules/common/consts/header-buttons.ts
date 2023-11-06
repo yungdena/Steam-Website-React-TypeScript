@@ -62,7 +62,7 @@ export const DROPDOWN_DATA = [
     content: [
       {
         title: "HOME",
-        linkTo: "/store",
+        linkTo: "/community",
       },
       {
         title: "ABOUT",

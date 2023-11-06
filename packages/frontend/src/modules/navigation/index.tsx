@@ -17,6 +17,8 @@ import { Profile } from '../components/profile';
 import { NotFound } from '../components/NotFound';
 import { Support } from '../components/support';
 import { EditProfile } from '../components/profile/edit';
+import { Community } from '../components/community';
+import { PostsDataProvider } from '../common/context/community-context';
 
 export const MainRouter = () => (
   <Router>
@@ -96,6 +98,14 @@ export const MainRouter = () => (
       <Route
         component={EditProfile}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.EDIT + "/:id"}
+      />
+      <Route
+        component={() => (
+          <PostsDataProvider>
+            <Community />
+          </PostsDataProvider>
+        )}
+        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.COMMUNITY}
       />
       <Route component={NotFound} />
     </Switch>
