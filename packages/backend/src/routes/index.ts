@@ -2,6 +2,7 @@ import { Application } from 'express';
 import appsRouter from './api/apps.route';
 import authRouter from './api/auth.route';
 import bannersRouter from './api/banners.route';
+import communityRouter from './api/community.route';
 import reviewsRouter from './api/reviews.route';
 import userRouter from './api/user.route';
 
@@ -17,6 +18,7 @@ class AppRouter {
     this.app.use('/api/banners', bannersRouter);
     this.app.use('/api/user', userRouter);
     this.app.use("/api/reviews", reviewsRouter);
+    this.app.use("/api/community/post", communityRouter)
   }
 }
 

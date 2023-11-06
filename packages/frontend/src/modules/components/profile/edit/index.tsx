@@ -40,7 +40,8 @@ export const EditProfile = () => {
         uploadPreset: "ivqnjn7v",
         cropping: "true",
         croppingCoordinatesMode: "custom",
-        showSkipCropButton: false
+        showSkipCropButton: false,
+        croppingAspectRatio: 1
       },
       function (err: any, result: any) {
         if (!err && result && result.info && result.info.secure_url) {
@@ -109,7 +110,7 @@ export const EditProfile = () => {
                     </CancelButton>
                     <EditAvatarDescription style={{ marginLeft: "2rem" }}>
                       Upload a file from your device. Image should be square, at
-                      least 184px x 184px.
+                      least 400px x 400px.
                     </EditAvatarDescription>
                   </div>
                 </AvatarWrapper>
