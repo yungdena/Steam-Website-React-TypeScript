@@ -1,8 +1,27 @@
 import { CommunityPostModel } from "../models/Community-post";
 import { IPost } from "../types/community-post";
-import { Response } from "express-serve-static-core";
 
 export class CommunityPostService {
+  async getAllPosts() {
+    const posts = await CommunityPostModel.find();
+
+    if (!posts) {
+      throw new Error("Post not found");
+    }
+
+    return posts
+  }
+
+  async getPostById(id: string) {
+    const post =  CommunityPostModel.findById(id);
+
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    return post;
+  }
+
   async createPost(postData: IPost) {
     const createdPost = await CommunityPostModel.create(postData);
     return createdPost;
