@@ -37,7 +37,7 @@ export const Community = () => {
     };
 
     fetchUsers();
-  }, []);
+  }, [postsData]);
 
   console.log(users)
 
@@ -45,7 +45,7 @@ export const Community = () => {
     <>
       <Header />
       <Background>
-        {isLoadingPosts ? (
+        {isLoadingPosts && users.length > 0 ? (
           <LoaderBig />
         ) : (
           <MainContainer className="grid-container">
