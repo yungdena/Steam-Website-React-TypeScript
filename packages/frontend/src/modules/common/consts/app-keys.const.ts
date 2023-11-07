@@ -39,5 +39,6 @@ export const ROUTER_KEYS = {
   PROFILE: 'profile',
   SUPPORT: 'support',
   EDIT: 'edit',
-  COMMUNITY: 'community'
+  COMMUNITY: 'community',
+  CREATE: 'create'
 };

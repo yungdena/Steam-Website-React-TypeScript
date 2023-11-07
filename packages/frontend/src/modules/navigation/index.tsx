@@ -19,6 +19,7 @@ import { Support } from '../components/support';
 import { EditProfile } from '../components/profile/edit';
 import { Community } from '../components/community';
 import { PostsDataProvider } from '../common/context/community-context';
+import { CreatePost } from '../components/community/create-post';
 
 export const MainRouter = () => (
   <Router>
@@ -100,12 +101,31 @@ export const MainRouter = () => (
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.EDIT + "/:id"}
       />
       <Route
+        exact
         component={() => (
-          <PostsDataProvider>
-            <Community />
-          </PostsDataProvider>
+          <AppsDataProvider>
+            <PostsDataProvider>
+              <Community />
+            </PostsDataProvider>
+          </AppsDataProvider>
         )}
         path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.COMMUNITY}
+      />
+      <Route
+        exact
+        component={() => (
+          <AppsDataProvider>
+            <PostsDataProvider>
+              <CreatePost />
+            </PostsDataProvider>
+          </AppsDataProvider>
+        )}
+        path={
+          APP_KEYS.ROUTER_KEYS.ROOT +
+          APP_KEYS.ROUTER_KEYS.COMMUNITY +
+          "/" +
+          APP_KEYS.ROUTER_KEYS.CREATE
+        }
       />
       <Route component={NotFound} />
     </Switch>

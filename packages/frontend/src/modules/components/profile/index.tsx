@@ -73,11 +73,7 @@ export const Profile = () => {
             {isOwnProfile ? (
               <Button
                 onClick={() =>
-                  history.push(
-                    '/' +
-                    APP_KEYS.ROUTER_KEYS.EDIT +
-                    "/" + id
-                  )
+                  history.push("/" + APP_KEYS.ROUTER_KEYS.EDIT + "/" + id)
                 }
               >
                 Edit Profile
@@ -115,38 +111,46 @@ export const Profile = () => {
           <InfoContainer>
             <ActivityContainer>
               <ActivityTitle>Recent Activity</ActivityTitle>
-              {userData?.apps.slice(0, 3).map((appId: string) => {
-                const appData = getAppById(appId, appsData);
-                if (appData) {
-                  return (
-                    <GameContainer key={appId}>
-                      <div style={{ display: "flex" }}>
-                        <GameImage
-                          onClick={() =>
-                            history.push("/" + "apps/" + appData._id)
-                          }
-                          src={appData.bannerImage}
-                        />
-                        <GameTitle
+              {userData?.apps
+                .slice(
+                  UserDataContext?.userData?.apps.length
+                    ? Math.max(UserDataContext.userData.apps.length - 3, 0)
+                    : 0,
+                  UserDataContext?.userData?.apps.length
+                )
+                .reverse()
+                .map((appId: string) => {
+                  const appData = getAppById(appId, appsData);
+                  if (appData) {
+                    return (
+                      <GameContainer key={appId}>
+                        <div style={{ display: "flex" }}>
+                          <GameImage
+                            onClick={() =>
+                              history.push("/" + "apps/" + appData._id)
+                            }
+                            src={appData.bannerImage}
+                          />
+                          <GameTitle
+                            onClick={() =>
+                              history.push("/" + "apps/" + appData._id)
+                            }
+                          >
+                            {appData.title}
+                          </GameTitle>
+                        </div>
+                        <AchievementsContainer
                           onClick={() =>
                             history.push("/" + "apps/" + appData._id)
                           }
                         >
-                          {appData.title}
-                        </GameTitle>
-                      </div>
-                      <AchievementsContainer
-                        onClick={() =>
-                          history.push("/" + "apps/" + appData._id)
-                        }
-                      >
-                        App Page
-                      </AchievementsContainer>
-                    </GameContainer>
-                  );
-                }
-                return null;
-              })}
+                          App Page
+                        </AchievementsContainer>
+                      </GameContainer>
+                    );
+                  }
+                  return null;
+                })}
             </ActivityContainer>
             <ProfileInfoContainer>
               <InfoWrap
