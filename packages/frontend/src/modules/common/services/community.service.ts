@@ -25,7 +25,7 @@ const getPostById = async (postId: string) => {
   return responseData;
 };
 
-const createPost = async (data: IPost) => {
+const createPost = async (data: any) => {
   const response = await fetch(`${BASE_URL}/community/post`, {
     method: "POST",
     headers: {

@@ -17,6 +17,7 @@ export const COLORS = {
   searchBarBlack: "#0e1c25",
   RecLime: "#a3cf06",
   priceGrey: "#c6d4df",
+  communityGrey: "#1f2126",
   gradientRight: "rgba(109, 38, 44, 0.301)",
   gradientLeft: "rgba(50, 255, 193, 0.103)",
   gradientBackground: "rgba(34, 35, 48, 0.93)",

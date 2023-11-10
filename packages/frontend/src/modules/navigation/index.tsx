@@ -20,6 +20,7 @@ import { EditProfile } from '../components/profile/edit';
 import { Community } from '../components/community';
 import { PostsDataProvider } from '../common/context/community-context';
 import { CreatePost } from '../components/community/create-post';
+import { ViewPost } from '../components/community/view-post';
 
 export const MainRouter = () => (
   <Router>

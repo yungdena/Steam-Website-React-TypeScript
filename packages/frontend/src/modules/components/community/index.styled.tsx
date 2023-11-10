@@ -1,3 +1,4 @@
+import { HTMLAttributes } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../common/theme";
 
@@ -103,6 +104,7 @@ export const PopularGameTitle = styled.div`
 `;
 
 export const MainContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -116,8 +118,13 @@ export const Post = styled.div`
   border: 1px solid transparent;
   border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: fit-content;
+  width: 100%;
   padding: 16px;
+  cursor: pointer;
+
+  &:hover {
+    border: 1px solid ${COLORS.tagBlue};
+  }
 `;
 
 export const PostImage = styled.img`
