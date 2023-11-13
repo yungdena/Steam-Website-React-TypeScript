@@ -19,7 +19,7 @@ communityRouter.post(
 );
 
 communityRouter.patch(
-  "/",
+  "/:id",
   communityPostController.updatePost.bind(communityPostController)
 );
 

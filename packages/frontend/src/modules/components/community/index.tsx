@@ -74,7 +74,7 @@ export const Community = () => {
                           const app = getAppById(appId, appsData);
                           if (app) {
                             return (
-                              <PopularGameItem>
+                              <PopularGameItem key={app._id}>
                                 <PopularGameTitle>{app.title}</PopularGameTitle>
                                 <PopularGameDescription
                                   onClick={() =>

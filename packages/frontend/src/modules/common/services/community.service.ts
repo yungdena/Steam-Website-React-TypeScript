@@ -69,8 +69,38 @@ const deletePost = async (postId: string) => {
   return responseData;
 };
 
+const addLikeToPost = async (data: any): Promise<IPost | undefined> => {
+  const response = await fetch(`${BASE_URL}/community/post/${data.postId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response.ok) {
+    const postData: IPost = await response.json();
+    postData.likes.count += 1;
+    postData.likes.users.push(data.userId)
+
+    const updateResponse = await fetch(`${BASE_URL}/community/post/${data.postId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ postData }),
+    });
+
+    if (updateResponse.ok) {
+      return postData;
+    }
+  }
+
+  return undefined;
+};
+
 export const useGetAllPosts = () => useMutation(getAllPosts);
 export const useGetPostById = () => useMutation(getPostById);
 export const useCreatePost = () => useMutation(createPost);
 export const useUpdatePost = () => useMutation(updatePost);
 export const useDeletePost = () => useMutation(deletePost);
+export const useAddLikeToPost = () => useMutation(addLikeToPost)

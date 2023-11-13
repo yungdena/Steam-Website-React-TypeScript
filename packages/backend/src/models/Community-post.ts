@@ -7,23 +7,25 @@ export const communityPostSchema: Schema<IPost> = new Schema({
     required: true,
   },
   image: {
-    type: String
+    type: String,
   },
   description: {
-    type: String
+    type: String,
   },
   likes: {
-    type: Number,
+    type: Object,
     required: true,
+    default: {},
   },
   comments: {
     type: Object,
     required: true,
+    default: {},
   },
   user: {
     type: String,
     required: true,
-  }
+  },
 });
 
 export const CommunityPostModel: Model<IPost> = model("CommunityPost", communityPostSchema);

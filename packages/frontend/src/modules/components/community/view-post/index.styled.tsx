@@ -20,7 +20,7 @@ export const ImageBlock = styled.div`
   left: 2px;
   transform: translateY(-50%);
   width: 60%;
-  border: 1px solid ${COLORS.tagBlue};
+  border: 1px solid #304a66;
   border-right: none;
   display: flex;
   flex-direction: column;
@@ -35,7 +35,7 @@ export const InfoBlock = styled.div`
   transform: translateY(-50%);
   width: 40%;
   background-color: ${COLORS.communityGrey};
-  border: 1px solid ${COLORS.tagBlue};
+  border: 1px solid #304a66;
   border-left: 1px solid transparent;
   display: flex;
   flex-direction: column;
@@ -88,4 +88,87 @@ export const PostText = styled.div`
   margin-top: 0px;
   margin-bottom: 4px;
   padding: 0 0.5rem;
+`;
+
+export const ClosePost = styled.div`
+  position: absolute;
+  top: -20px;
+  right: -2px;
+  width: calc(250% + 2px);
+  height: 20px;
+  background-color: #304a66;
+`;
+
+export const Cross = styled.img`
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+`
+
+export const LikesCount = styled.div`
+  display: flex;
+  padding: 0 0.5rem;
+  color: #7cc5fb;
+  font-size: 12px;
+  line-height: 16px;
+`;
+
+export const ThumbsUpIcon = styled.img`
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+`
+
+export const LikeButton = styled.div`
+  height: 30px;
+  padding: 0px;
+  padding-left: 32px;
+  background-image: url(https://community.cloudflare.steamstatic.com/public/images/sharedfiles/rate_ico_up_tiled.png?v=1);
+  background-position: 8px 0px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  line-height: 30px;
+  background-color: rgba(0, 0, 0, 0.4);
+  margin-right: 5px;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  cursor: pointer;
+  color: #939393;
+
+  &:hover {
+    background-position: 8px -30px;
+    background-color: rgba( 102, 192, 244, 0.4 );
+  }
+`;
+
+export const DislikeButton = styled.div`
+  height: 30px;
+  width: 32px;
+  padding: 0px;
+  background-image: url(https://community.cloudflare.steamstatic.com/public/images/sharedfiles/rate_ico_dn_tiled.png?v=1);
+  background-position: 8px 0px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  line-height: 30px;
+  background-color: rgba(0, 0, 0, 0.4);
+  margin-right: 5px;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  cursor: pointer;
+  color: #939393;
+
+  &:hover {
+    background-color: rgba(102, 192, 244, 0.4);
+    background-position: 8px -30px;
+  }
+`;
+
+export const CommentsBlock = styled.div`
+  border-top: 1px solid #304a66;
+  min-height: 30%;
+  margin: 0.5rem;
+  padding: 0.5rem;
 `;

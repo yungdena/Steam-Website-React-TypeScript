@@ -1,35 +1,61 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useGetAllPosts } from "../services/community.service";
 import { IPost } from "../types/Post.interface";
+import { useUserData } from "./user-context";
 
 type PostsDataContextType = {
   postsData: IPost[];
+  setPostsData: React.Dispatch<React.SetStateAction<IPost[]>>;
   isLoadingPosts: boolean;
+  likedPosts: string[];
+  setLikedPosts: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const PostsDataContext = createContext<PostsDataContextType>({
   postsData: [],
+  setPostsData: () => {},
   isLoadingPosts: true,
+  likedPosts: [],
+  setLikedPosts: () => {},
 });
 
 export const PostsDataProvider = ({ children }: any) => {
-  const [postsData, setPostsData] = useState([]);
-  const [fetchCounter, setFetchCounter] = useState(0);
+  const [postsData, setPostsData] = useState<IPost[]>([]);
+  const [likedPosts, setLikedPosts] = useState<string[]>([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
   const getAllPostsMutation = useGetAllPosts();
+  const UserDataProvider = useUserData();
+  const userDataId = UserDataProvider?.userData?._id;
 
   useEffect(() => {
     async function fetchAllPosts() {
       const data = await getAllPostsMutation.mutateAsync();
       setPostsData(data);
       setIsLoadingPosts(false);
-      setFetchCounter(fetchCounter + 1);
+      if (userDataId) {
+        console.log(
+          data.filter((post: IPost) => post.likes.users.includes(userDataId))
+        );
+        const userLikedPosts = userDataId
+          ? data.filter((post: IPost) => post.likes.users.includes(userDataId))
+          : [];
+          console.log(userLikedPosts)
+        setLikedPosts(userLikedPosts.map((post: IPost) => post._id));
+      }
     }
     fetchAllPosts();
-  }, []);
+  }, [userDataId]);
 
-  return (
-    <PostsDataContext.Provider value={{ postsData, isLoadingPosts }}>
+  return (  
+    <PostsDataContext.Provider
+      value={{
+        postsData,
+        setPostsData,
+        isLoadingPosts,
+        likedPosts,
+        setLikedPosts,
+      }}
+    >
       {children}
     </PostsDataContext.Provider>
   );

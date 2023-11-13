@@ -27,20 +27,12 @@ export class CommunityPostService {
     return createdPost;
   }
 
-  async updatePost(postData: IPost, userId: string) {
+  async updatePost(postData: IPost, userId: string, postId: string) {
     try {
-      const post = await CommunityPostModel.findById(postData._id);
+      const post = await CommunityPostModel.findById(postId);
 
       if (!post) {
         throw new Error("Post not found");
-      }
-
-      if (userId !== post.user) {
-        throw new Error("You are not authorized to update this post");
-      }
-
-      if (postData.user !== userId) {
-        throw new Error("You can only update your own posts");
       }
 
       if (postData.title) {
@@ -53,7 +45,16 @@ export class CommunityPostService {
         post.image = postData.image;
       }
       if (postData.likes !== undefined) {
-        post.likes = postData.likes;
+          const uniqueUser = postData.likes.users.find(
+            (user: string) => !post.likes.users.includes(user)
+          );
+
+          if (uniqueUser) {
+            post.likes = postData.likes;
+            post.markModified("likes");
+          } else {
+            throw new Error("You have already liked this post");
+          }
       }
       if (postData.comments) {
         post.comments = postData.comments;

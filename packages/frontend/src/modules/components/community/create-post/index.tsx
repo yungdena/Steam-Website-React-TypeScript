@@ -19,7 +19,10 @@ export const CreatePost = () => {
     description: '',
     image: '',
     user: UserDataContext?.userData?._id || '',
-    likes: 0,
+    likes: {
+      count: 0,
+      users: []
+    },
     comments: {},
   }
 
