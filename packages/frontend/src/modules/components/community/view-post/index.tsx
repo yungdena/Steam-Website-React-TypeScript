@@ -3,26 +3,87 @@ import { useEffect, useRef, useState } from "react";
 import { usePostsData } from "../../../common/context/community-context";
 import { defaultAvatar } from "../../../common/consts/avatar";
 import { useUserData } from "../../../common/context/user-context";
-import { useAddLikeToPost } from "../../../common/services/community.service";
+import { useAddCommentToPost, useAddLikeToPost } from "../../../common/services/community.service";
 import { useGetUserById } from "../../../common/services/user.service";
 import { IUser } from "../../../common/types/User";
-import { PostImage, ImageBlock, InfoBlock, MainContainer, AuthorBlock, AuthorAvatar, AuthorName, PostText, ClosePost, Cross, LikesCount, ThumbsUpIcon, LikeButton, DislikeButton, CommentsBlock } from "./index.styled";
-import { IPost } from "../../../common/types/Post.interface";
+import { PostImage, ImageBlock, InfoBlock, MainContainer, AuthorBlock, AuthorAvatar, AuthorName, PostText, ClosePost, Cross, LikesCount, ThumbsUpIcon, LikeButton, DislikeButton, CommentsBlock, MyComment, Comment, CommentNickname, CommentText, PostCommentWrap, PostCommentButton } from "./index.styled";
+import { IComment, IPost } from "../../../common/types/Post.interface";
+import { useHistory } from "react-router-dom";
+import { APP_KEYS } from "../../../common/consts";
 
 export const ViewPost = ({ post, user, setSelectedPost, setSelectedUser }: any) => {
   const { postsData, setPostsData, likedPosts, setLikedPosts } = usePostsData();
   const [userInfo, setUserInfo] = useState<IUser | null>(null);
-  const [userLiked, setUserLiked] = useState<boolean>(false)
-  const UserDataProvider = useUserData()
+  const [userLiked, setUserLiked] = useState<boolean>(false);
+  const [commentText, setCommentText] = useState('');
+  const [commentUsers, setCommentUsers] = useState<IUser[]>([]);
+  const UserDataProvider = useUserData();
+  const history = useHistory()
   const getUserByIdMutation = useGetUserById();
   const addLikeMutation = useAddLikeToPost()
+  const addCommentMutation = useAddCommentToPost();
 
   const imageRef = useRef<HTMLImageElement>(null);
   const infoBlockRef = useRef<HTMLDivElement>(null);
   const imageBlockRef = useRef<HTMLDivElement>(null);
 
-  console.log(post)
-  console.log(likedPosts);
+
+  const handleAddComment = async (
+    postId: string,
+    userId: string,
+    commentText: string
+  ) => {
+    if (UserDataProvider?.userData?._id) {
+      try {
+        await addCommentMutation.mutateAsync({
+          postId,
+          userId,
+          text: commentText,
+        });
+
+        const newComment = {
+          user: UserDataProvider.userData._id,
+          text: commentText,
+        };
+
+        const updatedPostsData = postsData.map((p: IPost) =>
+          p._id === postId
+            ? {
+                ...p,
+                comments: [...p.comments, newComment],
+              }
+            : p
+        );
+        setPostsData(updatedPostsData);
+
+        setCommentText("");
+
+        const user = await getUserByIdMutation.mutateAsync(
+          UserDataProvider.userData._id
+        );
+        if (user) {
+          setCommentUsers([...commentUsers, user]);
+        }
+      } catch (error: any) {
+        console.error("Error adding comment:", error.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchCommentUsers = async () => {
+      const usersPromises = post.comments.map((comment: IComment) =>
+        getUserByIdMutation.mutateAsync(comment.user)
+      );
+
+      if (usersPromises.length > 0) {
+        const resolvedUsers = await Promise.all(usersPromises);
+        setCommentUsers(resolvedUsers);
+      }
+    };
+
+    fetchCommentUsers();
+    }, [post.comments]);
 
   useEffect(() => {
     if (imageRef.current && infoBlockRef.current && imageBlockRef.current) {
@@ -66,38 +127,43 @@ export const ViewPost = ({ post, user, setSelectedPost, setSelectedUser }: any) 
     };
   }, [post.user]);
 
-const handleLikeClick = async (postId: string) => {
-  if (!userLiked) {
-    if (UserDataProvider?.userData?._id) {
-      try {
-        await addLikeMutation.mutateAsync({
-          postId,
-          userId: UserDataProvider.userData._id,
-        });
-        setUserLiked(true);
+  const handleLikeClick = async (postId: string) => {
+    if (!userLiked) {
+      if (UserDataProvider?.userData?._id) {
+        try {
+          await addLikeMutation.mutateAsync({
+            postId,
+            userId: UserDataProvider.userData._id,
+          });
+          setUserLiked(true);
 
-        const updatedLikedPosts = [...likedPosts, post._id];
-        setLikedPosts(updatedLikedPosts);
+          const updatedLikedPosts = [...likedPosts, post._id];
+          setLikedPosts(updatedLikedPosts);
 
-        const updatedPostsData = postsData.map((p: IPost) =>
-          p._id === post._id && UserDataProvider?.userData?._id
-            ? {
-                ...p,
-                likes: {
-                  ...p.likes,
-                  count: p.likes.count + 1,
-                  users: [...p.likes.users, UserDataProvider.userData._id],
-                },
-              }
-            : p
-        );
-        setPostsData(updatedPostsData);
-      } catch (error) {
-        console.error("Error occurred while adding like:", error);
+          const updatedPostsData = postsData.map((p: IPost) =>
+            p._id === post._id && UserDataProvider?.userData?._id
+              ? {
+                  ...p,
+                  likes: {
+                    ...p.likes,
+                    count: p.likes.count + 1,
+                    users: [...p.likes.users, UserDataProvider.userData._id],
+                  },
+                }
+              : p
+          );
+          setPostsData(updatedPostsData);
+        } catch (error) {
+          console.error("Error occurred while adding like:", error);
+        }
       }
     }
-  }
-};
+  };
+
+  const handleCommentTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newText = e.target.value;
+    setCommentText(newText);
+  };
 
   return (
     <MainContainer onClick={handleMainContainerClick}>
@@ -115,8 +181,23 @@ const handleLikeClick = async (postId: string) => {
           />
         </ClosePost>
         <AuthorBlock>
-          <AuthorAvatar src={userInfo?.avatar || defaultAvatar} />
-          <AuthorName>{userInfo?.name}</AuthorName>
+          <AuthorAvatar
+            onClick={() =>
+              history.push(
+                "/" + APP_KEYS.ROUTER_KEYS.PROFILE + "/" + userInfo?._id
+              )
+            }
+            src={userInfo?.avatar || defaultAvatar}
+          />
+          <AuthorName
+            onClick={() =>
+              history.push(
+                "/" + APP_KEYS.ROUTER_KEYS.PROFILE + "/" + userInfo?._id
+              )
+            }
+          >
+            {userInfo?.name}
+          </AuthorName>
         </AuthorBlock>
         <PostText>{post.title}</PostText>
         <PostText>{post.description}</PostText>
@@ -131,7 +212,67 @@ const handleLikeClick = async (postId: string) => {
           />
           <DislikeButton />
         </div>
-        <CommentsBlock></CommentsBlock>
+        <CommentsBlock>
+          <Comment style={{ margin: 0 }}>
+            <AuthorAvatar
+              onClick={() =>
+                history.push(
+                  "/" +
+                    APP_KEYS.ROUTER_KEYS.PROFILE +
+                    "/" +
+                    UserDataProvider?.userData?._id
+                )
+              }
+              src={UserDataProvider?.userData?.avatar || defaultAvatar}
+            />
+            <MyComment
+              onChange={handleCommentTextChange}
+              placeholder="Add a comment"
+            />
+          </Comment>
+          {commentText && UserDataProvider?.userData?._id && (
+            <PostCommentWrap>
+              <PostCommentButton
+                onClick={() =>
+                  handleAddComment(
+                    post._id,
+                    UserDataProvider?.userData?._id || "",
+                    commentText
+                  )
+                }
+              >
+                Post Comment
+              </PostCommentButton>
+            </PostCommentWrap>
+          )}
+          {postsData
+            .find((p: IPost) => p._id === post._id)
+            ?.comments.map((comment: IComment, index: number) => (
+              <Comment key={index}>
+                <AuthorAvatar
+                  onClick={() =>
+                    history.push(
+                      "/" + APP_KEYS.ROUTER_KEYS.PROFILE + "/" + comment.user
+                    )
+                  }
+                  src={commentUsers[index]?.avatar || defaultAvatar}
+                />
+                <div style={{ marginLeft: "0.75rem" }}>
+                  <CommentNickname
+                    onClick={() =>
+                      history.push(
+                        "/" + APP_KEYS.ROUTER_KEYS.PROFILE + "/" + comment.user
+                      )
+                    }
+                  >
+                    {commentUsers[index]?.name || "Unknown"}
+                  </CommentNickname>
+                  <CommentText>{comment.text}</CommentText>
+                </div>
+              </Comment>
+            ))
+            .reverse()}
+        </CommentsBlock>
       </InfoBlock>
     </MainContainer>
   );

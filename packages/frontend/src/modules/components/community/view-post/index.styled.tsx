@@ -68,6 +68,7 @@ export const AuthorAvatar = styled.img`
   width: 36px;
   height: 36px;
   margin: 0 0.25rem;
+  cursor: pointer;
 `
 
 export const AuthorName = styled.div`
@@ -77,6 +78,7 @@ export const AuthorName = styled.div`
   text-overflow: ellipsis;
   font-size: 12px;
   line-height: 13px;
+  cursor: pointer;
 `;
 
 export const PostText = styled.div`
@@ -170,5 +172,89 @@ export const CommentsBlock = styled.div`
   border-top: 1px solid #304a66;
   min-height: 30%;
   margin: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0;
+  overflow: auto;
+
+    &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+`;
+
+export const MyComment = styled.textarea`
+  all: unset;
+  border: none;
+  padding: 4px 6px 4px 6px;
+  margin-left: 0.75rem;
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  border-left: 1px solid #000;
+  border-top: 1px solid #000;
+  border-right: 1px solid #354357;
+  border-bottom: 1px solid #354357;
+  overflow: hidden;
+  height: 28px;
+  width: 100%;
+  resize: none;
+  color: #bfbfbf;
+`;
+
+export const Comment = styled.div`
+  display: flex;
+
+  margin-top: 1.5rem;
+`
+
+export const PostCommentWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: end;
+`
+
+export const PostCommentButton = styled.div`
+  border-radius: 2px;
+  border: none;
+  padding: 1px 15px;
+  font-size: 13px;
+  margin-top: 4px;
+  display: inline-block;
+  cursor: pointer;
+  color: #d2e885;
+  background: linear-gradient(to bottom, #a4d007 5%, #536904 95%);
+
+  &:hover {
+    background: linear-gradient(to bottom, #b6d908 5%, #80a006 95%);
+    color: #fff;
+  }
+`;
+
+export const CommentNickname = styled.div`
+  color: #ebebeb;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 14px;
+  margin-bottom: 5px;
+`;
+
+export const CommentText = styled.div`
+  font-size: 13px;
+  color: #acb2b8;
+  word-wrap: break-word;
+  overflow-y: auto;
+  max-height: 400px;
+  line-height: 18px;
 `;

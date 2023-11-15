@@ -18,9 +18,8 @@ export const communityPostSchema: Schema<IPost> = new Schema({
     default: {},
   },
   comments: {
-    type: Object,
+    type: Array,
     required: true,
-    default: {},
   },
   user: {
     type: String,

@@ -1,8 +1,11 @@
-import { ObjectId } from "mongoose";
-
 interface ILike {
-  count: number,
-  users: string[]
+  count: number;
+  users: string[];
+}
+
+export interface IComment {
+  user: string;
+  text: string;
 }
 
 export interface IPost extends Document {
@@ -11,6 +14,6 @@ export interface IPost extends Document {
   image: string;
   user: string;
   likes: ILike;
-  comments: object;
+  comments: IComment[];
   _id: string;
 }

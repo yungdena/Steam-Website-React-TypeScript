@@ -9,11 +9,11 @@ export class CommunityPostService {
       throw new Error("Post not found");
     }
 
-    return posts
+    return posts;
   }
 
   async getPostById(id: string) {
-    const post =  CommunityPostModel.findById(id);
+    const post = CommunityPostModel.findById(id);
 
     if (!post) {
       throw new Error("Post not found");
@@ -45,6 +45,10 @@ export class CommunityPostService {
         post.image = postData.image;
       }
       if (postData.likes !== undefined) {
+        const likesChanged =
+          JSON.stringify(postData.likes) !== JSON.stringify(post.likes);
+
+        if (likesChanged) {
           const uniqueUser = postData.likes.users.find(
             (user: string) => !post.likes.users.includes(user)
           );
@@ -55,6 +59,7 @@ export class CommunityPostService {
           } else {
             throw new Error("You have already liked this post");
           }
+        }
       }
       if (postData.comments) {
         post.comments = postData.comments;

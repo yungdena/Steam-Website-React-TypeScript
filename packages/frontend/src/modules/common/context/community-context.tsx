@@ -33,13 +33,9 @@ export const PostsDataProvider = ({ children }: any) => {
       setPostsData(data);
       setIsLoadingPosts(false);
       if (userDataId) {
-        console.log(
-          data.filter((post: IPost) => post.likes.users.includes(userDataId))
-        );
         const userLikedPosts = userDataId
           ? data.filter((post: IPost) => post.likes.users.includes(userDataId))
           : [];
-          console.log(userLikedPosts)
         setLikedPosts(userLikedPosts.map((post: IPost) => post._id));
       }
     }

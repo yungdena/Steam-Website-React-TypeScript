@@ -23,7 +23,7 @@ export const CreatePost = () => {
       count: 0,
       users: []
     },
-    comments: {},
+    comments: [],
   }
 
   const [post, setPost] = useState<IPost>(defaultPost as IPost);

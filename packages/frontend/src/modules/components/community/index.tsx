@@ -18,10 +18,11 @@ import { IUser } from "../../common/types/User";
 import { defaultAvatar } from "../../common/consts/avatar";
 import { IPost } from "../../common/types/Post.interface";
 import { ViewPost } from "./view-post";
+import { IApp } from "../../common/types/app.interface";
 
 export const Community = () => {
   const UserDataContext = useUserData();
-  const [users, setUsers] = useState<IUser[]>([])
+  const [users, setUsers] = useState<IUser[]>([]);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const { appsData } = useAppsData();
@@ -70,7 +71,7 @@ export const Community = () => {
                           UserDataContext.userData.apps.length
                         )
                         .reverse()
-                        .map((appId) => {
+                        .map((appId: string) => {
                           const app = getAppById(appId, appsData);
                           if (app) {
                             return (

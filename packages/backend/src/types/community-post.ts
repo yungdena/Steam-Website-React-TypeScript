@@ -5,12 +5,17 @@ interface ILike {
   users: string[]
 }
 
+interface IComment {
+  user: string,
+  text: string
+}
+
 export interface IPost extends Document {
   title: string;
   description: string;
   image: string;
   user: string;
   likes: ILike;
-  comments: object;
+  comments: IComment[];
   _id: ObjectId;
 }
