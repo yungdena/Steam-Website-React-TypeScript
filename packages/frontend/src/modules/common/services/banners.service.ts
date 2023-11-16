@@ -6,6 +6,7 @@ const getAllBanners = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
   const responseData = await response.json();
@@ -17,6 +18,7 @@ const getBannerById = async (bannerId: string) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
 

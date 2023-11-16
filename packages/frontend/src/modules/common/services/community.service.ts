@@ -7,6 +7,7 @@ const getAllPosts = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
   const responseData = await response.json();
@@ -18,6 +19,7 @@ const getPostById = async (postId: string) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
 
@@ -30,6 +32,7 @@ const createPost = async (data: any) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -49,6 +52,7 @@ const updatePost = async ({
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -62,6 +66,7 @@ const deletePost = async (postId: string) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
 
@@ -74,6 +79,7 @@ const addLikeToPost = async (data: any): Promise<IPost | undefined> => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
 
@@ -82,13 +88,17 @@ const addLikeToPost = async (data: any): Promise<IPost | undefined> => {
     postData.likes.count += 1;
     postData.likes.users.push(data.userId)
 
-    const updateResponse = await fetch(`${BASE_URL}/community/post/${data.postId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ postData }),
-    });
+    const updateResponse = await fetch(
+      `${BASE_URL}/community/post/${data.postId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
+        body: JSON.stringify({ postData }),
+      }
+    );
 
     if (updateResponse.ok) {
       return postData;
@@ -103,6 +113,7 @@ const addCommentToPost = async (data: any): Promise<IPost | undefined> => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
 
@@ -119,6 +130,7 @@ const addCommentToPost = async (data: any): Promise<IPost | undefined> => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
         },
         body: JSON.stringify({ postData }),
       }

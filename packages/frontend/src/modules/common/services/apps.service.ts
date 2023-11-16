@@ -9,7 +9,7 @@ const getAllApps = async (page: number, pageSize: number) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "69420",
+        "ngrok-skip-browser-warning": "true",
       },
     }
   );
@@ -27,7 +27,7 @@ const getAllDiscounts = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "ngrok-skip-browser-warning": "69420",
+      "ngrok-skip-browser-warning": "true",
     },
   });
 
@@ -45,6 +45,7 @@ const postApp = async (data: IApp) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -64,6 +65,7 @@ const updateApp = async ({
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -77,6 +79,7 @@ const getAppById = async (appId: string) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
 

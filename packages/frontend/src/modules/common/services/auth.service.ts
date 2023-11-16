@@ -15,11 +15,12 @@ type SignInFormValues = {
 
 const signUp = async (data: SignUpFormValues) => {
   const response = await fetch(`${BASE_URL}/auth/signup`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
   const responseData = await response.json();
 
@@ -28,11 +29,12 @@ const signUp = async (data: SignUpFormValues) => {
 
 const signIn = async (data: SignInFormValues) => {
   const response = await fetch(`${BASE_URL}/auth/signin`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
   const responseData = await response.json();
   return responseData;

@@ -13,6 +13,7 @@ const postReview = async (data: IReviewPostRequest) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -33,6 +34,7 @@ const updateReview = async (data: IReviewPatchRequest) => {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -52,6 +54,7 @@ const deleteReview = async (data: IReviewDeleteRequest) => {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });

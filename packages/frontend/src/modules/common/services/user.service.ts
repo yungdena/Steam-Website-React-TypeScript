@@ -12,7 +12,8 @@ const getLibrary = async (id: string) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-    }
+      "ngrok-skip-browser-warning": "true",
+    },
   });
   const responseData = await response.json();
   return responseData;
@@ -23,7 +24,8 @@ const getWishlist = async (id: string) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-    }
+      "ngrok-skip-browser-warning": "true",
+    },
   });
   const responseData = await response.json();
   return responseData;
@@ -35,6 +37,7 @@ const addToLibrary = async (data: IBody) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -47,6 +50,7 @@ const addToWishlist = async (data: IBody) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -59,6 +63,7 @@ const deleteFromLibrary = async (data: IBody) => {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -71,6 +76,7 @@ const deleteFromWishlist = async (data: IBody) => {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -83,6 +89,7 @@ const getUserById = async (userId: string) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
   const responseData = await response.json();
@@ -94,6 +101,7 @@ const getUserByName = async (name: string) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
   const responseData = await response.json();
@@ -105,6 +113,7 @@ const getUserByFriendCode = async (friendCode: string) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
   });
   const responseData = await response.json();
@@ -121,6 +130,7 @@ const sendFriendRequest = async (data: IFriendRequest) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -139,6 +149,7 @@ const respondToFriendRequest = async (data: IFriendRespond) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -156,6 +167,7 @@ const removeFriend = async (data: IFriendRemove) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
@@ -168,6 +180,7 @@ const updateUser = async (data: IUser) => {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(data),
   });
