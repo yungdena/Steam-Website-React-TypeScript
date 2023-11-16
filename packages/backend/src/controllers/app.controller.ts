@@ -13,10 +13,12 @@ export class AppsController {
   }
 
   async getAll(req: Request, res: Response, page: number, pageSize: number) {
+    console.log('apps')
     await this.appsService.getAllApps(res, page, pageSize);
   }
 
   async getAllDiscounts(req: Request, res: Response) {
+    console.log("apps");
     await this.appsService.getAllDiscounts(res);
   }
 

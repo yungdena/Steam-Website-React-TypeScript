@@ -9,6 +9,7 @@ const getAllApps = async (page: number, pageSize: number) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "69420",
       },
     }
   );
@@ -22,15 +23,13 @@ const getAllApps = async (page: number, pageSize: number) => {
 };
 
 const getAllDiscounts = async () => {
-  const response = await fetch(
-    `${BASE_URL}/apps/discounts`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await fetch(`${BASE_URL}/apps/discounts`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "69420",
+    },
+  });
 
   if (!response.ok) {
     throw new Error('Error');
