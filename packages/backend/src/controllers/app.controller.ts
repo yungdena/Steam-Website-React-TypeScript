@@ -12,8 +12,12 @@ export class AppsController {
     await this.appsService.createApp({ app, res });
   }
 
-  async getAll(req: Request, res: Response) {
-    const apps = await this.appsService.getAllApps(res);
+  async getAll(req: Request, res: Response, page: number, pageSize: number) {
+    await this.appsService.getAllApps(res, page, pageSize);
+  }
+
+  async getAllDiscounts(req: Request, res: Response) {
+    await this.appsService.getAllDiscounts(res);
   }
 
   async getByTitle(req: Request, res: Response) {

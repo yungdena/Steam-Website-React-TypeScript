@@ -2,16 +2,44 @@ import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import { IApp } from "../types/app.interface";
 import { BASE_URL } from "./base-url";
 
-const getAllApps = async () => {
-  const response = await fetch(`${BASE_URL}/apps`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+const getAllApps = async (page: number, pageSize: number) => {
+  const response = await fetch(
+    `${BASE_URL}/apps?page=${page}&pageSize=${pageSize}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Not enough apps for this page :D')
+  }
+
   const responseData = await response.json();
   return responseData;
 };
+
+const getAllDiscounts = async () => {
+  const response = await fetch(
+    `${BASE_URL}/apps/discounts`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Error');
+  }
+
+  const responseData = await response.json();
+  return responseData;
+};
+
 
 const postApp = async (data: IApp) => {
   const response = await fetch(`${BASE_URL}/apps`, {
@@ -57,7 +85,10 @@ const getAppById = async (appId: string) => {
   return responseData;
 };
 
-export const useGetAllApps = () => useMutation(getAllApps)
+export const useGetAllApps = (page: number = 1, pageSize: number = 10) => {
+  return useMutation(() => getAllApps(page, pageSize));
+};
+export const useGetDiscounts = () => useMutation(getAllDiscounts);
 export const useGetAppById = () => useMutation(getAppById)
 export const usePostApp = () => useMutation(postApp)
 export const useUpdateApp = (): UseMutationResult<

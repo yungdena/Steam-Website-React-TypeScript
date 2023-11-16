@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, useParams } from 'react-router-dom';
 
 import { SignUp } from '../components/auth/sign-up';
 import { SignIn } from '../components/auth/sign-in';
@@ -20,115 +20,142 @@ import { EditProfile } from '../components/profile/edit';
 import { Community } from '../components/community';
 import { PostsDataProvider } from '../common/context/community-context';
 import { CreatePost } from '../components/community/create-post';
-import { ViewPost } from '../components/community/view-post';
+import { LibraryDataProvider } from '../common/context/library-context';
+import { WishlistDataProvider } from '../common/context/wishlist-context';
+import { useUserData } from '../common/context/user-context';
 
-export const MainRouter = () => (
-  <Router>
-    <Switch>
-      <Route component={SignUp} path={APP_KEYS.ROUTER_KEYS.ROOT} exact />
-      <Route
-        component={AdminPanel}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.ADMIN}
-      />
-      <Route
-        component={SignUp}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNUP}
-        exact
-      />
-      <Route
-        component={SignIn}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN}
-      />
-      <Route
-        component={() => (
-          <AppsDataProvider>
-            <StorePage />
-          </AppsDataProvider>
-        )}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.STORE}
-      />
-      <Route
-        component={AppPage}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.APPS + "/:id"}
-      />
-      <Route
-        component={() => (
-          <AppsDataProvider>
-            <BannersDataProvider>
-              <HomePage />
-            </BannersDataProvider>
-          </AppsDataProvider>
-        )}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.HOME}
-      />
-      <Route
-        component={AboutPage}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.ABOUT}
-      />
-      <Route
-        component={() => (
-          <AppsDataProvider>
-            <Wishlist />
-          </AppsDataProvider>
-        )}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.WISHLIST}
-      />
-      <Route
-        component={() => (
-          <AppsDataProvider>
-            <Library />
-          </AppsDataProvider>
-        )}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY + "/:id"}
-      />
-      <Route
-        component={FriendList}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.FRIENDS + "/:id"}
-      />
-      <Route
-        component={Support}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SUPPORT}
-      />
-      <Route
-        component={() => (
-          <AppsDataProvider>
-            <Profile />
-          </AppsDataProvider>
-        )}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.PROFILE + "/:id"}
-      />
-      <Route
-        component={EditProfile}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.EDIT + "/:id"}
-      />
-      <Route
-        exact
-        component={() => (
-          <AppsDataProvider>
-            <PostsDataProvider>
-              <Community />
-            </PostsDataProvider>
-          </AppsDataProvider>
-        )}
-        path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.COMMUNITY}
-      />
-      <Route
-        exact
-        component={() => (
-          <AppsDataProvider>
-            <PostsDataProvider>
-              <CreatePost />
-            </PostsDataProvider>
-          </AppsDataProvider>
-        )}
-        path={
-          APP_KEYS.ROUTER_KEYS.ROOT +
-          APP_KEYS.ROUTER_KEYS.COMMUNITY +
-          "/" +
-          APP_KEYS.ROUTER_KEYS.CREATE
-        }
-      />
-      <Route component={NotFound} />
-    </Switch>
-  </Router>
-);
+const LibraryRoute = () => {
+  const { id }: { id: string } = useParams();
+
+  return (
+    <LibraryDataProvider userId={id}>
+      <Library />
+    </LibraryDataProvider>
+  );
+};
+
+const WishlistRoute = ({ id }: { id: string }) => {
+  return (
+    <WishlistDataProvider userId={id}>
+      <Wishlist />
+    </WishlistDataProvider>
+  );
+};
+  
+export const MainRouter = () => {
+  const UserDataProvider = useUserData();
+  return (
+    <Router>
+      <Switch>
+        <Route component={SignUp} path={APP_KEYS.ROUTER_KEYS.ROOT} exact />
+        <Route
+          component={AdminPanel}
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.ADMIN}
+        />
+        <Route
+          component={SignUp}
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNUP}
+          exact
+        />
+        <Route
+          component={SignIn}
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN}
+        />
+        <Route
+          component={() => (
+            <AppsDataProvider>
+              <StorePage />
+            </AppsDataProvider>
+          )}
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.STORE}
+        />
+        <Route
+          component={AppPage}
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.APPS + "/:id"}
+        />
+        <Route
+          component={() => (
+            <AppsDataProvider>
+              <BannersDataProvider>
+                <HomePage />
+              </BannersDataProvider>
+            </AppsDataProvider>
+          )}
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.HOME}
+        />
+        <Route
+          component={AboutPage}
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.ABOUT}
+        />
+        <Route
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.WISHLIST}
+          render={() =>
+            UserDataProvider?.userData?._id ? (
+              <WishlistRoute id={UserDataProvider?.userData?._id} />
+            ) : null
+          }
+        />
+        <Route
+          path={
+            APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY + "/:id"
+          }
+        >
+          <LibraryRoute />
+        </Route>
+        <Route
+          component={FriendList}
+          path={
+            APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.FRIENDS + "/:id"
+          }
+        />
+        <Route
+          component={Support}
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SUPPORT}
+        />
+        <Route
+          component={() => (
+            <AppsDataProvider>
+              <Profile />
+            </AppsDataProvider>
+          )}
+          path={
+            APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.PROFILE + "/:id"
+          }
+        />
+        <Route
+          component={EditProfile}
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.EDIT + "/:id"}
+        />
+        <Route
+          exact
+          component={() => (
+            <AppsDataProvider>
+              <PostsDataProvider>
+                <Community />
+              </PostsDataProvider>
+            </AppsDataProvider>
+          )}
+          path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.COMMUNITY}
+        />
+        <Route
+          exact
+          component={() => (
+            <AppsDataProvider>
+              <PostsDataProvider>
+                <CreatePost />
+              </PostsDataProvider>
+            </AppsDataProvider>
+          )}
+          path={
+            APP_KEYS.ROUTER_KEYS.ROOT +
+            APP_KEYS.ROUTER_KEYS.COMMUNITY +
+            "/" +
+            APP_KEYS.ROUTER_KEYS.CREATE
+          }
+        />
+        <Route component={NotFound} />
+      </Switch>
+    </Router>
+  );
+}
+

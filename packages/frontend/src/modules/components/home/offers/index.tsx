@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useHistory } from "react-router-dom";
 
@@ -8,12 +7,10 @@ import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { APP_KEYS } from "../../../common/consts";
 import { Offer, OffersContainer, StyledPagination } from "./index.styled";
 import { calculatePercentageDecrease } from "../../../common/utils/countPercentage";
+import { useDiscountData } from "../../../common/context/discounts-context";
 
-export const Offers = ({ appsArray }: { appsArray: IApp[] }) => {
-  const appsWithNewPrice = useMemo(
-    () => appsArray.filter((app) => app.newPrice),
-    [appsArray]
-  );
+export const Offers = () => {
+  const appsWithNewPrice = useDiscountData()
 
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],
@@ -29,8 +26,8 @@ export const Offers = ({ appsArray }: { appsArray: IApp[] }) => {
   };
 
     const chunks = [];
-    for (let i = 0; i < appsWithNewPrice.length; i += 6) {
-      chunks.push(appsWithNewPrice.slice(i, i + 6));
+    for (let i = 0; i < appsWithNewPrice.discountApps.length; i += 6) {
+      chunks.push(appsWithNewPrice.discountApps.slice(i, i + 6));
     }
 
     const history = useHistory();

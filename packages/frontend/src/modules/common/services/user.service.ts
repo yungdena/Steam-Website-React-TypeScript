@@ -7,6 +7,29 @@ type IBody = {
   appId: string
 };
 
+const getLibrary = async (id: string) => {
+  const response = await fetch(`${BASE_URL}/user/library/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+  const responseData = await response.json();
+  return responseData;
+};
+
+const getWishlist = async (id: string) => {
+  const response = await fetch(`${BASE_URL}/user/wishlist/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+  const responseData = await response.json();
+  return responseData;
+};
+
+
 const addToLibrary = async (data: IBody) => {
   const response = await fetch(`${BASE_URL}/user/library`, {
     method: "POST",
@@ -155,6 +178,8 @@ const updateUser = async (data: IUser) => {
 export const useRemoveFriend = () => useMutation(removeFriend);
 export const useRespondToFriendRequest = () => useMutation(respondToFriendRequest);
 export const useSendFriendRequest = () => useMutation(sendFriendRequest);
+export const useGetLibrary = () => useMutation(getLibrary);
+export const useGetWishlist = () => useMutation(getWishlist);
 export const useAddToLibrary = () => useMutation(addToLibrary);
 export const useAddToWishlist = () => useMutation(addToWishlist);
 export const useDeleteFromLibrary = () => useMutation(deleteFromLibrary);

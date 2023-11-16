@@ -15,15 +15,36 @@ interface IUpdatePayload {
 }
 
 class AppsService {
-  async getAllApps(res: Response) {
-    const apps = await AppModel.find();
+  async getAllApps(res: Response, page: number = 1, pageSize: number = 10) {
+    try {
+      const totalAppsCount = await AppModel.countDocuments();
 
-    if (!apps) {
-      res.status(404).send({ message: "cannot get all apps" });
-      return;
+      const maxPages = Math.ceil(totalAppsCount / pageSize);
+
+      if (page < 1 || page > maxPages) {
+        return res.status(404).send({ message: "Invalid page number" });
+      }
+
+      const offset = (page - 1) * pageSize;
+      const apps = await AppModel.find().skip(offset).limit(pageSize);
+
+      res.send(apps);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Internal Server Error" });
     }
+  }
 
-    res.send(apps);
+  async getAllDiscounts(res: Response) {
+    try {
+      const apps = await AppModel.find({ newPrice: { $exists: true } });
+
+      res.send(apps);
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).send({ message: "Internal Server Error" });
+    }
   }
 
   async getAppByTitle(title: string, res: Response) {

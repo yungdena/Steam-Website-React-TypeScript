@@ -5,31 +5,60 @@ import { IApp } from "../types/app.interface";
 type AppsDataContextType = {
   appsData: IApp[];
   isLoadingApps: boolean;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  page: number;
+  setPageError: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AppsDataContext = createContext<AppsDataContextType>({
   appsData: [],
   isLoadingApps: true,
+  setPage: () => {},
+  page: 1,
+  setPageError: () => {},
 });
 
-export const AppsDataProvider = ({ children }: any) => {
+export const AppsDataProvider = ({
+  children,
+  page: propPage = 1,
+  pageSize = 10,
+}: any) => {
   const [appsData, setAppsData] = useState([]);
-  const [fetchCounter, setFetchCounter] = useState(0);
+  const [page, setPage] = useState(propPage);
   const [isLoadingApps, setIsLoadingApps] = useState(true);
-  const getAllAppsMutation = useGetAllApps()
+  const [pageError, setPageError] = useState(false);
+
+  const getAllAppsMutation = useGetAllApps(page, pageSize);
 
   useEffect(() => {
-      async function fetchAllApps() {
+    setPage(propPage);
+  }, [propPage]);
+
+  useEffect(() => {
+    async function fetchAllApps() {
+      try {
         const data = await getAllAppsMutation.mutateAsync();
         setAppsData(data);
         setIsLoadingApps(false);
-        setFetchCounter(fetchCounter + 1)
+        setPageError(false);
+      } catch (error) {
+        console.error("Error fetching apps:", error);
+        setPageError(true);
       }
-      fetchAllApps();
-    }, []);
+    }
+    fetchAllApps();
+  }, [page, pageSize]);
+
+  const contextValue: AppsDataContextType = {
+    appsData,
+    isLoadingApps,
+    setPage,
+    setPageError,
+    page,
+  };
 
   return (
-    <AppsDataContext.Provider value={{ appsData, isLoadingApps }}>
+    <AppsDataContext.Provider value={contextValue}>
       {children}
     </AppsDataContext.Provider>
   );

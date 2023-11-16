@@ -43,12 +43,8 @@ const userSchema: Schema<any, Model<IUser>> = new Schema({
   avatar: {
     type: String,
   },
-  wishlist: {
-    type: Array,
-  },
-  apps: {
-    type: Array,
-  },
+  wishlist: [{ type: Schema.Types.ObjectId, ref: "App" }],
+  apps: [{ type: Schema.Types.ObjectId, ref: "App" }],
   friends: {
     type: Array,
   },

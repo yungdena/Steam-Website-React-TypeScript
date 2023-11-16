@@ -11,10 +11,14 @@ import { formatDate } from '../../../common/utils/formatDate';
 import { calculateReviewTitle, getReviewImageURL } from '../../../common/utils/calculateReviewRate';
 import { sortAppsByHighestPrice, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from './utils/sort-apps';
 import { handleNavigate, handleSearch, handleSearchInputChange, handleSortChange } from './utils/handlers';
+import { Button } from '../../auth/sign-up/index.styled';
+import { BASE_URL } from '../../../common/services/base-url';
 
 export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number | null, minHeight?: string, margin?: string }) => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
   const [sortBy, setSortBy] = useState("Relevance");
+  const [displayedApps, setDisplayedApps] = useState<IApp[]>([]);
+  const itemsPerPage = 10;
   const history = useHistory();
 
   const location = useLocation();
@@ -22,7 +26,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const searchUrl = searchParams.get("search");
   const [searchInput, setSearchInput] = useState<string>(searchUrl || "");
 
-  const { isLoadingApps, appsData } = useAppsData();
+  const { isLoadingApps, appsData, setPage, page, setPageError } = useAppsData();
 
 useEffect(() => {
   const appsCopy = [...appsData];
@@ -60,6 +64,46 @@ useEffect(() => {
   }
 }, [appsData, sortBy]);
 
+  useEffect(() => {
+    const displayedApps = sortedApps;
+
+    setDisplayedApps(displayedApps);
+  }, [page, sortedApps]);
+
+  const handleNextPage = async () => {
+    try {
+      const nextPage = page + 1;
+
+      const response = await fetch(`${BASE_URL}/apps/max-pages`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get max pages");
+      }
+
+      const { maxPages } = await response.json();
+
+      if (nextPage <= maxPages) {
+        setPage(nextPage);
+        setPageError(false);
+      } else {
+        setPageError(true);
+      }
+    } catch (error) {
+      console.error("Error fetching next page:", error);
+      setPageError(true);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage((prevPage) => prevPage - 1);
+    }
+  };
 
   return (
     <ContentContainer minHeight={minHeight}>
@@ -69,12 +113,21 @@ useEffect(() => {
         <>
           <SearchBarContainer>
             <SearchBarInput
-              onChange={(event) => handleSearchInputChange(event, setSearchInput)}
+              onChange={(event) =>
+                handleSearchInputChange(event, setSearchInput)
+              }
               placeholder="enter search term or tag"
             />
-            <SearchBarButton onClick={() => handleSearch(searchInput, setSortedApps, appsData)}>Search</SearchBarButton>
+            <SearchBarButton
+              onClick={() => handleSearch(searchInput, setSortedApps, appsData)}
+            >
+              Search
+            </SearchBarButton>
             <SearchBarSortByTitle>Sort by</SearchBarSortByTitle>
-            <SearchBarSortBySelect onChange={(event) => handleSortChange(event, setSortBy)} value={sortBy}>
+            <SearchBarSortBySelect
+              onChange={(event) => handleSortChange(event, setSortBy)}
+              value={sortBy}
+            >
               <SearchBarOption>Relevance</SearchBarOption>
               <SearchBarOption>Release date</SearchBarOption>
               <SearchBarOption>Name</SearchBarOption>
@@ -84,10 +137,13 @@ useEffect(() => {
             </SearchBarSortBySelect>
           </SearchBarContainer>
           <AppsList margin={margin}>
-            {sortedApps
+            {displayedApps
               .slice(0, sliceIndex ? sliceIndex : appsData.length)
               .map((app) => (
-                <AppLink key={app._id} onClick={() => handleNavigate(app._id, history)}>
+                <AppLink
+                  key={app._id}
+                  onClick={() => handleNavigate(app._id, history)}
+                >
                   <AppContainer>
                     <AppImageContainer>
                       <AppImage src={app.bannerImage} />
@@ -111,7 +167,8 @@ useEffect(() => {
                       {app.newPrice && (
                         <PriceContainer className="New-Price">
                           <PricePercent>
-                            -{calculatePercentageDecrease(
+                            -
+                            {calculatePercentageDecrease(
                               Number(app.price),
                               Number(app.newPrice),
                               0
@@ -128,6 +185,12 @@ useEffect(() => {
                   </AppContainer>
                 </AppLink>
               ))}
+              <div style={{display: 'flex', gap: '8px', justifyContent: 'center'}}>
+                <Button onClick={handlePreviousPage}>
+                  Previous
+                </Button>
+                <Button onClick={handleNextPage}>Next</Button>
+              </div>
           </AppsList>
         </>
       )}

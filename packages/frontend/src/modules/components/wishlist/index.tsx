@@ -20,6 +20,7 @@ import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer,
 import { CustomSelect } from "./select/custom-select";
 import Toast from "./toast";
 import { handleAddToLibrary, handleDeleteFromWishlist, handleInputChange, handleSortChange } from "./utils/functions";
+import { useWishlistData } from "../../common/context/wishlist-context";
 
 export const Wishlist = () => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
@@ -29,23 +30,18 @@ export const Wishlist = () => {
   const [showToast, setShowToast] = useState(false);
 
   const UserDataContext = useUserData();
-  const { appsData } = useAppsData();
+  const wishlistApps = useWishlistData()
   const history = useHistory()
   const deleteAppFromWishlistMutation = useDeleteFromWishlist()
   const addToLibraryMutation = useAddToLibrary();
 
-  const userWishlistIds = UserDataContext?.userData?.wishlist || [];
-  const userWishlistApps = appsData.filter((app) =>
-    userWishlistIds.includes(app._id)
-  );
-
   useEffect(() => {
-    setSortedApps(userWishlistApps);
+    setSortedApps(wishlistApps.wishlistApps);
     setIsLoading(false);
-  }, [appsData, userWishlistIds]);
+  }, [wishlistApps.wishlistApps]);
 
   useEffect(() => {
-    let sortedAppsCopy = [...userWishlistApps];
+    let sortedAppsCopy = [...wishlistApps.wishlistApps];
 
     switch (sortBy) {
       case "Your Rank":
@@ -79,7 +75,7 @@ export const Wishlist = () => {
     }
 
     setIsLoading(false);
-  }, [appsData, userWishlistIds, sortBy, searchInput]);
+  }, [wishlistApps.wishlistApps, sortBy, searchInput]);
 
   return (
     <>

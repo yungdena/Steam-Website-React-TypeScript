@@ -88,7 +88,7 @@ export class LibraryService {
 
   async getWishlist(userId: string, res: Response) {
     try {
-      const user = await UserModel.findById(userId);
+      const user = await UserModel.findById(userId).populate("wishlist");
       if (!user) {
         res.status(404).send({ message: "User not found" });
         return;
@@ -102,7 +102,7 @@ export class LibraryService {
 
   async getLibrary(userId: string, res: Response) {
     try {
-      const user = await UserModel.findById(userId);
+      const user = await UserModel.findById(userId).populate("apps");
       if (!user) {
         res.status(404).send({ message: "User not found" });
         return;

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 
 import { APP_KEYS } from "../../common/consts";
-import { useAppsData } from "../../common/context/apps-context";
 import { useUserData } from "../../common/context/user-context";
 import { LoaderBig } from "../../common/loader/loader";
 import { useDeleteFromLibrary, useGetUserById } from "../../common/services/user.service";
@@ -16,6 +15,7 @@ import { sortAppsByDiscount, sortAppsByLowestPrice, sortAppsByName, sortAppsByRe
 import { IUser } from "../../common/types/User";
 import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NicknameSpan, NoItems, SearchBar, SearchContainer, Stats, StatsLabel, Tag, TagsContainer, LibraryContainer, LibraryItem, LibraryTitle, RemoveButton } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
+import { useLibraryData } from "../../common/context/library-context";
 
 export const Library = () => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
@@ -27,7 +27,7 @@ export const Library = () => {
 
   const deleteFromLibraryMutation = useDeleteFromLibrary();
   const UserDataContext = useUserData();
-  const { appsData } = useAppsData();
+  const libraryApps = useLibraryData();
   const history = useHistory();
   const getUserByIdMutation = useGetUserById()
 
@@ -48,18 +48,15 @@ export const Library = () => {
     }
   }, [id]);
 
-  const userLibraryIds = user?.apps || [];
-  const userLibraryApps = appsData.filter((app) =>
-    userLibraryIds.includes(app._id)
-  );
-
   useEffect(() => {
-    setSortedApps(userLibraryApps);
+    setSortedApps(libraryApps.libraryApps);
     setIsLoading(false);
-  }, [appsData, userLibraryIds]);
+  }, [libraryApps.libraryApps]);
+
+  console.log('library apps', libraryApps.libraryApps)
 
   useEffect(() => {
-    let sortedAppsCopy = [...userLibraryApps];
+    let sortedAppsCopy = [...libraryApps.libraryApps];
 
     switch (sortBy) {
       case "Default":
@@ -93,7 +90,7 @@ export const Library = () => {
     }
 
     setIsLoading(false);
-  }, [appsData, userLibraryIds, sortBy, searchInput]);
+  }, [libraryApps.libraryApps, sortBy, searchInput]);
 
   const handleDeleteFromLibrary = (appId: string) => {
     if (UserDataContext?.userData) {

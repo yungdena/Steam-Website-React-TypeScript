@@ -36,6 +36,7 @@ import { useBannersData } from "../../common/context/banners-context";
 import { useUserData } from "../../common/context/user-context";
 import SearchApps from "./search-dropdown";
 import { IApp } from "../../common/types/app.interface";
+import { DiscountDataProvider } from "../../common/context/discounts-context";
 
 export const HomePage = () => {
   const [filteredApps, setFilteredApps] = useState<IApp[] | null>(null)
@@ -126,7 +127,9 @@ export const HomePage = () => {
           {isLoadingApps ? (
             <LoaderBig marginTop="20rem" marginBottom="10rem" />
           ) : (
-            <Offers appsArray={appsData} />
+            <DiscountDataProvider>
+              <Offers />
+            </DiscountDataProvider>
           )}
 
           {isLoadingApps ? (
