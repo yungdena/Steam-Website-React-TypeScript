@@ -34,6 +34,7 @@ export const ImageBig = styled.img`
 export const ImageSmall = styled.img<ImageSmallProps>`
   height: 4rem;
   margin: 0;
+  width: 95%;
 
   opacity: ${(props) => (props.selected ? 1 : 0.5)};
   transition: opacity 0.3s ease-in-out;

@@ -18,7 +18,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
   const [sortBy, setSortBy] = useState("Relevance");
   const [displayedApps, setDisplayedApps] = useState<IApp[]>([]);
-  const itemsPerPage = 10;
+
   const history = useHistory();
 
   const location = useLocation();
