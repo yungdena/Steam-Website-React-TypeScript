@@ -213,23 +213,25 @@ export const ViewPost = ({ post, user, setSelectedPost, setSelectedUser }: any) 
           <DislikeButton />
         </div>
         <CommentsBlock>
-          <Comment style={{ margin: 0 }}>
-            <AuthorAvatar
-              onClick={() =>
-                history.push(
-                  "/" +
-                    APP_KEYS.ROUTER_KEYS.PROFILE +
+          {UserDataProvider?.userData?._id && (
+            <Comment style={{ margin: 0 }}>
+              <AuthorAvatar
+                onClick={() =>
+                  history.push(
                     "/" +
-                    UserDataProvider?.userData?._id
-                )
-              }
-              src={UserDataProvider?.userData?.avatar || defaultAvatar}
-            />
-            <MyComment
-              onChange={handleCommentTextChange}
-              placeholder="Add a comment"
-            />
-          </Comment>
+                      APP_KEYS.ROUTER_KEYS.PROFILE +
+                      "/" +
+                      UserDataProvider?.userData?._id
+                  )
+                }
+                src={UserDataProvider?.userData?.avatar || defaultAvatar}
+              />
+              <MyComment
+                onChange={handleCommentTextChange}
+                placeholder="Add a comment"
+              />
+            </Comment>
+          )}
           {commentText && UserDataProvider?.userData?._id && (
             <PostCommentWrap>
               <PostCommentButton
