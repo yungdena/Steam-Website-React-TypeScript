@@ -64,12 +64,12 @@ export const CommunityInfoText = styled.div`
 `;
 
 export const RecentTitle = styled.div`
-  display: inline;
   margin-right: 12.1rem;
   font-size: 11px;
   color: #8f98a0;
   text-transform: uppercase;
   padding-bottom: 10px;
+  width: 100%;
 `;
 
 export const PopularGamesContainer = styled.div`

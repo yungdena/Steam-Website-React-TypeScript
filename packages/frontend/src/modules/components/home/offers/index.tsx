@@ -25,51 +25,70 @@ export const Offers = () => {
     className: "swiper",
   };
 
-    const chunks = [];
-    for (let i = 0; i < appsWithNewPrice.discountApps.length; i += 6) {
-      chunks.push(appsWithNewPrice.discountApps.slice(i, i + 6));
+  const chunks = [];
+  for (let i = 0; i < appsWithNewPrice.discountApps.length; i += 6) {
+    chunks.push(appsWithNewPrice.discountApps.slice(i, i + 6));
+  }
+
+  const history = useHistory();
+
+  const handleNavigate = (appId: string) => {
+    const recentGamesKey = "recentGames";
+    const maxRecentGames = 7;
+
+    let recentGames: string[] = JSON.parse(
+      localStorage.getItem(recentGamesKey) || "[]"
+    );
+
+    const alreadyInList = recentGames.includes(appId);
+
+    if (!alreadyInList) {
+      if (recentGames.length >= maxRecentGames) {
+        recentGames.shift();
+      }
+
+      recentGames.push(appId);
+
+      localStorage.setItem(recentGamesKey, JSON.stringify(recentGames));
     }
 
-    const history = useHistory();
-
-    const handleNavigate = (appId: string) => {
-      history.push(
-        `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.APPS}/${appId}`
-      );
-    };
-
-    return (
-      <MainContainer>
-        <Swiper {...swiperParams}>
-          {chunks.map((appsChunk, slideIndex) => (
-            <SwiperSlide key={slideIndex}>
-              <OffersContainer>
-                {appsChunk.map((app) => (
-                  <Offer onClick={() => handleNavigate(app._id)} key={app._id}>
-                    <OfferImage src={app.titleImage} />
-                    <PriceContainer style={{marginTop:'5px'}}>
-                      <PricePercent>
-                        -{calculatePercentageDecrease(
-                          Number(app.price),
-                          Number(app.newPrice),
-                          0
-                        )}
-                        %
-                      </PricePercent>
-                      <PriceAmounts>
-                        <OriginalPrice>{app.price}$</OriginalPrice>
-                        <FinalPrice>{app.newPrice}$</FinalPrice>
-                      </PriceAmounts>
-                    </PriceContainer>
-                  </Offer>
-                ))}
-              </OffersContainer>
-            </SwiperSlide>
-          ))}
-          <StyledPagination>
-            <div className="swiper-pagination"></div>
-          </StyledPagination>
-        </Swiper>
-      </MainContainer>
+    history.push(
+      `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.APPS}/${appId}`
     );
+  };
+
+  return (
+    <MainContainer>
+      <Swiper {...swiperParams}>
+        {chunks.map((appsChunk, slideIndex) => (
+          <SwiperSlide key={slideIndex}>
+            <OffersContainer>
+              {appsChunk.map((app) => (
+                <Offer onClick={() => handleNavigate(app._id)} key={app._id}>
+                  <OfferImage src={app.titleImage} />
+                  <PriceContainer style={{marginTop:'5px'}}>
+                    <PricePercent>
+                      -{calculatePercentageDecrease(
+                        Number(app.price),
+                        Number(app.newPrice),
+                        0
+                      )}
+                      %
+                    </PricePercent>
+                    <PriceAmounts>
+                      <OriginalPrice>{app.price}$</OriginalPrice>
+                      <FinalPrice>{app.newPrice}$</FinalPrice>
+                    </PriceAmounts>
+                  </PriceContainer>
+                </Offer>
+              ))}
+            </OffersContainer>
+          </SwiperSlide>
+        ))}
+        <StyledPagination>
+          <div className="swiper-pagination"></div>
+        </StyledPagination>
+      </Swiper>
+    </MainContainer>
+  );
 };

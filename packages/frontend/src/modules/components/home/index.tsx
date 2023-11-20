@@ -11,13 +11,24 @@ import { Navigation, Pagination, EffectFade, Autoplay } from "swiper/modules";
 
 import { Header } from "../header";
 import {
+  AppContainer,
+  AppImage,
+  AppNewPrice,
+  AppOldPrice,
+  AppPrice,
+  AppPriceContainer,
   AppsLine,
+  AppTags,
+  AppTitle,
   ContentContainer,
+  ContentWrap,
   FeaturedButton,
   FeaturedTitle,
   HomeAppsContainer,
   MainBanner,
   MainContainer,
+  PricePercent,
+  PriceWrapper,
   StyledPagination,
   WishlistButton,
 } from "./index.styled";
@@ -26,17 +37,15 @@ import { HomepageHeader } from "./home-header";
 import { Footer } from "./footer";
 import { Offers } from "./offers";
 import { LoaderBig } from "../../common/loader/loader";
-import { AppContainer, AppImage, AppImageContainer, AppLink, AppPrice, AppReleaseDate, AppReviews, AppTextContainer, AppTitle } from "../store/app-list/index.styled";
-import { FinalPrice, OriginalPrice, PriceAmounts, PriceContainer, PricePercent } from "./offers/index.styled";
-import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
-import { calculateReviewTitle, getReviewImageURL } from "../../common/utils/calculateReviewRate";
-import { formatDate } from "../../common/utils/formatDate";
+import { AppLink } from "../store/app-list/index.styled";
 import { useAppsData } from "../../common/context/apps-context";
 import { useBannersData } from "../../common/context/banners-context";
 import { useUserData } from "../../common/context/user-context";
 import SearchApps from "./search-dropdown";
 import { IApp } from "../../common/types/app.interface";
 import { DiscountDataProvider } from "../../common/context/discounts-context";
+import { HomeMenu } from "./home-menu";
+import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
 
 export const HomePage = () => {
   const [filteredApps, setFilteredApps] = useState<IApp[] | null>(null)
@@ -91,79 +100,82 @@ export const HomePage = () => {
       <MainBanner />
       <MainContainer>
         <ContentContainer>
-          <WishlistButton
-            onClick={() =>
-              history.push(
-                `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.WISHLIST}`
-              )
-            }
-          >
-            Wishlist ({UserDataContext?.userData?.wishlist.length})
-          </WishlistButton>
-          <HomepageHeader onSearch={handleSearch} />
-          <SearchApps apps={filteredApps} searchQuery={searchQuery} />
-          {isLoadingBanners ? (
-            <LoaderBig marginTop="40rem" marginBottom="10rem" />
-          ) : (
-            <>
-              <FeaturedTitle left="60px" top="33rem">
-                FEATURED & RECOMMENDED
-              </FeaturedTitle>
-              <Swiper style={{ marginTop: "21rem" }} {...swiperParams}>
-                {bannersData.map((banner) => (
-                  <SwiperSlide key={banner._id} className="banner-slide">
-                    <GameBannerComponent
-                      onClick={handleNavigateToApps}
-                      appInfo={banner}
-                    />
-                  </SwiperSlide>
-                ))}
-                <StyledPagination>
-                  <div className="swiper-pagination"></div>
-                </StyledPagination>
-              </Swiper>
-            </>
-          )}
-          {isLoadingApps ? (
-            <LoaderBig marginTop="20rem" marginBottom="10rem" />
-          ) : (
-            <DiscountDataProvider>
-              <Offers />
-            </DiscountDataProvider>
-          )}
-
-          {isLoadingApps ? (
-            <LoaderBig marginTop="10rem" marginBottom="10rem" />
-          ) : (
-            <>
-              <AppsLine>
-                <FeaturedTitle left="0" top="-20px">
-                  Top Sellers
+          <HomeMenu />
+          <ContentWrap>
+            <WishlistButton
+              onClick={() =>
+                history.push(
+                  `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.WISHLIST}`
+                )
+              }
+            >
+              Wishlist ({UserDataContext?.userData?.wishlist.length})
+            </WishlistButton>
+            <HomepageHeader onSearch={handleSearch} />
+            <SearchApps apps={filteredApps} searchQuery={searchQuery} />
+            {isLoadingBanners ? (
+              <LoaderBig marginTop="40rem" marginBottom="10rem" />
+            ) : (
+              <>
+                <FeaturedTitle left="60px" top="33rem">
+                  FEATURED & RECOMMENDED
                 </FeaturedTitle>
-                <FeaturedButton onClick={handleNavigateToApps}>
-                  To apps
-                </FeaturedButton>
-              </AppsLine>
-              <HomeAppsContainer>
-                {appsData.slice(0, 5).map((app) => (
-                  <AppLink
-                    key={app._id}
-                    onClick={() => handleNavigate(app._id)}
-                  >
-                    <AppContainer>
-                      <AppImageContainer>
+                <Swiper style={{ marginTop: "21rem" }} {...swiperParams}>
+                  {bannersData.map((banner) => (
+                    <SwiperSlide key={banner._id} className="banner-slide">
+                      <GameBannerComponent
+                        onClick={handleNavigateToApps}
+                        appInfo={banner}
+                      />
+                    </SwiperSlide>
+                  ))}
+                  <StyledPagination>
+                    <div className="swiper-pagination"></div>
+                  </StyledPagination>
+                </Swiper>
+              </>
+            )}
+            {isLoadingApps ? (
+              <LoaderBig marginTop="20rem" marginBottom="10rem" />
+            ) : (
+              <DiscountDataProvider>
+                <Offers />
+              </DiscountDataProvider>
+            )}
+
+            {isLoadingApps ? (
+              <LoaderBig marginTop="10rem" marginBottom="10rem" />
+            ) : (
+              <>
+                <AppsLine>
+                  <FeaturedTitle left="-125px" top="-30px">
+                    Top Sellers
+                  </FeaturedTitle>
+                  <FeaturedButton onClick={handleNavigateToApps}>
+                    To apps
+                  </FeaturedButton>
+                </AppsLine>
+                <HomeAppsContainer>
+                  {appsData.slice(0, 10).map((app) => (
+                    <AppLink
+                      key={app._id}
+                      onClick={() => handleNavigate(app._id)}
+                    >
+                      <AppContainer>
                         <AppImage src={app.bannerImage} />
-                      </AppImageContainer>
-                      <AppTextContainer>
-                        <AppTitle>{app.title}</AppTitle>
-                        <AppReleaseDate>
-                          {formatDate(app.releaseDate)}
-                        </AppReleaseDate>
-                        <AppReviews
-                          src={getReviewImageURL(
-                            calculateReviewTitle(app.reviews).title
-                          )}
-                        />
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <AppTitle>{app.title}</AppTitle>
+                          <AppTags>
+                            {app.tags.map((tag, index) => (
+                              <>
+                                <span>{tag}</span>
+                                {index < app.tags.length - 1 && <span>, </span>}
+                              </>
+                            ))}
+                          </AppTags>
+                        </div>
                         {!app.newPrice && (
                           <AppPrice>
                             {app.price}
@@ -171,10 +183,7 @@ export const HomePage = () => {
                           </AppPrice>
                         )}
                         {app.newPrice && (
-                          <PriceContainer
-                            style={{ marginTop: "3px" }}
-                            className="New-Price"
-                          >
+                          <PriceWrapper>
                             <PricePercent style={{ marginLeft: "4px" }}>
                               -
                               {calculatePercentageDecrease(
@@ -184,19 +193,19 @@ export const HomePage = () => {
                               )}
                               %
                             </PricePercent>
-                            <PriceAmounts>
-                              <OriginalPrice>{app.price}$</OriginalPrice>
-                              <FinalPrice>{app.newPrice}$</FinalPrice>
-                            </PriceAmounts>
-                          </PriceContainer>
+                            <AppPriceContainer>
+                              <AppOldPrice>{app.price}$</AppOldPrice>
+                              <AppNewPrice>{app.newPrice}$</AppNewPrice>
+                            </AppPriceContainer>
+                          </PriceWrapper>
                         )}
-                      </AppTextContainer>
-                    </AppContainer>
-                  </AppLink>
-                ))}
-              </HomeAppsContainer>
-            </>
-          )}
+                      </AppContainer>
+                    </AppLink>
+                  ))}
+                </HomeAppsContainer>
+              </>
+            )}
+          </ContentWrap>
         </ContentContainer>
       </MainContainer>
       <Footer />

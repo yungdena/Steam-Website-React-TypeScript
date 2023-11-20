@@ -31,6 +31,10 @@ appsRouter.get(
 
 appsRouter.get("/:id", isExist(AppModel), appsController.getById.bind(appsController));
 
+appsRouter.get(
+  "/title/:id",
+  appsController.getTitle.bind(appsController)
+);
 
 appsRouter.post("/", validate(appSchema), appsController.create.bind(appsController));
 

@@ -4,16 +4,17 @@ import { COLORS } from "../../common/theme";
 const backgroundURL = 'https://res.cloudinary.com/didkbrlcz/image/upload/v1693031862/System/colored_body_top_dl0m6y.png'
 
 export const MainContainer = styled.div`
-  background-image: url(${backgroundURL});
+  background-image: url('${backgroundURL}');
   background-repeat: no-repeat;
   background-size: 100% 100%;
   min-height: 100vh;
+  overflow-x: hidden;
 `;
 
 export const ContentContainer = styled.div`
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   max-width: 1050px;
   width: 100%;
@@ -32,6 +33,16 @@ export const ContentContainer = styled.div`
     .banner-slide {
       z-index: 1;
     }
+  }
+`;
+
+export const ContentWrap = styled.div`
+  display: flex; 
+  flex-direction: column;
+  position: relative;
+
+  @media(max-width: 1500px) {
+    left: 120px;
   }
 `;
 
@@ -93,8 +104,8 @@ export const FeaturedTitle = styled.div<TitleProps>`
 export const FeaturedButton = styled.button`
   all: unset;
   position: absolute;
-  right: 0;
-  bottom: 4px;
+  right: 180px;
+  bottom: 10px;
   padding: 0 1rem;
   max-width: 122px;
   height: 24px;
@@ -115,8 +126,7 @@ export const FeaturedButton = styled.button`
 
 export const HomeAppsContainer = styled.div`
   align-self: start;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 55px;
   margin-bottom: 5rem;
   display: flex;
   flex-direction: column;
@@ -184,3 +194,118 @@ export const MainBanner = styled.div`
     }
   }
 `;
+
+
+export const AppContainer = styled.div`
+  width: 632px;
+  height: 69px;
+  background: rgba(0, 0, 0, 0.2);
+  margin-bottom: 5px;
+  display: flex;
+  cursor: pointer;
+  position: relative;
+
+  &:hover {
+    background: linear-gradient(to right, #c6e6f8 5%, #95bcd3 95%);
+  }
+`;
+
+export const AppImage = styled.img`
+  width: 184px;
+  height: 69px;
+`
+
+export const AppTitle = styled.div`
+  color: #c7d5e0;
+  font-size: 16px;
+  margin-top: 0.5rem;
+  line-height: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  overflow: hidden;
+  transition: color 0.25s;
+  width: fit-content;
+  margin-left: 0.5rem;
+
+  ${AppContainer}:hover & {
+    color: #10161b;
+  }
+`;
+
+export const AppTags = styled.div`
+  color: #384959;
+  font-size: 12px;
+  margin-top: 1rem;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: fit-content;
+`
+
+export const AppPriceContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+export const AppPrice = styled.div`
+  padding: 0 6px;
+  color: white;
+  line-height: 16px;
+  font-size: 15px;
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
+export const AppNewPrice = styled.div`
+  color: #beee11;
+  line-height: 16px;
+  font-size: 15px;
+  position: absolute;
+  right: 0;
+  top: 60%;
+  transform: translateY(-50%);
+
+  ${AppContainer}:hover & {
+    color: #10161b;
+  }
+`;
+
+export const AppOldPrice = styled.div`
+  width: fit-content;
+  color: #738895;
+  font-size: 11px;
+  line-height: 12px;
+  position: absolute;
+  right: 0;
+  top: 40%;
+  transform: translateY(-50%);
+  text-decoration: line-through;
+`;
+
+export const PricePercent = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 18px;
+  padding: 0 4px;
+  border-radius: 1px;
+  color: #beee11;
+  background: #4c6b22;
+  height: 26px;
+  position: absolute;
+  left: 35%;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
+export const PriceWrapper = styled.div`
+  display: flex;
+  position: absolute;
+  right: 16px;
+  width: 200px;
+  height: 100%;
+`

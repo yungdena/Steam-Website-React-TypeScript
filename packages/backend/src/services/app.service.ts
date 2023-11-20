@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-import { AppModel } from "../models/App";
+import { AppModel, appSchema } from "../models/App";
 import { IApp } from "../types/app.type";
 
 interface ICreatePayload {
@@ -56,6 +56,24 @@ class AppsService {
     }
 
     res.send(app);
+  }
+
+  async getAppTitle(id: string, res: Response) {
+    try {
+      const app = await AppModel.findById(id);
+
+      if (!app) {
+        res.status(404).send({ message: "App not found" });
+        return;
+      }
+
+      const title = app.title;
+
+      res.send({ title });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Internal Server Error" });
+    }
   }
 
   async getAppById(id: string, res: Response) {

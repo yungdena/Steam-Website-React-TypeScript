@@ -87,11 +87,25 @@ const getAppById = async (appId: string) => {
   return responseData;
 };
 
+const getAppTitle = async (appId: string) => {
+  const response = await fetch(`${BASE_URL}/apps/title/${appId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
+    },
+  });
+
+  const responseData = await response.json();
+  return responseData;
+};
+
 export const useGetAllApps = (page: number = 1, pageSize: number = 10) => {
   return useMutation(() => getAllApps(page, pageSize));
 };
 export const useGetDiscounts = () => useMutation(getAllDiscounts);
 export const useGetAppById = () => useMutation(getAppById)
+export const useGetTitle = () => useMutation(getAppTitle);
 export const usePostApp = () => useMutation(postApp)
 export const useUpdateApp = (): UseMutationResult<
   any,

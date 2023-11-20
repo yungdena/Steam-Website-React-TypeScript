@@ -13,7 +13,7 @@ export class AppsController {
   }
 
   async getAll(req: Request, res: Response, page: number, pageSize: number) {
-    console.log('apps')
+    console.log("apps");
     await this.appsService.getAllApps(res, page, pageSize);
   }
 
@@ -25,6 +25,12 @@ export class AppsController {
   async getByTitle(req: Request, res: Response) {
     const appTitle = req.params.title;
     const app = await this.appsService.getAppByTitle(appTitle, res);
+  }
+
+  async getTitle(req: Request, res: Response) {
+    const appId = req.params.id;
+
+    const app = await this.appsService.getAppTitle(appId, res);
   }
 
   async getById(req: Request, res: Response) {
