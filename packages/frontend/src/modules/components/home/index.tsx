@@ -29,6 +29,14 @@ import {
   MainContainer,
   PricePercent,
   PriceWrapper,
+  SelectedAppContainer,
+  SelectedAppsImage,
+  SelectedAppsImages,
+  SelectedAppsReviews,
+  SelectedAppsReviewsTitle,
+  SelectedAppsTag,
+  SelectedAppsTags,
+  SelectedAppTitle,
   StyledPagination,
   WishlistButton,
 } from "./index.styled";
@@ -46,14 +54,33 @@ import { IApp } from "../../common/types/app.interface";
 import { DiscountDataProvider } from "../../common/context/discounts-context";
 import { HomeMenu } from "./home-menu";
 import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
+import { calculateReviewTitle } from "../../common/utils/calculateReviewRate";
 
 export const HomePage = () => {
-  const [filteredApps, setFilteredApps] = useState<IApp[] | null>(null)
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredApps, setFilteredApps] = useState<IApp[] | null>(null);
   const { isLoadingApps, appsData } = useAppsData();
+  const [selectedApp, setSelectedApp] = useState<IApp | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const { isLoadingBanners, bannersData } = useBannersData();
   const history = useHistory();
   const UserDataContext = useUserData();
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const setSelectedAppIdOnMount = async () => {
+      if (isMounted) {
+        console.log(appsData)
+        setSelectedApp(appsData[0]);
+      }
+    };
+
+    setSelectedAppIdOnMount();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [appsData]);
 
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],
@@ -93,6 +120,12 @@ export const HomePage = () => {
 
     setFilteredApps(filteredApps);
   };
+
+  const handleSelectApp = (app: IApp) => {
+    setSelectedApp(app);
+  };
+
+  console.log(selectedApp)
 
   return (
     <>
@@ -160,13 +193,28 @@ export const HomePage = () => {
                     <AppLink
                       key={app._id}
                       onClick={() => handleNavigate(app._id)}
+                      onMouseEnter={() => handleSelectApp(app)}
                     >
-                      <AppContainer>
+                      <AppContainer
+                        isSelected={
+                          selectedApp && selectedApp._id === app._id
+                            ? true
+                            : false
+                        }
+                      >
                         <AppImage src={app.bannerImage} />
                         <div
                           style={{ display: "flex", flexDirection: "column" }}
                         >
-                          <AppTitle>{app.title}</AppTitle>
+                          <AppTitle
+                            isSelected={
+                              selectedApp && selectedApp._id === app._id
+                                ? true
+                                : false
+                            }
+                          >
+                            {app.title}
+                          </AppTitle>
                           <AppTags>
                             {app.tags.map((tag, index) => (
                               <>
@@ -177,7 +225,13 @@ export const HomePage = () => {
                           </AppTags>
                         </div>
                         {!app.newPrice && (
-                          <AppPrice>
+                          <AppPrice
+                            isSelected={
+                              selectedApp && selectedApp._id === app._id
+                                ? true
+                                : false
+                            }
+                          >
                             {app.price}
                             {app.price === "Free to Play" ? "" : "$"}
                           </AppPrice>
@@ -195,13 +249,51 @@ export const HomePage = () => {
                             </PricePercent>
                             <AppPriceContainer>
                               <AppOldPrice>{app.price}$</AppOldPrice>
-                              <AppNewPrice>{app.newPrice}$</AppNewPrice>
+                              <AppNewPrice
+                                isSelected={
+                                  selectedApp && selectedApp._id === app._id
+                                    ? true
+                                    : false
+                                }
+                              >
+                                {app.newPrice}$
+                              </AppNewPrice>
                             </AppPriceContainer>
                           </PriceWrapper>
                         )}
                       </AppContainer>
                     </AppLink>
                   ))}
+                  <SelectedAppContainer>
+                    <SelectedAppTitle>{selectedApp?.title}</SelectedAppTitle>
+                    <SelectedAppsReviews>
+                      <SelectedAppsReviewsTitle>
+                        Overall user reviews:
+                        <SelectedAppsReviewsTitle
+                          style={{
+                            color: calculateReviewTitle(selectedApp?.reviews)
+                              .color,
+                          }}
+                        >
+                          {selectedApp?.reviews &&
+                            calculateReviewTitle(selectedApp?.reviews).title}
+                          <span style={{ color: "#c6d4df" }}>
+                            {' '}({selectedApp?.reviews.length})
+                          </span>
+                        </SelectedAppsReviewsTitle>
+                      </SelectedAppsReviewsTitle>
+                    </SelectedAppsReviews>
+                    <SelectedAppsTags>
+                      {selectedApp?.tags.map((tag) => (
+                        <SelectedAppsTag>{tag}</SelectedAppsTag>
+                      ))}
+                    </SelectedAppsTags>
+                    <SelectedAppsImages>
+                      {selectedApp?.imagesUrl.map((image) => (
+                        <SelectedAppsImage src={image}/>
+                      ))}
+                    </SelectedAppsImages>
+                  </SelectedAppContainer>
                 </HomeAppsContainer>
               </>
             )}

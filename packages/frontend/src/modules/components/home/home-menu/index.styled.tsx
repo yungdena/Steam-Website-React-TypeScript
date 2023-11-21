@@ -23,6 +23,7 @@ export const TagTitle = styled.div`
   font-size: 14px;
   text-transform: uppercase;
   margin-bottom: 7px;
+  font-weight: 500;
 `;
 
 export const TagLink = styled.div`
@@ -31,6 +32,7 @@ export const TagLink = styled.div`
   font-size: 12px;
   line-height: 16px;
   margin: 3px 0;
+  font-weight: 500;
   cursor: pointer;
 
   &:hover {

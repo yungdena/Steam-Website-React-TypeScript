@@ -11,8 +11,8 @@ const reviewTitleColors = {
   "No Reviews": "gray",
 };
 
-export function calculateReviewTitle(reviews: IReview[]): {title: string, color: string} {
-  if (reviews.length === 0) {
+export function calculateReviewTitle(reviews: IReview[] | undefined): {title: string, color: string} {
+  if (reviews === undefined || reviews.length === 0) {
     return {
       title: "No reviews",
       color: reviewTitleColors["Overwhelmingly Positive"],

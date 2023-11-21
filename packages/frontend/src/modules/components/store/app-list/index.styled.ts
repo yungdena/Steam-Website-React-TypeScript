@@ -9,21 +9,20 @@ interface CustomProps {
 export const ContentContainer = styled.div<CustomProps>`
   display: flex;
   flex-direction: column;
-  align-items: center;
   min-height: ${(props) => (props.minHeight ? props.minHeight : "fit-content")};
-  width: 100%;
+  max-width: 42.875rem;
   color: ${COLORS.lightBlue};
   font-size: 3rem;
-  margin-top: 20rem;
+  margin-top: 2rem;
 `;
 
 export const AppsList = styled.div<CustomProps>`
-  max-width: 1200px;
-  margin: ${(props) => (props.margin ? props.margin : "0")} auto;
+  margin: ${(props) => (props.margin ? props.margin : "0")};
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   height: fix-content;
+  max-width: 42.875rem;
 `;
 
 export const SearchBarContainer = styled.div`
@@ -180,10 +179,11 @@ export const AppTextContainer = styled.div`
 `
 
 export const AppLink = styled.button`
+  max-width: 42.875rem;
   border: none;
   background-color: transparent;
   padding: 0;
-`
+`;
 
 export const AppReleaseDate = styled.div`
   width: 85px;

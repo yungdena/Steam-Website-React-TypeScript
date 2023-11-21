@@ -36,6 +36,8 @@ appsRouter.get(
   appsController.getTitle.bind(appsController)
 );
 
+appsRouter.get("/tags/:tags", appsController.getByTags.bind(appsController));
+
 appsRouter.post("/", validate(appSchema), appsController.create.bind(appsController));
 
 appsRouter.patch(

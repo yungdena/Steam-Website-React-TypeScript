@@ -1,4 +1,5 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import { useHistory } from "react-router-dom";
 import { IApp } from "../types/app.interface";
 import { BASE_URL } from "./base-url";
 
@@ -100,12 +101,26 @@ const getAppTitle = async (appId: string) => {
   return responseData;
 };
 
-export const useGetAllApps = (page: number = 1, pageSize: number = 10) => {
+const getAppsByTags = async (tags: string) => {
+  const response = await fetch(`${BASE_URL}/apps/tags/${tags}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
+    },
+  });
+
+  const responseData = await response.json();
+  return responseData;
+};
+
+export const useGetAllApps = (page: number = 1, pageSize: number = 100) => {
   return useMutation(() => getAllApps(page, pageSize));
 };
 export const useGetDiscounts = () => useMutation(getAllDiscounts);
 export const useGetAppById = () => useMutation(getAppById)
 export const useGetTitle = () => useMutation(getAppTitle);
+export const useGetAppsByTags = () => useMutation(getAppsByTags);
 export const usePostApp = () => useMutation(postApp)
 export const useUpdateApp = (): UseMutationResult<
   any,

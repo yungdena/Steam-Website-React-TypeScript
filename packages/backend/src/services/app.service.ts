@@ -76,6 +76,24 @@ class AppsService {
     }
   }
 
+  async getAppsByTags(tags: string[], res: Response) {
+    try {
+      const apps = await AppModel.find({ tags: { $in: tags } });
+
+      if (!apps || apps.length === 0) {
+        res
+          .status(404)
+          .send({ message: "No apps found with the specified tags" });
+        return;
+      }
+
+      res.send(apps);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Internal Server Error" });
+    }
+  }
+
   async getAppById(id: string, res: Response) {
     const app = await AppModel.findById(id);
 

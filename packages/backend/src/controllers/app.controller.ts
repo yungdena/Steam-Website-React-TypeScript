@@ -38,6 +38,15 @@ export class AppsController {
     const app = await this.appsService.getAppById(appId, res);
   }
 
+  async getByTags(req: Request, res: Response) {
+    const appTags = req.params.tags
+      .split(",")
+      .map((tag) => decodeURIComponent(tag));
+
+    console.log('appTags', appTags)
+    const app = await this.appsService.getAppsByTags(appTags, res);
+  }
+
   async update(req: Request, res: Response) {
     const app: IApp = req.body;
     const id = req.params.id;

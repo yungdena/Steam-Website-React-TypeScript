@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { COLORS } from "../../common/theme";
 
 const backgroundURL = 'https://res.cloudinary.com/didkbrlcz/image/upload/v1693031862/System/colored_body_top_dl0m6y.png'
@@ -131,6 +131,7 @@ export const HomeAppsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  position: relative;
 `;
 
 const wishlistUrl = 'https://res.cloudinary.com/didkbrlcz/image/upload/v1694246344/System/background_wishlist_rz7wjf.jpg'
@@ -195,19 +196,33 @@ export const MainBanner = styled.div`
   }
 `;
 
+interface AppContainerProps {
+  isSelected?: boolean;
+}
 
-export const AppContainer = styled.div`
+export const AppContainer = styled.div<AppContainerProps>`
   width: 632px;
   height: 69px;
   background: rgba(0, 0, 0, 0.2);
-  margin-bottom: 5px;
   display: flex;
   cursor: pointer;
   position: relative;
+  box-sizing: content-box;
 
   &:hover {
     background: linear-gradient(to right, #c6e6f8 5%, #95bcd3 95%);
   }
+
+  ${(props) =>
+    props.isSelected &&
+    css`
+      background: linear-gradient(to right, #c6e6f8 5%, #95bcd3 95%);
+      border-right: 1rem solid #95bcd3;
+      &:hover {
+        border-right: 1rem solid #95bcd3;
+        background: linear-gradient(to right, #c6e6f8 5%, #95bcd3 95%);
+      }
+    `}
 `;
 
 export const AppImage = styled.img`
@@ -215,7 +230,7 @@ export const AppImage = styled.img`
   height: 69px;
 `
 
-export const AppTitle = styled.div`
+export const AppTitle = styled.div<AppContainerProps>`
   color: #c7d5e0;
   font-size: 16px;
   margin-top: 0.5rem;
@@ -231,6 +246,15 @@ export const AppTitle = styled.div`
   ${AppContainer}:hover & {
     color: #10161b;
   }
+
+  ${(props) =>
+    props.isSelected &&
+    css`
+      color: #10161b;
+      &:hover {
+        color: #10161b;
+      }
+    `}
 `;
 
 export const AppTags = styled.div`
@@ -249,7 +273,7 @@ export const AppPriceContainer = styled.div`
   flex-direction: column;
 `
 
-export const AppPrice = styled.div`
+export const AppPrice = styled.div<AppContainerProps>`
   padding: 0 6px;
   color: white;
   line-height: 16px;
@@ -258,9 +282,22 @@ export const AppPrice = styled.div`
   right: 0.5rem;
   top: 50%;
   transform: translateY(-50%);
+
+  ${AppContainer}:hover & {
+    color: #10161b;
+  }
+
+  ${(props) =>
+    props.isSelected &&
+    css`
+      color: #10161b;
+      &:hover {
+        color: #10161b;
+      }
+    `}
 `;
 
-export const AppNewPrice = styled.div`
+export const AppNewPrice = styled.div<AppContainerProps>`
   color: #beee11;
   line-height: 16px;
   font-size: 15px;
@@ -272,6 +309,15 @@ export const AppNewPrice = styled.div`
   ${AppContainer}:hover & {
     color: #10161b;
   }
+
+  ${(props) =>
+    props.isSelected &&
+    css`
+      color: #10161b;
+      &:hover {
+        color: #10161b;
+      }
+    `}
 `;
 
 export const AppOldPrice = styled.div`
@@ -308,4 +354,78 @@ export const PriceWrapper = styled.div`
   right: 16px;
   width: 200px;
   height: 100%;
+`
+
+export const SelectedAppContainer = styled.div`
+  width: 308px;
+  height: 726px;
+  background: linear-gradient(to right, #95bbd4 5%, #859bac 95%);
+  position: absolute;
+  right: -19rem;
+`;
+
+export const SelectedAppTitle = styled.div`
+  font-size: 21px;
+  letter-spacing: 0px;
+  color: #263645;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: 1rem;
+  margin-top: 1rem;
+`;
+
+export const SelectedAppsReviews = styled.div`
+  padding: 4px 7px;
+  margin-bottom: 10px;
+  margin-left: 1rem;
+  background-color: rgba(38, 54, 69, 0.6);
+  width: 272px;
+  border-radius: 2px;
+  height: 32px;
+`;
+
+export const SelectedAppsReviewsTitle = styled.div`
+  color: #c6d4df;
+  font-size: 11px;
+  line-height: 12px;
+  letter-spacing: 0.1px;
+`;
+
+export const SelectedAppsTags = styled.div`
+  display: flex;
+  margin-left: 1rem;
+`;
+
+export const SelectedAppsTag = styled.div`
+  background-color: rgba(38, 54, 69, 0.6);
+  display: inline-block;
+  line-height: 19px;
+  padding: 0 4px;
+  box-shadow: none;
+  margin-right: 2px;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  color: #ffffff;
+
+  &:hover {
+    color: #66c0f4;
+  }
+`;
+
+export const SelectedAppsImages = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 1rem;
+`;
+
+export const SelectedAppsImage = styled.img`
+  width: 274px;
+  height: 150px;
 `

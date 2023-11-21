@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_KEYS } from "../../../common/consts";
-import { useGetTitle } from "../../../common/services/apps.service";
+import { useGetAppsByTags, useGetTitle } from "../../../common/services/apps.service";
 
 import { RecentContainer, TagLink, TagTitle } from "./index.styled"
 
@@ -22,7 +22,7 @@ export const HomeMenu = () => {
         const titlesPromises = parsedApps.map(async (appId: string) => {
           try {
             const response = await getAppsTitleMutation.mutateAsync(appId);
-            console.log(response);
+
             if (isMounted) {
               setRecentApps((prevTitles: string[]) => [
                 ...prevTitles,
@@ -50,6 +50,23 @@ export const HomeMenu = () => {
     };
   }, []);
 
+  const useTagClick = () => {
+    const getAppsByTagsMutation = useGetAppsByTags();
+    const history = useHistory();
+
+    const handleTagClick = (tags: string) => {
+      getAppsByTagsMutation.mutate(tags, {
+        onSuccess: (data) => {
+          history.push(`/store?tags=${tags}`);
+        },
+      });
+    };
+
+    return { handleTagClick };
+  };
+
+  const { handleTagClick } = useTagClick();
+
   return (
     <>
       <RecentContainer>
@@ -65,20 +82,20 @@ export const HomeMenu = () => {
           </TagLink>
         ))}
       </RecentContainer>
-      <RecentContainer style={{ background: "none", top: "820px" }}>
+      <RecentContainer style={{ background: "none", top: "800px" }}>
         <TagTitle>Your Tags</TagTitle>
-        <TagLink>FPS</TagLink>
+        <TagLink onClick={() => handleTagClick('FPS')}>FPS</TagLink>
         <TagLink>Fighting</TagLink>
         <TagLink>Action</TagLink>
         <TagLink>Open World</TagLink>
         <TagLink>Adventure</TagLink>
         <TagLink>Automobile Sim</TagLink>
       </RecentContainer>
-      <RecentContainer style={{ background: "none", top: "1000px" }}>
+      <RecentContainer style={{ background: "none", top: "960px" }}>
         <TagTitle>Recommended</TagTitle>
         <TagLink>Tags</TagLink>
       </RecentContainer>
-      <RecentContainer style={{ background: "none", top: "1080px" }}>
+      <RecentContainer style={{ background: "none", top: "1030px" }}>
         <TagTitle>BROWSE BY GENRE</TagTitle>
         <TagLink>Action</TagLink>
         <TagLink>Adventure</TagLink>

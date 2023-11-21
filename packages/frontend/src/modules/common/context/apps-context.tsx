@@ -21,7 +21,7 @@ const AppsDataContext = createContext<AppsDataContextType>({
 export const AppsDataProvider = ({
   children,
   page: propPage = 1,
-  pageSize = 20,
+  pageSize = 100,
 }: any) => {
   const [appsData, setAppsData] = useState([]);
   const [page, setPage] = useState(propPage);

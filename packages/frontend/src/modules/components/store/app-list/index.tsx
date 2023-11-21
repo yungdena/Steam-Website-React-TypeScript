@@ -24,6 +24,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const searchUrl = searchParams.get("search");
+  const tagsParam = searchParams.get("tags");
   const [searchInput, setSearchInput] = useState<string>(searchUrl || "");
 
   const { isLoadingApps, appsData, setPage, page, setPageError } = useAppsData();
@@ -53,15 +54,23 @@ useEffect(() => {
       break;
   }
 
+  let filteredApps = appsCopy;
+
   if (searchInput) {
-    const filteredApps = appsCopy.filter((app) =>
+    filteredApps = appsCopy.filter((app) =>
       app.title.toLowerCase().includes(searchInput.toLowerCase())
     );
 
     setSortedApps(filteredApps);
-  } else {
-    setSortedApps(appsCopy);
-  }
+  } else if (tagsParam) {
+      const tagsArray = tagsParam.split(",").map((tag) => tag.trim());
+      filteredApps = filteredApps.filter((app) =>
+        tagsArray.some((tag) => app.tags.includes(tag))
+      );
+      setSortedApps(filteredApps);
+    } else {
+      setSortedApps(appsCopy);
+    }
 }, [appsData, sortBy]);
 
   useEffect(() => {
@@ -186,12 +195,6 @@ useEffect(() => {
                   </AppContainer>
                 </AppLink>
               ))}
-              <div style={{display: 'flex', gap: '8px', justifyContent: 'center'}}>
-                <Button onClick={handlePreviousPage}>
-                  Previous
-                </Button>
-                <Button onClick={handleNextPage}>Next</Button>
-              </div>
           </AppsList>
         </>
       )}
