@@ -11,8 +11,6 @@ import { formatDate } from '../../../common/utils/formatDate';
 import { calculateReviewTitle, getReviewImageURL } from '../../../common/utils/calculateReviewRate';
 import { sortAppsByHighestPrice, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from './utils/sort-apps';
 import { handleNavigate, handleSearch, handleSearchInputChange, handleSortChange } from './utils/handlers';
-import { Button } from '../../auth/sign-up/index.styled';
-import { BASE_URL } from '../../../common/services/base-url';
 
 export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number | null, minHeight?: string, margin?: string }) => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
@@ -25,9 +23,12 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const searchParams = new URLSearchParams(location.search);
   const searchUrl = searchParams.get("search");
   const tagsParam = searchParams.get("tags");
+  const onlySpecialOffersParam = searchParams.get("onlySpecialOffers");
+  const hideFreeParam = searchParams.get("hideFree");
+  const priceParam = searchParams.get("price");
   const [searchInput, setSearchInput] = useState<string>(searchUrl || "");
 
-  const { isLoadingApps, appsData, setPage, page, setPageError } = useAppsData();
+  const { isLoadingApps, appsData, page } = useAppsData();
 
 useEffect(() => {
   const appsCopy = [...appsData];
@@ -56,22 +57,62 @@ useEffect(() => {
 
   let filteredApps = appsCopy;
 
+  if (onlySpecialOffersParam !== null && onlySpecialOffersParam === 'true') {
+    filteredApps = filteredApps.filter(
+      (app) => app.newPrice
+    );
+  }
+
+  if (hideFreeParam !== null && Boolean(hideFreeParam) === true) {
+    const hideFree = hideFreeParam === "true";
+    filteredApps = filteredApps.filter(
+      (app) => !(hideFree && app.price === "Free to Play")
+    );
+  }
+
+  if (priceParam !== null) {
+    let filteredAppsByPrice;
+
+    if (priceParam === "Free") {
+      filteredAppsByPrice = filteredApps.filter(
+        (app) => app.newPrice === "Free to Play" || app.price === "Free to Play"
+      );
+    } else if (priceParam === "Any Price") {
+      filteredAppsByPrice = filteredApps;
+    } else {
+      const priceFilter = parseInt(priceParam, 10);
+      filteredAppsByPrice = filteredApps.filter((app) => {
+        const appPrice = app.newPrice !== undefined ? app.newPrice : app.price;
+        return (
+          appPrice &&
+          (appPrice === "Free to Play" || Number(appPrice) < priceFilter)
+        );
+      });
+    }
+    filteredApps = filteredAppsByPrice;
+  }
+
   if (searchInput) {
-    filteredApps = appsCopy.filter((app) =>
+    filteredApps = filteredApps.filter((app) =>
       app.title.toLowerCase().includes(searchInput.toLowerCase())
     );
-
-    setSortedApps(filteredApps);
   } else if (tagsParam) {
-      const tagsArray = tagsParam.split(",").map((tag) => tag.trim());
-      filteredApps = filteredApps.filter((app) =>
-        tagsArray.some((tag) => app.tags.includes(tag))
-      );
-      setSortedApps(filteredApps);
-    } else {
-      setSortedApps(appsCopy);
-    }
-}, [appsData, sortBy]);
+    const tagsArray = tagsParam.split(",").map((tag) => tag.trim());
+    filteredApps = filteredApps.filter((app) =>
+      tagsArray.some((tag) => app.tags.includes(tag))
+    );
+  }
+
+  setSortedApps(filteredApps);
+}, [
+  appsData,
+  sortBy,
+  tagsParam,
+  hideFreeParam,
+  priceParam,
+  onlySpecialOffersParam,
+  searchInput,
+]);
 
   useEffect(() => {
     const displayedApps = sortedApps;
@@ -79,46 +120,10 @@ useEffect(() => {
     setDisplayedApps(displayedApps);
   }, [page, sortedApps]);
 
-  const handleNextPage = async () => {
-    try {
-      const nextPage = page + 1;
-
-      const response = await fetch(`${BASE_URL}/apps/max-pages`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to get max pages");
-      }
-
-      const { maxPages } = await response.json();
-
-      if (nextPage <= maxPages) {
-        setPage(nextPage);
-        setPageError(false);
-      } else {
-        setPageError(true);
-      }
-    } catch (error) {
-      console.error("Error fetching next page:", error);
-      setPageError(true);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (page > 1) {
-      setPage((prevPage) => prevPage - 1);
-    }
-  };
-
   return (
     <ContentContainer minHeight={minHeight}>
       {isLoadingApps ? (
-        <LoaderBig marginTop="15rem" />
+        <LoaderBig marginTop="10rem" marginRight="40rem" />
       ) : (
         <>
           <SearchBarContainer>

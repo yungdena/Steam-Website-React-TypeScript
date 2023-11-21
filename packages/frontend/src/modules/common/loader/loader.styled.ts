@@ -30,6 +30,8 @@ export const Spinner = styled.div`
 interface CustomProps {
   marginTop?: string;
   marginBottom?: string;
+  marginLeft?: string;
+  marginRight?: string;
 }
 
 export const LoaderContainerBig = styled.div<CustomProps>`
@@ -40,6 +42,8 @@ export const LoaderContainerBig = styled.div<CustomProps>`
   align-items: center;
   margin-top: ${(props) => (props.marginTop ? props.marginTop : "0")};
   margin-bottom: ${(props) => (props.marginBottom ? props.marginBottom : "0")};
+  margin-left: ${(props) => (props.marginLeft ? props.marginLeft : "0")};
+  margin-right: ${(props) => (props.marginRight ? props.marginRight : "0")};
 `;
 
 export const SpinnerBig = styled.div`

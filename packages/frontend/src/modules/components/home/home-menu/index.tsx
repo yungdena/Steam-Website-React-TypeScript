@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_KEYS } from "../../../common/consts";
 import { useGetAppsByTags, useGetTitle } from "../../../common/services/apps.service";
+import { Tags } from "../../../common/utils/tags";
 
 import { RecentContainer, TagLink, TagTitle } from "./index.styled"
 
@@ -84,12 +85,11 @@ export const HomeMenu = () => {
       </RecentContainer>
       <RecentContainer style={{ background: "none", top: "800px" }}>
         <TagTitle>Your Tags</TagTitle>
-        <TagLink onClick={() => handleTagClick('FPS')}>FPS</TagLink>
-        <TagLink>Fighting</TagLink>
-        <TagLink>Action</TagLink>
-        <TagLink>Open World</TagLink>
-        <TagLink>Adventure</TagLink>
-        <TagLink>Automobile Sim</TagLink>
+        {Object.values(Tags).map((tag) => (
+          <TagLink key={tag} onClick={() => handleTagClick(tag)}>
+            {tag}
+          </TagLink>
+        ))}
       </RecentContainer>
       <RecentContainer style={{ background: "none", top: "960px" }}>
         <TagTitle>Recommended</TagTitle>
@@ -97,14 +97,18 @@ export const HomeMenu = () => {
       </RecentContainer>
       <RecentContainer style={{ background: "none", top: "1030px" }}>
         <TagTitle>BROWSE BY GENRE</TagTitle>
-        <TagLink>Action</TagLink>
-        <TagLink>Adventure</TagLink>
-        <TagLink>Racing</TagLink>
-        <TagLink>RPG</TagLink>
-        <TagLink>Indie</TagLink>
-        <TagLink>Simulation</TagLink>
-        <TagLink>Strategy</TagLink>
-        <TagLink>Early Access</TagLink>
+        <TagLink onClick={() => handleTagClick("Action")}>Action</TagLink>
+        <TagLink onClick={() => handleTagClick("Adventure")}>Adventure</TagLink>
+        <TagLink onClick={() => handleTagClick("Racing")}>Racing</TagLink>
+        <TagLink onClick={() => handleTagClick("RPG")}>RPG</TagLink>
+        <TagLink onClick={() => handleTagClick("Indie")}>Indie</TagLink>
+        <TagLink onClick={() => handleTagClick("Simulation")}>
+          Simulation
+        </TagLink>
+        <TagLink onClick={() => handleTagClick("Strategy")}>Strategy</TagLink>
+        <TagLink onClick={() => handleTagClick("Early Access")}>
+          Early Access
+        </TagLink>
       </RecentContainer>
     </>
   );
