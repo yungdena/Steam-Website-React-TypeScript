@@ -57,7 +57,6 @@ export const SignIn: React.FC = () => {
     (route: string) => async (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       setIsLoading(true)
-      console.log('handleauthorized');
 
       const user = await signInMutation.mutateAsync({
         name: formik.values.name,
@@ -75,9 +74,7 @@ export const SignIn: React.FC = () => {
         return;
       }
       UserDataContext?.setUser(user);
-      console.log('data', user);
 
-      console.log('user', JSON.stringify(user));
       history.push(route);
     };
 

@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import { COLORS } from "../../../common/theme";
 
-export const HomeHeader = styled.div`
+export const HomeHeader = styled.div<{ margin?: string }>`
   display: flex;
   width: 940px;
   height: 35px;
   justify-content: space-between;
+  margin: ${({ margin }) =>
+    margin || 0};
   margin-top: 6.5rem;
   background-image: linear-gradient(
     90deg,

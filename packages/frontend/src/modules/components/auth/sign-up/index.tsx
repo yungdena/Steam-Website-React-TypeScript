@@ -69,7 +69,6 @@ export const SignUp: React.FC = () => {
     const response = await fetch(COUNTRY_API_URL);
     const { name } = await response.json();
 
-    console.log(name);
     const selectedCountry = name;
     if (selectedCountry) {
       setCountry(selectedCountry);
@@ -119,7 +118,6 @@ export const SignUp: React.FC = () => {
       });
       UserDataContext?.setUser(user);
 
-      console.log("user", user);
       localStorage.setItem(
         APP_KEYS.STORAGE_KEYS.ACCOUNT,
         JSON.stringify(user._id)
@@ -131,7 +129,6 @@ export const SignUp: React.FC = () => {
     if (isValid) {
       history.push(route);
     } else {
-      console.log(formik.errors)
       setIsLoading(false);
     }
   };

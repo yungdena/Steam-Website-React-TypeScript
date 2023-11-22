@@ -53,8 +53,6 @@ export const Library = () => {
     setIsLoading(false);
   }, [libraryApps.libraryApps]);
 
-  console.log('library apps', libraryApps.libraryApps)
-
   useEffect(() => {
     let sortedAppsCopy = [...libraryApps.libraryApps];
 

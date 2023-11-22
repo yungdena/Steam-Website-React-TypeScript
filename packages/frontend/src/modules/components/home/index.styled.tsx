@@ -143,7 +143,7 @@ export const WishlistButton = styled.button`
   display: inline-block;
   position: absolute;
   top: 80px;
-  right: 109px;
+  right: 215px;
   padding: 0 25px;
   margin: 0 1px;
   line-height: 20px;

@@ -11,7 +11,7 @@ import {
   Link,
 } from "./index.styled";
 
-export const HomepageHeader = ({ onSearch }: any) => {
+export const HomepageHeader = ({ onSearch, margin }: any) => {
   const history = useHistory();
   const SearchButtonURL =
     "https://res.cloudinary.com/didkbrlcz/image/upload/v1693034230/System/search_icon_btn_r7rp8b.png";
@@ -29,11 +29,15 @@ export const HomepageHeader = ({ onSearch }: any) => {
   };
 
   return (
-    <HomeHeader>
+    <HomeHeader margin={margin}>
       <LinkGroup>
         {HOME_HEADER_LINKS.map((link) => {
           return (
-            <Link onClick={() => history.push(link.link)} id={link.id} key={link.id}>
+            <Link
+              onClick={() => history.push(link.link)}
+              id={link.id}
+              key={link.id}
+            >
               {link.label}
             </Link>
           );

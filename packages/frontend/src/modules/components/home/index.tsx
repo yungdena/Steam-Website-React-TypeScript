@@ -71,7 +71,6 @@ export const HomePage = () => {
 
     const setSelectedAppIdOnMount = async () => {
       if (isMounted) {
-        console.log(appsData)
         setSelectedApp(appsData[0]);
       }
     };
@@ -101,7 +100,6 @@ export const HomePage = () => {
   };
 
   const handleNavigate = (appId: string) => {
-    console.log('handleNavigate', appId);
     history.push(
       `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.APPS}/${appId}`
     );
@@ -126,8 +124,6 @@ export const HomePage = () => {
     setSelectedApp(app);
   };
 
-  console.log(selectedApp)
-
   return (
     <>
       <Header />
@@ -145,7 +141,7 @@ export const HomePage = () => {
             >
               Wishlist ({UserDataContext?.userData?.wishlist.length})
             </WishlistButton>
-            <HomepageHeader onSearch={handleSearch} />
+            <HomepageHeader margin="6.5rem 0 0 55px" onSearch={handleSearch} />
             <SearchApps apps={filteredApps} searchQuery={searchQuery} />
             {isLoadingBanners ? (
               <LoaderBig marginTop="40rem" marginBottom="10rem" />

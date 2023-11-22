@@ -99,8 +99,6 @@ export const CreatePost = () => {
     }
   }, [UserDataContext])
 
-  console.log({ postData: { ...post } });
-
   return (
     <>
       <Header />
