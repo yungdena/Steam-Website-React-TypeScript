@@ -59,16 +59,17 @@ export const Offers = () => {
 
   return (
     <MainContainer>
-      <Swiper {...swiperParams}>
+      <Swiper style={{ marginLeft: "0" }} {...swiperParams}>
         {chunks.map((appsChunk, slideIndex) => (
           <SwiperSlide key={slideIndex}>
             <OffersContainer>
               {appsChunk.map((app) => (
                 <Offer onClick={() => handleNavigate(app._id)} key={app._id}>
                   <OfferImage src={app.titleImage} />
-                  <PriceContainer style={{marginTop:'5px'}}>
+                  <PriceContainer style={{ marginTop: "5px" }}>
                     <PricePercent>
-                      -{calculatePercentageDecrease(
+                      -
+                      {calculatePercentageDecrease(
                         Number(app.price),
                         Number(app.newPrice),
                         0

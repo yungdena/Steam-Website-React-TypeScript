@@ -258,3 +258,12 @@ export const CommentText = styled.div`
   max-height: 400px;
   line-height: 18px;
 `;
+
+export const AuthorSpan = styled.span`
+  font-size: 11px;
+  color: gold;
+  border: 1px solid gold;
+  border-radius: 2px;
+  padding: 1px;
+  margin-left: 1px;
+`;

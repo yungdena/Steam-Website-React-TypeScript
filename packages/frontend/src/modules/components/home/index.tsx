@@ -55,6 +55,7 @@ import { DiscountDataProvider } from "../../common/context/discounts-context";
 import { HomeMenu } from "./home-menu";
 import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
 import { calculateReviewTitle } from "../../common/utils/calculateReviewRate";
+import { BigTags } from "./big-tags";
 
 export const HomePage = () => {
   const [filteredApps, setFilteredApps] = useState<IApp[] | null>(null);
@@ -153,7 +154,7 @@ export const HomePage = () => {
                 <FeaturedTitle left="60px" top="33rem">
                   FEATURED & RECOMMENDED
                 </FeaturedTitle>
-                <Swiper style={{ marginTop: "21rem" }} {...swiperParams}>
+                <Swiper style={{ marginLeft: '0', marginTop: "21rem" }} {...swiperParams}>
                   {bannersData.map((banner) => (
                     <SwiperSlide key={banner._id} className="banner-slide">
                       <GameBannerComponent
@@ -297,6 +298,7 @@ export const HomePage = () => {
                 </HomeAppsContainer>
               </>
             )}
+            <BigTags />
           </ContentWrap>
         </ContentContainer>
       </MainContainer>

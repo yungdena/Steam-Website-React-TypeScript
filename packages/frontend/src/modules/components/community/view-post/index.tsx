@@ -6,7 +6,7 @@ import { useUserData } from "../../../common/context/user-context";
 import { useAddCommentToPost, useAddLikeToPost } from "../../../common/services/community.service";
 import { useGetUserById } from "../../../common/services/user.service";
 import { IUser } from "../../../common/types/User";
-import { PostImage, ImageBlock, InfoBlock, MainContainer, AuthorBlock, AuthorAvatar, AuthorName, PostText, ClosePost, Cross, LikesCount, ThumbsUpIcon, LikeButton, DislikeButton, CommentsBlock, MyComment, Comment, CommentNickname, CommentText, PostCommentWrap, PostCommentButton } from "./index.styled";
+import { PostImage, ImageBlock, InfoBlock, MainContainer, AuthorBlock, AuthorAvatar, AuthorName, PostText, ClosePost, Cross, LikesCount, ThumbsUpIcon, LikeButton, DislikeButton, CommentsBlock, MyComment, Comment, CommentNickname, CommentText, PostCommentWrap, PostCommentButton, AuthorSpan } from "./index.styled";
 import { IComment, IPost } from "../../../common/types/Post.interface";
 import { useHistory } from "react-router-dom";
 import { APP_KEYS } from "../../../common/consts";
@@ -267,7 +267,11 @@ export const ViewPost = ({ post, user, setSelectedPost, setSelectedUser }: any) 
                       )
                     }
                   >
-                    {commentUsers[index]?.name || "Unknown"}
+                    {post.user === commentUsers[index]?._id ? (
+                      <>{commentUsers[index]?.name} <AuthorSpan>author</AuthorSpan></>
+                    ) : (
+                      commentUsers[index]?.name || "Unknown"
+                    )}
                   </CommentNickname>
                   <CommentText>{comment.text}</CommentText>
                 </div>
