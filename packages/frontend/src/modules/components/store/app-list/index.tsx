@@ -11,6 +11,7 @@ import { formatDate } from '../../../common/utils/formatDate';
 import { calculateReviewTitle, getReviewImageURL } from '../../../common/utils/calculateReviewRate';
 import { sortAppsByHighestPrice, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from './utils/sort-apps';
 import { handleNavigate, handleSearch, handleSearchInputChange, handleSortChange } from './utils/handlers';
+import { useGetAppsByTags } from '../../../common/services/apps.service';
 
 export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number | null, minHeight?: string, margin?: string }) => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
@@ -20,6 +21,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const history = useHistory();
 
   const location = useLocation();
+  const getAppsByTagsMutation = useGetAppsByTags()
   const searchParams = new URLSearchParams(location.search);
   const searchUrl = searchParams.get("search");
   const tagsParam = searchParams.get("tags");
@@ -30,89 +32,109 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
 
   const { isLoadingApps, appsData, page } = useAppsData();
 
-useEffect(() => {
-  const appsCopy = [...appsData];
+  useEffect(() => {
+    const appsCopy = [...appsData];
 
-  switch (sortBy) {
-    case "Relevance":
-      break;
-    case "Release date":
-      sortAppsByReleaseDate(appsCopy);
-      break;
-    case "Name":
-      sortAppsByName(appsCopy);
-      break;
-    case "Lowest Price":
-      sortAppsByLowestPrice(appsCopy);
-      break;
-    case "Highest Price":
-      sortAppsByHighestPrice(appsCopy);
-      break;
-    case "User Reviews":
-      sortAppsByReviews(appsCopy);
-      break;
-    default:
-      break;
-  }
-
-  let filteredApps = appsCopy;
-
-  if (onlySpecialOffersParam !== null && onlySpecialOffersParam === 'true') {
-    filteredApps = filteredApps.filter(
-      (app) => app.newPrice
-    );
-  }
-
-  if (hideFreeParam !== null && Boolean(hideFreeParam) === true) {
-    const hideFree = hideFreeParam === "true";
-    filteredApps = filteredApps.filter(
-      (app) => !(hideFree && app.price === "Free to Play")
-    );
-  }
-
-  if (priceParam !== null) {
-    let filteredAppsByPrice;
-
-    if (priceParam === "Free") {
-      filteredAppsByPrice = filteredApps.filter(
-        (app) => app.newPrice === "Free to Play" || app.price === "Free to Play"
-      );
-    } else if (priceParam === "Any Price") {
-      filteredAppsByPrice = filteredApps;
-    } else {
-      const priceFilter = parseInt(priceParam, 10);
-      filteredAppsByPrice = filteredApps.filter((app) => {
-        const appPrice = app.newPrice !== undefined ? app.newPrice : app.price;
-        return (
-          appPrice &&
-          (appPrice === "Free to Play" || Number(appPrice) < priceFilter)
-        );
-      });
+    switch (sortBy) {
+      case "Relevance":
+        break;
+      case "Release date":
+        sortAppsByReleaseDate(appsCopy);
+        break;
+      case "Name":
+        sortAppsByName(appsCopy);
+        break;
+      case "Lowest Price":
+        sortAppsByLowestPrice(appsCopy);
+        break;
+      case "Highest Price":
+        sortAppsByHighestPrice(appsCopy);
+        break;
+      case "User Reviews":
+        sortAppsByReviews(appsCopy);
+        break;
+      default:
+        break;
     }
-    filteredApps = filteredAppsByPrice;
-  }
 
-  if (searchInput) {
-    filteredApps = filteredApps.filter((app) =>
-      app.title.toLowerCase().includes(searchInput.toLowerCase())
-    );
-  } else if (tagsParam) {
-    const tagsArray = tagsParam.split(",").map((tag) => tag.trim());
-    filteredApps = filteredApps.filter((app) =>
-      tagsArray.some((tag) => app.tags.includes(tag))
-    );
-  }
+    let filteredApps = appsCopy;
 
-  setSortedApps(filteredApps);
-}, [
-  appsData,
-  sortBy,
-  tagsParam,
-  hideFreeParam,
-  priceParam,
-  onlySpecialOffersParam,
-  searchInput,
-]);
+    if (onlySpecialOffersParam !== null && onlySpecialOffersParam === "true") {
+      filteredApps = filteredApps.filter((app) => app.newPrice);
+    }
+
+    if (hideFreeParam !== null && Boolean(hideFreeParam) === true) {
+      const hideFree = hideFreeParam === "true";
+      filteredApps = filteredApps.filter(
+        (app) => !(hideFree && app.price === "Free to Play")
+      );
+    }
+
+    if (priceParam !== null) {
+      let filteredAppsByPrice;
+
+      if (priceParam === "Free") {
+        filteredAppsByPrice = filteredApps.filter(
+          (app) =>
+            app.newPrice === "Free to Play" || app.price === "Free to Play"
+        );
+      } else if (priceParam === "Any Price") {
+        filteredAppsByPrice = filteredApps;
+      } else {
+        const priceFilter = parseInt(priceParam, 10);
+        filteredAppsByPrice = filteredApps.filter((app) => {
+          const appPrice =
+            app.newPrice !== undefined ? app.newPrice : app.price;
+          return (
+            appPrice &&
+            (appPrice === "Free to Play" || Number(appPrice) < priceFilter)
+          );
+        });
+      }
+      filteredApps = filteredAppsByPrice;
+    }
+
+    if (searchInput) {
+      filteredApps = filteredApps.filter((app) =>
+        app.title.toLowerCase().includes(searchInput.toLowerCase())
+      );
+    }
+
+    const fetchAppsByTags = async () => {
+      if (tagsParam) {
+        const tagsArray = tagsParam.split(",").map((tag) => tag.trim());
+
+        try {
+          const fetchedApps = await getAppsByTagsMutation.mutateAsync(tagsArray);
+
+          const mergedApps = fetchedApps.filter((fetchedApp: IApp) =>
+            filteredApps.some((app) => app._id === fetchedApp._id)
+          );
+
+          return mergedApps;
+        } catch (error) {
+          console.error("Error fetching apps by tags:", error);
+          return filteredApps;
+        }
+      }
+
+      return filteredApps;
+    };
+
+    const updateFilteredApps = async () => {
+      const tagsFilteredApps = await fetchAppsByTags();
+      setSortedApps(tagsFilteredApps);
+    };
+
+    updateFilteredApps();
+  }, [
+    appsData,
+    sortBy,
+    tagsParam,
+    hideFreeParam,
+    priceParam,
+    onlySpecialOffersParam,
+  ]);
 
   useEffect(() => {
     const displayedApps = sortedApps;

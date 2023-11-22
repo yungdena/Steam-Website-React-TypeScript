@@ -101,7 +101,7 @@ const getAppTitle = async (appId: string) => {
   return responseData;
 };
 
-const getAppsByTags = async (tags: string) => {
+const getAppsByTags = async (tags: string[]) => {
   const response = await fetch(`${BASE_URL}/apps/tags/${tags}`, {
     method: "GET",
     headers: {

@@ -56,7 +56,7 @@ export const HomeMenu = () => {
     const history = useHistory();
 
     const handleTagClick = (tags: string) => {
-      getAppsByTagsMutation.mutate(tags, {
+      getAppsByTagsMutation.mutate([tags], {
         onSuccess: (data) => {
           history.push(`/store?tags=${tags}`);
         },
@@ -70,7 +70,7 @@ export const HomeMenu = () => {
 
   return (
     <>
-      <RecentContainer>
+      <RecentContainer style={{ minHeight: "220px" }}>
         <TagTitle>Recently Viewed</TagTitle>
         {recentApps.slice(0, 7).map((app: any) => (
           <TagLink
@@ -94,8 +94,24 @@ export const HomeMenu = () => {
       <RecentContainer style={{ background: "none", top: "960px" }}>
         <TagTitle>Recommended</TagTitle>
         <TagLink>Tags</TagLink>
+        <TagLink
+          onClick={() =>
+            history.push(
+              `/${APP_KEYS.ROUTER_KEYS.STORE}/?onlySpecialOffers=true`
+            )
+          }
+        >
+          Special Offers
+        </TagLink>
+        <TagLink
+          onClick={() =>
+            history.push(`/${APP_KEYS.ROUTER_KEYS.STORE}/?price=Free`)
+          }
+        >
+          Free Games
+        </TagLink>
       </RecentContainer>
-      <RecentContainer style={{ background: "none", top: "1030px" }}>
+      <RecentContainer style={{ background: "none", top: "1060px" }}>
         <TagTitle>BROWSE BY GENRE</TagTitle>
         <TagLink onClick={() => handleTagClick("Action")}>Action</TagLink>
         <TagLink onClick={() => handleTagClick("Adventure")}>Adventure</TagLink>

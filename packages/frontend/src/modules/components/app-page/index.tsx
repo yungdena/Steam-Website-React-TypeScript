@@ -6,7 +6,7 @@ import { APP_KEYS } from "../../common/consts";
 import { useUserData } from "../../common/context/user-context";
 import { LoaderBig } from "../../common/loader/loader";
 import { useGetAppById } from "../../common/services/apps.service";
-import { useAddToLibrary, useAddToWishlist, useGetUserById } from "../../common/services/user.service";
+import { useAddToLibrary, useAddToWishlist, useGetLibrary, useGetUserById, useGetWishlist } from "../../common/services/user.service";
 import { IApp, IReview } from "../../common/types/app.interface";
 import { calculateReviewTitle } from "../../common/utils/calculateReviewRate";
 import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
@@ -31,8 +31,6 @@ export const AppPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [addedToLibrary, setAddedToLibrary] = useState(false);
   const [addedToWishlist, setAddedToWishlist] = useState(false);
-  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
-  const [libraryIds, setLibraryIds] = useState<string[]>([]);
   const [userReviewed, setUserReviewed] = useState(true);
   const [descriptionError, setDescriptionError] = useState<string | null>(null);
   const [isRecommended, setIsRecommended] = useState<boolean>(true);
@@ -40,6 +38,8 @@ export const AppPage = () => {
   const [usersData, setUsersData] = useState<Record<string, IUser | null>>(
     {}
   );
+  const [userLibraryData, setUserLibraryData] = useState<IApp[] | null>(null);
+  const [userWishlistData, setUserWishlistData] = useState<IApp[] | null>(null);
   const UserDataContext = useUserData();
   const initialReviewData =
     UserDataContext && UserDataContext.userData
@@ -65,7 +65,9 @@ export const AppPage = () => {
   const getAppByIdMutation = useGetAppById();
   const addToWishlistMutation = useAddToWishlist();
   const addToLibraryMutation = useAddToLibrary();
-  const getUserByIdMutation = useGetUserById()
+  const getUserByIdMutation = useGetUserById();
+  const getLibraryMutation = useGetLibrary();
+  const getWishlistMutation = useGetWishlist();
   const history = useHistory();
   const { id } = useParams<AppRouteParams>()
 
@@ -226,24 +228,39 @@ export const AppPage = () => {
   }, []);
 
   useEffect(() => {
-    async function getUsersLibrary() {
-      if (UserDataContext?.userData?.apps.includes(id)) {
-        setAddedToLibrary(true);
-      }
-    }
+    const fetchLibraryData = async () => {
+      if (UserDataContext?.userData) {
+        const userId = UserDataContext.userData._id;
+        try {
+          const libraryData = await getLibraryMutation.mutateAsync(userId);
+          const wishlistData = await getWishlistMutation.mutateAsync(userId);
+          if (libraryData && libraryData.library) {
+            setUserLibraryData(libraryData.library);
+          }
 
-    getUsersLibrary();
-  }, [libraryIds])
+          if (wishlistData && wishlistData.wishlist) {
+            setUserWishlistData(wishlistData.wishlist);
+          }
+        } catch (error) {
+          console.error("Error fetching user's library/wishlist:", error);
+        }
+      }
+    };
+
+    fetchLibraryData();
+  }, [UserDataContext?.userData]);
 
   useEffect(() => {
-    async function getUsersWishlist() {
-      if (UserDataContext?.userData?.wishlist.includes(id)) {
-        setAddedToWishlist(true);
-      }
+    const isAppInLibrary = userLibraryData?.some((app) => app._id === id);
+    const isAppInWishlist = userWishlistData?.some((app) => app._id === id);
+    if (isAppInLibrary) {
+      setAddedToLibrary(true);
     }
 
-    getUsersWishlist();
-  }, [wishlistIds]);
+    if (isAppInWishlist) {
+      setAddedToWishlist(true);
+    }
+  }, [userLibraryData, userWishlistData, id]);
 
   useEffect(() => {
     if (reviewDataIdChanged) {

@@ -59,11 +59,17 @@ export const StoreMenu = () => {
   };
 
   useEffect(() => {
-    searchParams.set("tags", selectedTags.join(","));
-    history.push(
-      `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.STORE}?${searchParams}`
-    );
-  }, [selectedTags]);
+    const onlySpecialOffers = searchParams.get("onlySpecialOffers");
+    const hideFreeParam = searchParams.get("hideFree");
+
+    if (onlySpecialOffers !== null) {
+      setIncludeFree(onlySpecialOffers === "true");
+    }
+
+    if (hideFreeParam !== null) {
+      setHideFree(hideFreeParam === "true");
+    }
+  }, [searchParams]);
 
   return (
     <MainMenuContainer>

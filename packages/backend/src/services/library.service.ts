@@ -55,7 +55,7 @@ export class LibraryService {
         return;
       }
 
-      user.wishlist = user.wishlist.filter((id) => id !== appId);
+      user.wishlist = user.wishlist.filter((id) => id.toString() !== appId);
       await user.save();
 
       res.send(user);
@@ -67,6 +67,7 @@ export class LibraryService {
   async deleteFromLibrary(userId: string, appId: string, res: Response) {
     try {
       const user = await UserModel.findById(userId);
+
       if (!user) {
         res.status(404).send({ message: "User not found" });
         return;
@@ -77,7 +78,7 @@ export class LibraryService {
         return;
       }
 
-      user.apps = user.apps.filter((id) => id !== appId);
+      user.apps = user.apps.filter((id) => id.toString() !== appId);
       await user.save();
 
       res.send(user);
