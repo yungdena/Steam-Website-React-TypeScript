@@ -104,7 +104,7 @@ export const FeaturedTitle = styled.div<TitleProps>`
 export const FeaturedButton = styled.button`
   all: unset;
   position: absolute;
-  right: 180px;
+  right: 260px;
   bottom: 10px;
   padding: 0 1rem;
   max-width: 122px;

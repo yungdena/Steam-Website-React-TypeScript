@@ -38,7 +38,10 @@ export const GameBannerComponent = ({appInfo}: Partial<IApp>) => {
             )}
             <TagsContainer>
               {tags.slice(0, 4).map((tag: string) => (
-                <Tag key={tag}>{tag}</Tag>
+                <Tag onClick={(event) => {
+                  event.stopPropagation()
+                  history.push('/' + APP_KEYS.ROUTER_KEYS.STORE + '/' + `?tags=${tag}`)
+                }} key={tag}>{tag}</Tag>
               ))}
             </TagsContainer>
           </ReasonContainer>

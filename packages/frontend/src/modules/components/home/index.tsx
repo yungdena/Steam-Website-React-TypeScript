@@ -179,7 +179,7 @@ export const HomePage = () => {
             ) : (
               <>
                 <AppsLine>
-                  <FeaturedTitle left="-125px" top="-30px">
+                  <FeaturedTitle left="-200px" top="-30px">
                     Top Sellers
                   </FeaturedTitle>
                   <FeaturedButton onClick={handleNavigateToApps}>

@@ -72,6 +72,7 @@ export const Image = styled.img`
   padding: 10px 10px 10px 0;
   opacity: 0.6;
   cursor: pointer;
+  object-fit: cover;
 
   &:hover {
     opacity: 1;
@@ -94,6 +95,10 @@ export const Tag = styled.div`
   max-width: 200px;
   font-size: 11px;
   color: ${COLORS.greyishWhite};
+
+  &:hover {
+    color: ${COLORS.tagBlue}
+  }
 `;
 
 export const Price = styled.div`
