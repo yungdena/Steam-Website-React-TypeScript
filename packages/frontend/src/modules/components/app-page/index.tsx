@@ -371,7 +371,7 @@ export const AppPage = () => {
                           </AdditionalInfoTitle>
                           <Tags>
                             {app?.tags.map((tag) => (
-                              <Tag key={tag}>{tag}</Tag>
+                              <Tag onClick={() => history.push('/' + APP_KEYS.ROUTER_KEYS.STORE + '/' + `?tags=${tag}`)} key={tag}>{tag}</Tag>
                             ))}
                           </Tags>
                         </TagsContainer>

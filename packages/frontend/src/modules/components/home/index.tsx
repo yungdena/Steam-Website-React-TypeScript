@@ -56,6 +56,7 @@ import { HomeMenu } from "./home-menu";
 import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
 import { calculateReviewTitle } from "../../common/utils/calculateReviewRate";
 import { BigTags } from "./big-tags";
+import { BigOffers } from "./offers/main-offers";
 
 export const HomePage = () => {
   const [filteredApps, setFilteredApps] = useState<IApp[] | null>(null);
@@ -295,6 +296,9 @@ export const HomePage = () => {
               </>
             )}
             <BigTags />
+            <DiscountDataProvider>
+              <BigOffers />
+            </DiscountDataProvider>
           </ContentWrap>
         </ContentContainer>
       </MainContainer>
