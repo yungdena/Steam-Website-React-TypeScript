@@ -154,7 +154,11 @@ export const WishlistButton = styled.button`
 
   &:hover {
     color: black;
-    background: linear-gradient(135deg, #ffffff 0%,#919aa3 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #919aa3 100%);
+  }
+
+  @media (max-width: 1500px) {
+    right: 330px;
   }
 `;
 

@@ -11,7 +11,7 @@ import {
   Link,
 } from "./index.styled";
 
-export const HomepageHeader = ({ onSearch, margin }: any) => {
+export const HomepageHeader = ({ onSearch, margin, smallScreenMarginLeft }: any) => {
   const history = useHistory();
   const SearchButtonURL =
     "https://res.cloudinary.com/didkbrlcz/image/upload/v1693034230/System/search_icon_btn_r7rp8b.png";
@@ -29,7 +29,7 @@ export const HomepageHeader = ({ onSearch, margin }: any) => {
   };
 
   return (
-    <HomeHeader margin={margin}>
+    <HomeHeader smallScreenMarginLeft={smallScreenMarginLeft} margin={margin}>
       <LinkGroup>
         {HOME_HEADER_LINKS.map((link) => {
           return (

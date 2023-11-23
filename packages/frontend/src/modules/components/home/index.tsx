@@ -142,7 +142,7 @@ export const HomePage = () => {
             >
               Wishlist ({UserDataContext?.userData?.wishlist.length})
             </WishlistButton>
-            <HomepageHeader margin="6.5rem 0 0 55px" onSearch={handleSearch} />
+            <HomepageHeader smallScreenMarginLeft="-60px" margin="6.5rem 0 0 55px" onSearch={handleSearch} />
             <SearchApps apps={filteredApps} searchQuery={searchQuery} />
             {isLoadingBanners ? (
               <LoaderBig marginTop="40rem" marginBottom="10rem" />

@@ -1,13 +1,15 @@
 import styled from "styled-components";
 import { COLORS } from "../../../common/theme";
 
-export const HomeHeader = styled.div<{ margin?: string }>`
+export const HomeHeader = styled.div<{
+  margin?: string;
+  smallScreenMarginLeft?: string;
+}>`
   display: flex;
   width: 940px;
   height: 35px;
   justify-content: space-between;
-  margin: ${({ margin }) =>
-    margin || 0};
+  margin: ${({ margin }) => margin || 0};
   margin-top: 6.5rem;
   background-image: linear-gradient(
     90deg,
@@ -18,6 +20,10 @@ export const HomeHeader = styled.div<{ margin?: string }>`
   background-repeat: no-repeat;
   background-size: 100% 100%;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+
+  @media (max-width: 1500px) {
+    margin-left: ${({ smallScreenMarginLeft }) => smallScreenMarginLeft || 0};
+  }
 `;
 
 export const LinkGroup = styled.div`
