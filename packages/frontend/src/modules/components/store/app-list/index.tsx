@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { useAppsData } from '../../../common/context/apps-context';
@@ -31,6 +31,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const hideFreeParam = searchParams.get("hideFree");
   const priceParam = searchParams.get("price");
   const [searchInput, setSearchInput] = useState<string>(searchUrl || "");
+  const isMountedRef = useRef(true);
 
   const { isLoadingApps, appsData, page, setPage, isLoadingNewApps } = useAppsData();
 
@@ -102,20 +103,28 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
       );
     }
 
-  const fetchAppsByTags = async () => {
-    try {
-      if (tagsParam) {
-        const tagsArray = tagsParam.split(",").map((tag) => tag.trim());
-        const fetchedApps = await getAppsByTagsMutation.mutateAsync(tagsArray);
-        setSortedApps(fetchedApps);
-      } else {
-        setSortedApps(filteredApps);
+    const fetchAppsByTags = async () => {
+      try {
+        if (tagsParam) {
+          const tagsArray = tagsParam.split(",").map((tag) => tag.trim());
+          const fetchedApps = await getAppsByTagsMutation.mutateAsync(
+            tagsArray
+          );
+          if (isMountedRef.current) {
+            setSortedApps(fetchedApps);
+          }
+        } else {
+          if (isMountedRef.current) {
+            setSortedApps(filteredApps);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching apps by tags:", error);
+        if (isMountedRef.current) {
+          setSortedApps(filteredApps);
+        }
       }
-    } catch (error) {
-      console.error("Error fetching apps by tags:", error);
-      setSortedApps(filteredApps);
-    }
-  };
+    };
 
   fetchAppsByTags();
   }, [
@@ -133,36 +142,45 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
     setDisplayedApps(displayedApps);
   }, [page, sortedApps]);
 
-    useEffect(() => {
-      const displayedApps = sortedApps.slice(
-        0,
-        sliceIndex ? sliceIndex : appsData.length
-      );
-      setDisplayedApps(displayedApps);
-    }, [page, sortedApps]);
+  useEffect(() => {
+    const displayedApps = sortedApps.slice(
+      0,
+      sliceIndex ? sliceIndex : appsData.length
+    );
+    setDisplayedApps(displayedApps);
+  }, [page, sortedApps]);
 
+  useEffect(() => {
     const handleScroll = async () => {
-      const offset = 1000;
-      if (
+      const scrolledToBottom =
         window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - offset
-      ) {
-        if (!loadingNextPage) {
+        document.documentElement.offsetHeight;
+
+      if (scrolledToBottom && !isLoadingNewApps) {
+        try {
           const maxPages = await getMaxPages.mutateAsync();
           if (page < maxPages.maxPages) {
             setLoadingNextPage(true);
             setPage(page + 1);
           }
+        } catch (error) {
+          console.error("Error fetching max pages:", error);
         }
       }
     };
-    useEffect(() => {
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }, [page]);
 
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [page]);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   return (
     <ContentContainer minHeight={minHeight}>

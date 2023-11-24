@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useGetAllApps } from "../services/apps.service";
 import { IApp } from "../types/app.interface";
 
@@ -30,6 +30,7 @@ export const AppsDataProvider = ({
   const [isLoadingApps, setIsLoadingApps] = useState(true);
   const [isLoadingNewApps, setIsLoadingNewApps] = useState(false);
   const [pageError, setPageError] = useState(false);
+  const [dataFetched, setDataFetched] = useState(false);
 
   const getAllAppsMutation = useGetAllApps(page, pageSize);
 
@@ -38,31 +39,46 @@ export const AppsDataProvider = ({
   }, [propPage]);
 
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchAllApps() {
       try {
         setIsLoadingNewApps(true);
         const data = await getAllAppsMutation.mutateAsync();
-        setAppsData((prevAppsData) => [...prevAppsData, ...data]);
-        setIsLoadingApps(false);
-        setIsLoadingNewApps(false);
-        setPageError(false);
+        if (isMounted) {
+          setAppsData((prevAppsData) => [...prevAppsData, ...data]);
+          setIsLoadingApps(false);
+          setDataFetched(true);
+        }
       } catch (error) {
         console.error("Error fetching apps:", error);
-        setPageError(true);
+        if (isMounted) {
+          setPageError(true);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingNewApps(false);
+        }
       }
     }
 
     fetchAllApps();
+
+    return () => {
+      isMounted = false;
+    };
   }, [page, pageSize]);
 
-  const contextValue: AppsDataContextType = {
-    appsData,
-    isLoadingApps,
-    isLoadingNewApps,
-    setPage,
-    setPageError,
-    page,
-  };
+  const contextValue: AppsDataContextType = useMemo(() => {
+    return {
+      appsData,
+      isLoadingApps,
+      isLoadingNewApps,
+      setPage,
+      setPageError,
+      page,
+    };
+  }, [appsData, isLoadingApps, isLoadingNewApps, setPage, setPageError, page]);
 
   return (
     <AppsDataContext.Provider value={contextValue}>

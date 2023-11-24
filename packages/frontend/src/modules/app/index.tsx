@@ -6,6 +6,7 @@ import * as theme from '../common/theme';
 import * as Styled from './app.styled';
 import '../../style.css';
 import { UserDataProvider } from '../common/context/user-context';
+import { AppsDataProvider } from '../common/context/apps-context';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,7 +26,9 @@ const AppContainer = () => (
     <QueryClientProvider client={queryClient}>
       <Styled.MainContainer>
         <UserDataProvider>
-          <MainRouter />
+          <AppsDataProvider>
+            <MainRouter />
+          </AppsDataProvider>
         </UserDataProvider>
       </Styled.MainContainer>
     </QueryClientProvider>
