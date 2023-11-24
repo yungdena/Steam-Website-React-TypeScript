@@ -93,7 +93,6 @@ export const HomeMenu = () => {
       </RecentContainer>
       <RecentContainer style={{ background: "none", top: "960px" }}>
         <TagTitle>Recommended</TagTitle>
-        <TagLink>Tags</TagLink>
         <TagLink
           onClick={() =>
             history.push(
@@ -111,7 +110,7 @@ export const HomeMenu = () => {
           Free Games
         </TagLink>
       </RecentContainer>
-      <RecentContainer style={{ background: "none", top: "1060px" }}>
+      <RecentContainer style={{ background: "none", top: "1045px" }}>
         <TagTitle>BROWSE BY GENRE</TagTitle>
         <TagLink onClick={() => handleTagClick("Action")}>Action</TagLink>
         <TagLink onClick={() => handleTagClick("Adventure")}>Adventure</TagLink>

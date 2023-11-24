@@ -127,7 +127,7 @@ export const FeaturedButton = styled.button`
 export const HomeAppsContainer = styled.div`
   align-self: start;
   margin-left: 55px;
-  margin-bottom: 5rem;
+  margin-bottom: 8rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;

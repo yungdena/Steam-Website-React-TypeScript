@@ -11,17 +11,19 @@ import { formatDate } from '../../../common/utils/formatDate';
 import { calculateReviewTitle, getReviewImageURL } from '../../../common/utils/calculateReviewRate';
 import { sortAppsByHighestPrice, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from './utils/sort-apps';
 import { handleNavigate, handleSearch, handleSearchInputChange, handleSortChange } from './utils/handlers';
-import { useGetAppsByTags } from '../../../common/services/apps.service';
+import { useGetAppsByTags, useGetMaxPages } from '../../../common/services/apps.service';
 
 export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number | null, minHeight?: string, margin?: string }) => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
   const [sortBy, setSortBy] = useState("Relevance");
   const [displayedApps, setDisplayedApps] = useState<IApp[]>([]);
+  const [loadingNextPage, setLoadingNextPage] = useState(false);
 
   const history = useHistory();
 
   const location = useLocation();
-  const getAppsByTagsMutation = useGetAppsByTags()
+  const getAppsByTagsMutation = useGetAppsByTags();
+  const getMaxPages = useGetMaxPages()
   const searchParams = new URLSearchParams(location.search);
   const searchUrl = searchParams.get("search");
   const tagsParam = searchParams.get("tags");
@@ -30,7 +32,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const priceParam = searchParams.get("price");
   const [searchInput, setSearchInput] = useState<string>(searchUrl || "");
 
-  const { isLoadingApps, appsData, page } = useAppsData();
+  const { isLoadingApps, appsData, page, setPage, isLoadingNewApps } = useAppsData();
 
   useEffect(() => {
     const appsCopy = [...appsData];
@@ -100,33 +102,22 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
       );
     }
 
-    const fetchAppsByTags = async () => {
+  const fetchAppsByTags = async () => {
+    try {
       if (tagsParam) {
         const tagsArray = tagsParam.split(",").map((tag) => tag.trim());
-
-        try {
-          const fetchedApps = await getAppsByTagsMutation.mutateAsync(tagsArray);
-
-          const mergedApps = fetchedApps.filter((fetchedApp: IApp) =>
-            filteredApps.some((app) => app._id === fetchedApp._id)
-          );
-
-          return mergedApps;
-        } catch (error) {
-          console.error("Error fetching apps by tags:", error);
-          return filteredApps;
-        }
+        const fetchedApps = await getAppsByTagsMutation.mutateAsync(tagsArray);
+        setSortedApps(fetchedApps);
+      } else {
+        setSortedApps(filteredApps);
       }
+    } catch (error) {
+      console.error("Error fetching apps by tags:", error);
+      setSortedApps(filteredApps);
+    }
+  };
 
-      return filteredApps;
-    };
-
-    const updateFilteredApps = async () => {
-      const tagsFilteredApps = await fetchAppsByTags();
-      setSortedApps(tagsFilteredApps);
-    };
-
-    updateFilteredApps();
+  fetchAppsByTags();
   }, [
     appsData,
     sortBy,
@@ -141,6 +132,37 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
 
     setDisplayedApps(displayedApps);
   }, [page, sortedApps]);
+
+    useEffect(() => {
+      const displayedApps = sortedApps.slice(
+        0,
+        sliceIndex ? sliceIndex : appsData.length
+      );
+      setDisplayedApps(displayedApps);
+    }, [page, sortedApps]);
+
+    const handleScroll = async () => {
+      const offset = 1000;
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - offset
+      ) {
+        if (!loadingNextPage) {
+          const maxPages = await getMaxPages.mutateAsync();
+          if (page < maxPages.maxPages) {
+            setLoadingNextPage(true);
+            setPage(page + 1);
+          }
+        }
+      }
+    };
+    useEffect(() => {
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }, [page]);
+
 
   return (
     <ContentContainer minHeight={minHeight}>
@@ -223,6 +245,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
                 </AppLink>
               ))}
           </AppsList>
+          {isLoadingNewApps && <LoaderBig marginTop="2rem" />}
         </>
       )}
     </ContentContainer>

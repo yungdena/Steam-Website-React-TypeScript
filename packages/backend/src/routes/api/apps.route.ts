@@ -15,7 +15,7 @@ appsRouter.get("/", (req: Request, res: Response) => {
 appsRouter.get("/max-pages", async (req, res) => {
   try {
     const totalCount = await AppModel.countDocuments();
-    const pageSize = 10;
+    const pageSize = 20;
     const maxPages = Math.ceil(totalCount / pageSize);
     res.json({ maxPages });
   } catch (error) {

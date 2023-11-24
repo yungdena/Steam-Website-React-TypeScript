@@ -1,10 +1,13 @@
+import { useHistory } from "react-router-dom";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { APP_KEYS } from "../../../common/consts";
 import { BigTagsObject } from "../../../common/utils/tags";
-import { StyledPagination } from "./index.styled";
+import { StyledPagination, Title } from "./index.styled";
 import { BigTagItem, BigTagTitle, Gradient, MainContainer } from "./index.styled"
 
 export const BigTags = () => {
+  const history = useHistory();
   const swiperParams = {
     modules: [EffectFade, Autoplay, Navigation, Pagination],
     effect: "fade",
@@ -24,49 +27,62 @@ export const BigTags = () => {
   }
 
   return (
-    <MainContainer>
-      <Swiper style={{ padding: "1.5rem" }} {...swiperParams}>
-        {tagChunks.map((tagGroup, index) => (
-          <SwiperSlide
-            key={index}
-            style={{
-              display: "flex",
-              width: "1050px",
-              gap: "16px",
-              marginLeft: "-16px",
-              padding: "1rem",
-            }}
-          >
-            {tagGroup.map((tag) => (
-              <BigTagItem
-                key={tag}
-                style={{
-                  position: "relative",
-                  backgroundImage: `url(${
-                    BigTagsObject[tag as keyof typeof BigTagsObject].bg
-                  })`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  overflow: "hidden",
-                }}
-              >
-                <Gradient
+    <div>
+      <Title>Browse By Category</Title>
+      <MainContainer>
+        <Swiper style={{ padding: "1.5rem" }} {...swiperParams}>
+          {tagChunks.map((tagGroup, index) => (
+            <SwiperSlide
+              key={index}
+              style={{
+                display: "flex",
+                width: "1050px",
+                gap: "16px",
+                marginLeft: "-16px",
+                padding: "1rem",
+              }}
+            >
+              {tagGroup.map((tag) => (
+                <BigTagItem
+                  onClick={() =>
+                    history.push(
+                      "/" +
+                        APP_KEYS.ROUTER_KEYS.STORE +
+                        "/" +
+                        `?tags=${
+                          BigTagsObject[tag as keyof typeof BigTagsObject].link
+                        }`
+                    )
+                  }
+                  key={tag}
                   style={{
-                    background:
-                    BigTagsObject[tag as keyof typeof BigTagsObject].color,
+                    position: "relative",
+                    backgroundImage: `url(${
+                      BigTagsObject[tag as keyof typeof BigTagsObject].bg
+                    })`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    overflow: "hidden",
                   }}
-                />
-                <BigTagTitle>
-                  {BigTagsObject[tag as keyof typeof BigTagsObject].title}
-                </BigTagTitle>
-              </BigTagItem>
-            ))}
-          </SwiperSlide>
-        ))}
-        <StyledPagination>
-          <div className="swiper-pagination"></div>
-        </StyledPagination>
-      </Swiper>
-    </MainContainer>
+                >
+                  <Gradient
+                    style={{
+                      background:
+                        BigTagsObject[tag as keyof typeof BigTagsObject].color,
+                    }}
+                  />
+                  <BigTagTitle>
+                    {BigTagsObject[tag as keyof typeof BigTagsObject].title}
+                  </BigTagTitle>
+                </BigTagItem>
+              ))}
+            </SwiperSlide>
+          ))}
+          <StyledPagination>
+            <div className="swiper-pagination"></div>
+          </StyledPagination>
+        </Swiper>
+      </MainContainer>
+    </div>
   );
 }

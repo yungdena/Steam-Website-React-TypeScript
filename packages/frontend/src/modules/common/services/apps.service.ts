@@ -114,10 +114,24 @@ const getAppsByTags = async (tags: string[]) => {
   return responseData;
 };
 
+const getMaxPages = async () => {
+  const response = await fetch(`${BASE_URL}/apps/max-pages`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
+    },
+  });
+
+  const responseData = await response.json();
+  return responseData;
+};
+
 export const useGetAllApps = (page: number = 1, pageSize: number = 100) => {
   return useMutation(() => getAllApps(page, pageSize));
 };
 export const useGetDiscounts = () => useMutation(getAllDiscounts);
+export const useGetMaxPages = () => useMutation(getMaxPages);
 export const useGetAppById = () => useMutation(getAppById)
 export const useGetTitle = () => useMutation(getAppTitle);
 export const useGetAppsByTags = () => useMutation(getAppsByTags);

@@ -25,6 +25,20 @@ export const MainContainer = styled.div`
   }
 `;
 
+export const Title = styled.div`
+  margin-left: 2rem;
+  text-align: start;
+  color: #ffffff;
+  padding: 10px;
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: 600;
+
+  @media (max-width: 1500px) {
+    margin-left: -5.5rem;
+  }
+`;
+
 export const BigTagItem = styled.div`
   width: 250px;
   height: 250px;

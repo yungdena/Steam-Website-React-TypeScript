@@ -3,10 +3,13 @@ import { COLORS } from "../../../common/theme";
 
 export const MainContainer = styled.div`
   position: absolute;
-  right: 3.3rem;
+  right: 13.5rem;
   top: 8.7rem;
   max-height: 100%;
   z-index: 9999;
+  @media(max-width: 1500px) {
+    right: 20.6rem;
+  }
 `
 
 export const SearchList = styled.div`
