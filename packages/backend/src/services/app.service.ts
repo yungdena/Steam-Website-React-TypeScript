@@ -81,7 +81,7 @@ class AppsService {
             { $expr: { $lt: [{ $toDecimal: "$price" }, numericPrice] } },
             {
               $and: [
-                { newPrice: { $exists: true } }
+                { newPrice: { $exists: true } },
                 { $expr: { $lt: [{ $toDecimal: "$newPrice" }, numericPrice] } },
               ],
             },
