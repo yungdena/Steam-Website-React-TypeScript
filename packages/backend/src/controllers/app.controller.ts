@@ -13,7 +13,6 @@ export class AppsController {
   }
 
   async getAll(req: Request, res: Response, page: number, pageSize: number) {
-    console.log("apps");
     await this.appsService.getAllApps(res, page, pageSize);
   }
 
@@ -22,9 +21,13 @@ export class AppsController {
     await this.appsService.getAllDiscounts(res);
   }
 
-  async getByTitle(req: Request, res: Response) {
+  async getByTitle(req: Request, res: Response, page: number, pageSize: number) {
     const appTitle = req.params.title;
-    const app = await this.appsService.getAppByTitle(appTitle, res);
+    if (appTitle) {
+      const app = await this.appsService.getAppByTitle(appTitle, res);
+    } else {
+      const apps = await this.appsService.getAllApps(res, page, pageSize);
+    }
   }
 
   async getTitle(req: Request, res: Response) {
@@ -43,7 +46,6 @@ export class AppsController {
       .split(",")
       .map((tag) => decodeURIComponent(tag));
 
-    console.log('appTags', appTags)
     const app = await this.appsService.getAppsByTags(appTags, res);
   }
 

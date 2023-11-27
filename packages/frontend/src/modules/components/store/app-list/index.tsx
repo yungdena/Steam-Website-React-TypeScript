@@ -11,7 +11,7 @@ import { formatDate } from '../../../common/utils/formatDate';
 import { calculateReviewTitle, getReviewImageURL } from '../../../common/utils/calculateReviewRate';
 import { sortAppsByHighestPrice, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from './utils/sort-apps';
 import { handleNavigate, handleSearch, handleSearchInputChange, handleSortChange } from './utils/handlers';
-import { useGetAppsByTags, useGetMaxPages } from '../../../common/services/apps.service';
+import { useGetAppsByTags, useGetAppsByTitle, useGetMaxPages } from '../../../common/services/apps.service';
 
 export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number | null, minHeight?: string, margin?: string }) => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
@@ -23,6 +23,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
 
   const location = useLocation();
   const getAppsByTagsMutation = useGetAppsByTags();
+  const getAppsByTitleMutation = useGetAppsByTitle();
   const getMaxPages = useGetMaxPages()
   const searchParams = new URLSearchParams(location.search);
   const searchUrl = searchParams.get("search");
@@ -31,6 +32,9 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const hideFreeParam = searchParams.get("hideFree");
   const priceParam = searchParams.get("price");
   const [searchInput, setSearchInput] = useState<string>(searchUrl || "");
+  const [debouncedSearchInput, setDebouncedSearchInput] = useState<string>(
+    searchUrl || ""
+  );
   const isMountedRef = useRef(true);
 
   const { isLoadingApps, appsData, page, setPage, isLoadingNewApps } = useAppsData();
@@ -125,7 +129,6 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
         }
       }
     };
-
   fetchAppsByTags();
   }, [
     appsData,
@@ -182,6 +185,26 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
     };
   }, []);
 
+  const debouncedPerformSearch = async () => {
+    if (debouncedSearchInput.trim() === "") {
+      setSortedApps(appsData);
+      return;
+    }
+
+    try {
+      const response = await getAppsByTitleMutation.mutateAsync(
+        debouncedSearchInput
+      );
+      if (response.message) {
+        setSortedApps([]);
+      } else {
+        setSortedApps(response);
+      }
+    } catch (error) {
+      console.error("Error searching apps:", error);
+    }
+  };
+
   return (
     <ContentContainer minHeight={minHeight}>
       {isLoadingApps ? (
@@ -191,12 +214,12 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
           <SearchBarContainer>
             <SearchBarInput
               onChange={(event) =>
-                handleSearchInputChange(event, setSearchInput)
+                handleSearchInputChange(event, setSearchInput, setDebouncedSearchInput)
               }
               placeholder="enter search term or tag"
             />
             <SearchBarButton
-              onClick={() => handleSearch(searchInput, setSortedApps, appsData)}
+              onClick={() => debouncedPerformSearch()}
             >
               Search
             </SearchBarButton>

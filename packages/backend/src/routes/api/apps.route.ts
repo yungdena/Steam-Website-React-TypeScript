@@ -29,6 +29,18 @@ appsRouter.get(
   appsController.getAllDiscounts.bind(appsController)
 );
 
+appsRouter.get("/search/:title?", (req: Request, res: Response) => {
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const pageSize = parseInt(req.query.pageSize as string, 10) || 20;
+  const appTitle = req.params.title;
+
+  if (appTitle !== undefined && appTitle !== "") {
+    appsController.getByTitle(req, res, page, pageSize);
+  } else {
+    appsController.getAll(req, res, page, pageSize);
+  }
+});
+
 appsRouter.get("/:id", isExist(AppModel), appsController.getById.bind(appsController));
 
 appsRouter.get(

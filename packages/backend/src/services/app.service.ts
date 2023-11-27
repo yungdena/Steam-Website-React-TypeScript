@@ -48,14 +48,20 @@ class AppsService {
   }
 
   async getAppByTitle(title: string, res: Response) {
-    const app = await AppModel.find({ title });
+    try {
+      const regex = new RegExp(title, 'i');
+      const apps = await AppModel.find({ title: { $regex: regex } });
 
-    if (!app) {
-      res.status(404).send({ message: "cannot get app by title" });
-      return;
+      if (!apps || apps.length === 0) {
+        res.status(404).send({ message: "No apps found by title" });
+        return;
+      }
+
+      res.send(apps);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Internal Server Error" });
     }
-
-    res.send(app);
   }
 
   async getAppTitle(id: string, res: Response) {

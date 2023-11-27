@@ -11,11 +11,14 @@ export const handleSortChange = (event: any, setSortBy: any) => {
 };
 
 export const handleSearchInputChange = (
-  event: React.ChangeEvent<HTMLInputElement>,
-  setSearchInput: any
-) => {
-  setSearchInput(event.target.value);
-};
+    event: React.ChangeEvent<HTMLInputElement>,
+    setSearchInput: any,
+    setDebouncedSearchInput: any
+  ) => {
+    setSearchInput(event.target.value);
+    setDebouncedSearchInput(event.target.value);
+  };
+
 
 export const handleSearch = (searchInput: string, setSortedApps: any, apps: IApp[]) => {
   console.log('search input', searchInput)
