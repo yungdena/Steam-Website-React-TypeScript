@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { FilterQuery } from "mongoose";
 
 import { AppModel, appSchema } from "../models/App";
 import { IApp } from "../types/app.type";
@@ -49,8 +50,46 @@ class AppsService {
 
   async getAppByTitle(title: string, res: Response) {
     try {
-      const regex = new RegExp(title, 'i');
+      const regex = new RegExp(title, "i");
       const apps = await AppModel.find({ title: { $regex: regex } });
+
+      if (!apps || apps.length === 0) {
+        res.status(404).send({ message: "No apps found by title" });
+        return;
+      }
+
+      res.send(apps);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Internal Server Error" });
+    }
+  }
+
+  async getAppsByPrice(price: string, res: Response) {
+    try {
+      let apps;
+
+      if (price === "Free") {
+        apps = await AppModel.find({ price: "Free to Play" });
+      } else {
+        const numericPrice = parseFloat(price);
+        console.log(numericPrice);
+
+        const query: FilterQuery<IApp> = {
+          $or: [
+            { price: "Free to Play" },
+            { $expr: { $lt: [{ $toDecimal: "$price" }, numericPrice] } },
+            {
+              $and: [
+                { newPrice: { $exists: true } }
+                { $expr: { $lt: [{ $toDecimal: "$newPrice" }, numericPrice] } },
+              ],
+            },
+          ],
+        };
+
+        apps = await AppModel.find(query);
+      }
 
       if (!apps || apps.length === 0) {
         res.status(404).send({ message: "No apps found by title" });

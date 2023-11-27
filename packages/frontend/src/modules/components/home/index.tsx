@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_KEYS } from "../../common/consts";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -57,15 +57,18 @@ import { calculatePercentageDecrease } from "../../common/utils/countPercentage"
 import { calculateReviewTitle } from "../../common/utils/calculateReviewRate";
 import { BigTags } from "./big-tags";
 import { BigOffers } from "./offers/main-offers";
+import { useGetAppsByTitle } from "../../common/services/apps.service";
 
 export const HomePage = () => {
   const [filteredApps, setFilteredApps] = useState<IApp[] | null>(null);
   const { isLoadingApps, appsData } = useAppsData();
   const [selectedApp, setSelectedApp] = useState<IApp | null>(null);
+  const [searchedApps, setSearchedApps] = useState<IApp[] | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const { isLoadingBanners, bannersData } = useBannersData();
   const history = useHistory();
   const UserDataContext = useUserData();
+  const getAppsByTitleMutation = useGetAppsByTitle();
 
   useEffect(() => {
     let isMounted = true;
@@ -112,13 +115,20 @@ export const HomePage = () => {
     );
   };
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
     setSearchQuery(query);
-    const filteredApps = appsData.filter((app) =>
-      app.title.toLowerCase().includes(query.toLowerCase())
-    );
-
-    setFilteredApps(filteredApps);
+    if (query.trim() === "") {
+      setSearchedApps(null);
+    } else {
+      try {
+        const response = await getAppsByTitleMutation.mutateAsync(query);
+        if (Array.isArray(response)) {
+          setSearchedApps(response)
+        }
+      } catch (error) {
+        console.error("Error searching apps:", error);
+      }
+    }
   };
 
   const handleSelectApp = (app: IApp) => {
@@ -143,7 +153,7 @@ export const HomePage = () => {
               Wishlist ({UserDataContext?.userData?.wishlist.length})
             </WishlistButton>
             <HomepageHeader smallScreenMarginLeft="-60px" margin="6.5rem 0 0 55px" onSearch={handleSearch} />
-            <SearchApps apps={filteredApps} searchQuery={searchQuery} />
+            <SearchApps apps={searchedApps} searchQuery={searchQuery} />
             {isLoadingBanners ? (
               <LoaderBig marginTop="40rem" marginBottom="10rem" />
             ) : (
@@ -215,10 +225,10 @@ export const HomePage = () => {
                           </AppTitle>
                           <AppTags>
                             {app.tags.map((tag, index) => (
-                              <>
+                              <Fragment key={index}>
                                 <span>{tag}</span>
                                 {index < app.tags.length - 1 && <span>, </span>}
-                              </>
+                              </Fragment>
                             ))}
                           </AppTags>
                         </div>
@@ -283,12 +293,12 @@ export const HomePage = () => {
                     </SelectedAppsReviews>
                     <SelectedAppsTags>
                       {selectedApp?.tags.map((tag) => (
-                        <SelectedAppsTag>{tag}</SelectedAppsTag>
+                        <SelectedAppsTag key={tag}>{tag}</SelectedAppsTag>
                       ))}
                     </SelectedAppsTags>
                     <SelectedAppsImages>
                       {selectedApp?.imagesUrl.map((image) => (
-                        <SelectedAppsImage src={image}/>
+                        <SelectedAppsImage key={image} src={image}/>
                       ))}
                     </SelectedAppsImages>
                   </SelectedAppContainer>

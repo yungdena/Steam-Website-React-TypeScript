@@ -19,7 +19,7 @@ export const BigOffers = () => {
 
   const chunkedBigCards = chunkArray(bigCards, 3);
   const chunkedSmallCards = chunkArray(smallCards, 4);
-  console.log(chunkedBigCards)
+
   return (
     <MainContainer>
       {chunkedSmallCards.slice(0, 1).map((row, rowIndex) => (

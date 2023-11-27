@@ -29,6 +29,11 @@ appsRouter.get(
   appsController.getAllDiscounts.bind(appsController)
 );
 
+appsRouter.get(
+  "/price/:price",
+  appsController.getByPrice.bind(appsController)
+);
+
 appsRouter.get("/search/:title?", (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string, 10) || 1;
   const pageSize = parseInt(req.query.pageSize as string, 10) || 20;

@@ -1,16 +1,22 @@
 import styled from "styled-components";
 import { COLORS } from "../../../common/theme";
 
-export const MainContainer = styled.div`
+interface MainContainerProps {
+  right: string | undefined;
+  top: string | undefined;
+  onSmallScreenRight: string | undefined;
+}
+
+export const MainContainer = styled.div<MainContainerProps>`
   position: absolute;
-  right: 13.5rem;
-  top: 8.7rem;
+  right: ${(props) => props.right || "13.5rem"};
+  top: ${(props) => props.top || "8.7rem"};
   max-height: 100%;
   z-index: 9999;
-  @media(max-width: 1500px) {
-    right: 20.6rem;
+  @media (max-width: 1500px) {
+    right: ${(props) => props.onSmallScreenRight || "20.6rem"};
   }
-`
+`;
 
 export const SearchList = styled.div`
   display: flex;

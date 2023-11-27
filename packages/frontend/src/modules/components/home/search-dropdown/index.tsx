@@ -6,9 +6,12 @@ import { APP_KEYS } from "../../../common/consts";
 interface IComponent {
   apps: IApp[] | null;
   searchQuery: string;
+  right?: string | undefined;
+  top?: string | undefined;
+  onSmallScreenRight?: string | undefined;
 }
 
-const SearchApps = ({ apps, searchQuery }: IComponent) => {
+const SearchApps = ({ apps, searchQuery, right, top, onSmallScreenRight }: IComponent) => {
   const history = useHistory();
 
   const filteredApps = apps?.filter((app) =>
@@ -16,7 +19,7 @@ const SearchApps = ({ apps, searchQuery }: IComponent) => {
   );
 
   return (searchQuery !== "" && (
-    <MainContainer>
+    <MainContainer right={right} top={top} onSmallScreenRight={onSmallScreenRight}>
       <SearchList>
         {filteredApps?.slice(0, 5).map((app) => (
           <App

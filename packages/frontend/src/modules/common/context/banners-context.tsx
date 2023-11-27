@@ -19,13 +19,29 @@ export const BannersDataProvider = ({ children }: any) => {
   const getAllBannersMutation = useGetAllBanners();
 
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchAllBanners() {
-      const data = await getAllBannersMutation.mutateAsync();
-      setBannersData(data);
-      setIsLoadingBanners(false);
-      setFetchCounter(fetchCounter + 1);
+      try {
+        const data = await getAllBannersMutation.mutateAsync();
+        if (isMounted) {
+          setBannersData(data);
+          setIsLoadingBanners(false);
+          setFetchCounter((prevCounter) => prevCounter + 1);
+        }
+      } catch (error) {
+        console.error("Error fetching banners:", error);
+        if (isMounted) {
+          setIsLoadingBanners(false);
+        }
+      }
     }
+
     fetchAllBanners();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (

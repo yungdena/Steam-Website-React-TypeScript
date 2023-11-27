@@ -17,59 +17,59 @@ const languageSchema = new Schema<ILanguage>({
 export const appSchema: Schema<IApp> = new Schema({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   developer: {
     type: String,
-    required: true
+    required: true,
   },
   publisher: {
     type: String,
-    required: true
+    required: true,
   },
   reviews: {
     type: [reviewSchema],
-    required: true
+    required: true,
   },
   releaseDate: {
     type: String,
-    required: true
+    required: true,
   },
   tags: {
     type: [String],
-    required: true
+    required: true,
   },
   genre: {
     type: [String],
-    required: true
+    required: true,
   },
   price: {
     type: String,
-    required: true
+    required: true,
   },
   newPrice: {
     type: String,
-    required: false
+    required: false,
   },
   titleImage: {
     type: String,
-    required: true
+    required: true,
   },
   imagesUrl: {
     type: [String],
-    required: true
+    required: true,
   },
   languages: {
     type: languageSchema,
-    required: true
+    required: true,
   },
   bannerImage: {
     type: String,
-  }
+  },
 });
 
 export const AppModel: Model<IApp> = model("App", appSchema);

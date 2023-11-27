@@ -16,7 +16,6 @@ export const HomepageHeader = ({ onSearch, margin, smallScreenMarginLeft }: any)
   const SearchButtonURL =
     "https://res.cloudinary.com/didkbrlcz/image/upload/v1693034230/System/search_icon_btn_r7rp8b.png";
   const [searchQuery, setSearchQuery] = useState("");
-
   const handleSearchInputChange = (e: any) => {
     const { value } = e.target;
     setSearchQuery(value);

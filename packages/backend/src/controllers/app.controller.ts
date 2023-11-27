@@ -21,13 +21,23 @@ export class AppsController {
     await this.appsService.getAllDiscounts(res);
   }
 
-  async getByTitle(req: Request, res: Response, page: number, pageSize: number) {
+  async getByTitle(
+    req: Request,
+    res: Response,
+    page: number,
+    pageSize: number
+  ) {
     const appTitle = req.params.title;
     if (appTitle) {
       const app = await this.appsService.getAppByTitle(appTitle, res);
     } else {
       const apps = await this.appsService.getAllApps(res, page, pageSize);
     }
+  }
+
+  async getByPrice(req: Request, res: Response) {
+    const price = req.params.price
+    const apps = await this.appsService.getAppsByPrice(price, res)
   }
 
   async getTitle(req: Request, res: Response) {

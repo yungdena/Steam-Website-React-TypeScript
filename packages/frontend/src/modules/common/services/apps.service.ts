@@ -140,11 +140,26 @@ const getAppsByTitle = async (title: string) => {
   return responseData;
 };
 
+const getAppsByPrice = async (price: string) => {
+  const response = await fetch(`${BASE_URL}/apps/price/${price}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
+    },
+  });
+
+  const responseData = await response.json();
+  return responseData;
+};
+
+
 export const useGetAllApps = (page: number = 1, pageSize: number = 100) => {
   return useMutation(() => getAllApps(page, pageSize));
 };
 export const useGetDiscounts = () => useMutation(getAllDiscounts);
 export const useGetAppsByTitle = () => useMutation(getAppsByTitle);
+export const useGetAppsByPrice = () => useMutation(getAppsByPrice);
 export const useGetMaxPages = () => useMutation(getMaxPages);
 export const useGetAppById = () => useMutation(getAppById)
 export const useGetTitle = () => useMutation(getAppTitle);

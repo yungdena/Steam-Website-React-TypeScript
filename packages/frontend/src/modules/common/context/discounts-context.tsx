@@ -19,18 +19,29 @@ export const DiscountDataProvider = ({ children }: any) => {
   const getDiscountsMutation = useGetDiscounts();
 
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchDiscounts() {
       try {
         const data = await getDiscountsMutation.mutateAsync();
-        setAppsData(data);
-        setIsLoadingApps(false);
+        if (isMounted) {
+          setAppsData(data);
+          setIsLoadingApps(false);
+        }
       } catch (error) {
-        console.error("Error fetching apps:", error);
+        console.error("Error fetching discounts:", error);
+        if (isMounted) {
+          setIsLoadingApps(false);
+        }
       }
     }
-    fetchDiscounts();
-  }, []);
 
+    fetchDiscounts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   const contextValue: AppsDataContextType = {
     discountApps,
     isLoadingDiscounts

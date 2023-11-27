@@ -11,7 +11,7 @@ import { formatDate } from '../../../common/utils/formatDate';
 import { calculateReviewTitle, getReviewImageURL } from '../../../common/utils/calculateReviewRate';
 import { sortAppsByHighestPrice, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from './utils/sort-apps';
 import { handleNavigate, handleSearch, handleSearchInputChange, handleSortChange } from './utils/handlers';
-import { useGetAppsByTags, useGetAppsByTitle, useGetMaxPages } from '../../../common/services/apps.service';
+import { useGetAppsByPrice, useGetAppsByTags, useGetAppsByTitle, useGetDiscounts, useGetMaxPages } from '../../../common/services/apps.service';
 
 export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number | null, minHeight?: string, margin?: string }) => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
@@ -24,6 +24,8 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const location = useLocation();
   const getAppsByTagsMutation = useGetAppsByTags();
   const getAppsByTitleMutation = useGetAppsByTitle();
+  const getDiscounts = useGetDiscounts();
+  const getAppsByPrice = useGetAppsByPrice();
   const getMaxPages = useGetMaxPages()
   const searchParams = new URLSearchParams(location.search);
   const searchUrl = searchParams.get("search");
@@ -66,39 +68,59 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
 
     let filteredApps = appsCopy;
 
-    if (onlySpecialOffersParam !== null && onlySpecialOffersParam === "true") {
-      filteredApps = filteredApps.filter((app) => app.newPrice);
-    }
+    const fetchDiscounts = async () => {
+      try {
+        if (
+          onlySpecialOffersParam !== null &&
+          onlySpecialOffersParam === "true"
+        ) {
+          const fetchedApps = await getDiscounts.mutateAsync()
+          if (isMountedRef.current) {
+            setSortedApps(fetchedApps);
+          }
+        } else {
+          if (isMountedRef.current) {
+            setSortedApps(filteredApps);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching apps by tags:", error);
+        if (isMountedRef.current) {
+          setSortedApps(filteredApps);
+        }
+      }
+    };
+
+    const fetchByPrice = async () => {
+      try {
+        let fetchedApps;
+
+        if (priceParam !== null) {
+          if (priceParam === "Free to Play") {
+            fetchedApps = await getAppsByPrice.mutateAsync("Free%20to%20Play");
+          } else if (priceParam === "Any Price") {
+            fetchedApps = filteredApps;
+          } else {
+            fetchedApps = await getAppsByPrice.mutateAsync(priceParam);
+          }
+        }
+
+        if (isMountedRef.current) {
+          setSortedApps(fetchedApps);
+        }
+      } catch (error) {
+        console.error("Error fetching apps by price:", error);
+        if (isMountedRef.current) {
+          setSortedApps(filteredApps);
+        }
+      }
+    };
 
     if (hideFreeParam !== null && Boolean(hideFreeParam) === true) {
       const hideFree = hideFreeParam === "true";
       filteredApps = filteredApps.filter(
         (app) => !(hideFree && app.price === "Free to Play")
       );
-    }
-
-    if (priceParam !== null) {
-      let filteredAppsByPrice;
-
-      if (priceParam === "Free") {
-        filteredAppsByPrice = filteredApps.filter(
-          (app) =>
-            app.newPrice === "Free to Play" || app.price === "Free to Play"
-        );
-      } else if (priceParam === "Any Price") {
-        filteredAppsByPrice = filteredApps;
-      } else {
-        const priceFilter = parseInt(priceParam, 10);
-        filteredAppsByPrice = filteredApps.filter((app) => {
-          const appPrice =
-            app.newPrice !== undefined ? app.newPrice : app.price;
-          return (
-            appPrice &&
-            (appPrice === "Free to Play" || Number(appPrice) < priceFilter)
-          );
-        });
-      }
-      filteredApps = filteredAppsByPrice;
     }
 
     if (searchInput) {
@@ -129,7 +151,9 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
         }
       }
     };
-  fetchAppsByTags();
+    fetchByPrice();
+    fetchDiscounts();
+    fetchAppsByTags();
   }, [
     appsData,
     sortBy,
@@ -188,6 +212,8 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const debouncedPerformSearch = async () => {
     if (debouncedSearchInput.trim() === "") {
       setSortedApps(appsData);
+      searchParams.delete("search");
+      history.push({ search: searchParams.toString() });
       return;
     }
 
@@ -216,6 +242,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
               onChange={(event) =>
                 handleSearchInputChange(event, setSearchInput, setDebouncedSearchInput)
               }
+              value={debouncedSearchInput}
               placeholder="enter search term or tag"
             />
             <SearchBarButton
