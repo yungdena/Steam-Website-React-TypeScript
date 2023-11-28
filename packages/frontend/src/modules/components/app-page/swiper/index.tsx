@@ -1,7 +1,8 @@
 import { FC, useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { CSSTransition } from "react-transition-group";
-import { ImageBig, ImageSmall, SwiperContainer } from "./index.styled";
+import { Scrollbar, FreeMode } from "swiper/modules";
+import "swiper/css/scrollbar";
+import { BigImageWrapper, ImageBig, ImageContainer, ImageSmall, SwiperContainer, SwiperNavigationButton } from "./index.styled";
 
 type ImageType = {
   images?: string[]
@@ -9,47 +10,70 @@ type ImageType = {
 
 export const ImageSlider: FC<ImageType> = ({ images }) => {
   const swiperParams = {
-    className:"swiper-container",
+    className: "swiper-container",
     slidesPerView: 5,
     spaceBetween: 0,
-    direction:"horizontal"
+    direction: "horizontal",
+    scrollbar: {
+      draggable: true,
+      dragSize: 69,
+    },
+    modules: [Scrollbar, FreeMode],
+    freeMode: true,
   };
   const [selectedImage, setSelectedImage] = useState<string>(
     images && images.length > 0 ? images[0] : ""
   );
-  const [selectedImageLoaded, setSelectedImageLoaded] = useState(false);
+
+  const [nextImage, setNextImage] = useState<string | null>(null);
 
   const handleImageClick = (image: string) => {
-    setSelectedImageLoaded(false);
-    setSelectedImage(image);
+    setNextImage(image);
+  };
+
+  const handlePrevButtonClick = () => {
+    const currentIndex = images?.indexOf(selectedImage) || 0;
+    if (images) {
+      const newIndex = currentIndex > 0 ? currentIndex - 1 : images?.length - 1;
+      setSelectedImage(images?.[newIndex] || "");
+    }
+  };
+
+  const handleNextButtonClick = () => {
+    const currentIndex = images?.indexOf(selectedImage) || 0;
+    if (images) {
+      const newIndex = currentIndex < images?.length - 1 ? currentIndex + 1 : 0;
+      setSelectedImage(images?.[newIndex] || "");
+    }
   };
 
   useEffect(() => {
-    if (images) {
-      setSelectedImage(images[0]);
+    if (nextImage) {
+      setSelectedImage(nextImage);
+      setNextImage(null);
     }
-  }, [images]);
+  }, [nextImage]);
 
   return (
     <div>
-      <div className="selected-image-container">
-        <CSSTransition
-          in={true}
-          timeout={300}
-          classNames="fade"
-          key={selectedImage}
-          unmountOnExit
-        >
+      <BigImageWrapper>
+        {images?.map((image, index) => (
           <ImageBig
-            src={selectedImage}
-            alt="selected-image"
-            onLoad={() => setSelectedImageLoaded(true)}
-            style={{ opacity: selectedImage ? 1 : 0 }}
+            key={`big-image-${index}`}
+            src={image}
+            alt={`selected-image-${index}`}
+            style={{
+              opacity: image === selectedImage ? 1 : 0,
+              position: "absolute",
+              top: 0,
+              left: 0,
+            }}
           />
-        </CSSTransition>
-      </div>
+        ))}
+      </BigImageWrapper>
       <SwiperContainer>
         <Swiper
+          style={{ paddingBottom: "20px" }}
           {...swiperParams}
         >
           {images?.map((image, index) => (
@@ -58,13 +82,23 @@ export const ImageSlider: FC<ImageType> = ({ images }) => {
               key={`slide-${index}`}
               onClick={() => handleImageClick(image)}
             >
-              <ImageSmall
-                src={image}
-                alt={`image-${index}`}
-                selected={image === selectedImage}
-              />
+              <ImageContainer selected={image === selectedImage}>
+                <ImageSmall
+                  src={image}
+                  alt={`image-${index}`}
+                  selected={image === selectedImage}
+                />
+              </ImageContainer>
             </SwiperSlide>
           ))}
+          <SwiperNavigationButton
+            className="swiper-button-prev"
+            onClick={handlePrevButtonClick}
+          />
+          <SwiperNavigationButton
+            className="swiper-button-next"
+            onClick={handleNextButtonClick}
+          />
         </Swiper>
       </SwiperContainer>
     </div>

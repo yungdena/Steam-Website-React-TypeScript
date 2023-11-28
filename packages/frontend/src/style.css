@@ -45,6 +45,15 @@ iframe {
   display: none;
 }
 
+
+.swiper-button-next::after {
+  opacity: 0;
+}
+
+.swiper-button-prev::after {
+  opacity: 0;
+}
+
 .swiper-button-next {
   transform: rotate(180deg);
   background: linear-gradient( to right, rgba( 0, 0, 0, 0.3) 5%,rgba( 0, 0, 0, 0) 95%), url("https://res.cloudinary.com/didkbrlcz/image/upload/v1693038057/System/arrow_qfxjae.png");
@@ -53,14 +62,6 @@ iframe {
   height: 108px;
   width: 45px;
   top: 45%;
-}
-
-.swiper-button-next::after {
-  opacity: 0;
-}
-
-.swiper-button-prev::after {
-  opacity: 0;
 }
 
 .swiper-button-prev {
@@ -83,4 +84,3 @@ iframe {
   background-repeat: no-repeat;
   background-position: center;
 }
-

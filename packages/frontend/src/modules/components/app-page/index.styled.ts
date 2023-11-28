@@ -21,6 +21,7 @@ export const InfoContainer = styled.div`
   width: 58.75rem;
   height: fit-content;
   padding: 9.5rem 0 2rem;
+  padding-bottom: 0;
   background: rgb(27, 40, 56);
   background: linear-gradient(
     180deg,
@@ -69,7 +70,7 @@ export const TitleImage = styled.img`
 
 export const BigInfoContainer = styled.div`
   width: 38.5rem;
-  height: 27rem;
+  position: relative;
 `;
 
 export const AdditionalInfoContainer = styled.div`
