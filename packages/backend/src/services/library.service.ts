@@ -33,7 +33,7 @@ export class LibraryService {
       }
 
       const addedToLibrary = user.apps.some((app) => app === appId);
-      if (addedToLibrary) {
+      if (!addedToLibrary) {
         user.apps.push(appId);
         await user.save();
   
