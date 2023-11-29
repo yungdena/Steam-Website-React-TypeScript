@@ -21,6 +21,7 @@ import { Footer } from "../home/footer";
 import { defaultAvatar } from "../../common/consts/avatar";
 import { COLORS } from "../../common/theme";
 import { useDeleteReview, usePostReview, useUpdateReview } from "../../common/services/reviews.service";
+import { getUserDataById, handleAddToLibrary, handleAddToWishlist, handleDeleteReview, handlePostReview, handleRecommendClick, handleTextAreaChange, handleUpdateReview } from "./utils/functions";
 
 interface AppRouteParams {
   id: string;
@@ -40,6 +41,7 @@ export const AppPage = () => {
   );
   const [userLibraryData, setUserLibraryData] = useState<IApp[] | null>(null);
   const [userWishlistData, setUserWishlistData] = useState<IApp[] | null>(null);
+
   const UserDataContext = useUserData();
   const initialReviewData =
     UserDataContext && UserDataContext.userData
@@ -74,125 +76,21 @@ export const AppPage = () => {
   const thumbUp = 'https://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsUp_v6.png'
   const thumbDown = 'https://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsDown_v6.png'
 
-  const getUserDataById = async (userId: string) => {
-    try {
-      const userData = await getUserByIdMutation.mutateAsync(userId);
-      return userData;
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      return null;
-    }
-  };
-
-  const handleTextAreaChange = (e: any) => {
-    const description = e.target.value;
-    setReviewData((prevReviewData) => ({
-      ...prevReviewData,
-      description,
-    }));
-  };
-
-  const handleRecommendClick = (isRecommended: boolean) => {
-    setReviewData((prevReviewData) => ({
-      ...prevReviewData,
-      rate: isRecommended,
-    }));
-    setIsRecommended(isRecommended);
-  };
-
-  const handlePostReview = () => {
-    if (!reviewData?.description?.trim()) {
-      setDescriptionError("Please enter a review description.");
-      return;
-    }
-
-    const userReviewExists = app?.reviews.some(
-      (review: IReview) => review.user === reviewData.user
-    );
-
-    if (userReviewExists) {
-      alert("You have already posted a review.");
-      return;
-    }
-    if (app && UserDataContext && UserDataContext.userData) {
-        const data = {
-          appId: app._id,
-          userId: UserDataContext?.userData._id,
-          reviewData: reviewData,
-        }
-        postReviewMutation.mutateAsync(data);
-        setUserReviewed(true);
-    }
-  };
-
-  const handleUpdateReview = () => {
-    if (!reviewData?.description?.trim()) {
-      setDescriptionError("Please enter a review description.");
-      return;
-    }
-
-    const userReviewExists = app?.reviews.some(
-      (review: IReview) => review.user === reviewData.user
-    );
-
-    if (!userReviewExists) {
-      setDescriptionError("You haven't posted a review yet.");
-      return;
-    }
-
-    if (app && UserDataContext && UserDataContext.userData && reviewData._id) {
-      const data = {
-        appId: app._id,
-        userId: UserDataContext?.userData._id,
-        reviewId: reviewData._id,
-        updatedReviewData: reviewData,
-      };
-
-      updateReviewMutation.mutateAsync(data);
-      setUserReviewed(true);
-    }
-  };
-
-  const handleDeleteReview = () => {
-    const userReviewExists = app?.reviews.some(
-      (review: IReview) => review.user === reviewData.user
-    );
-
-    if (!userReviewExists) {
-      setDescriptionError("You haven't posted a review yet.");
-      return;
-    }
-
-    if (
-      app &&
-      UserDataContext &&
-      UserDataContext.userData &&
-      reviewData._id
-    ) {
-      const data = {
-        appId: app._id,
-        userId: UserDataContext?.userData._id,
-        reviewId: reviewData._id,
-      };
-
-      deleteReviewMutation.mutateAsync(data);
-      alert(`Review deleted successfully`);
-    }
-  };
-
   useEffect(() => {
-    if (app?.reviews.some((review: IReview) => review.user === reviewData.user)) {
-      setUserReviewed(true);
-    } else {
-      setUserReviewed(false);
+    if (app) {
+      const hasUserReviewed = app.reviews.some(
+        (review) => review.user === UserDataContext?.userData?._id
+      );
+
+      setUserReviewed(hasUserReviewed);
     }
-  }, [app])
+  }, [app]);
 
   useEffect(() => {
     async function fetchReviewsData() {
       const reviewsData = app?.reviews || [];
       const usersDataPromises = reviewsData.map((review) =>
-        getUserDataById(review.user)
+        getUserDataById(review.user, getUserByIdMutation)
       );
 
       try {
@@ -214,13 +112,13 @@ export const AppPage = () => {
 
   useEffect(() => {
     async function fetchById() {
-      const data = await getAppByIdMutation.mutateAsync(id);
-
-      setApp(data);
-      setIsLoading(false);
-
-      if(!app) {
-        return <Redirect to="/not-found" />;
+      try {
+        const data = await getAppByIdMutation.mutateAsync(id);
+        setApp(data);
+      } catch (error) {
+        console.error("Error fetching app data:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -248,6 +146,7 @@ export const AppPage = () => {
     };
 
     fetchLibraryData();
+    
   }, [UserDataContext?.userData]);
 
   useEffect(() => {
@@ -260,54 +159,16 @@ export const AppPage = () => {
     if (isAppInWishlist) {
       setAddedToWishlist(true);
     }
+    
   }, [userLibraryData, userWishlistData, id]);
 
   useEffect(() => {
     if (reviewDataIdChanged) {
-      handleDeleteReview();
+      handleDeleteReview(UserDataContext, reviewData, setDescriptionError, deleteReviewMutation, app, setApp);
       setReviewDataIdChanged(false);
     }
-  }, [reviewDataIdChanged, handleDeleteReview]);
-
-  const handleAddToWishlist = async () => {
-    if (UserDataContext?.userData) {
-      const appId = id;
-      const userId = UserDataContext.userData._id;
-      await addToWishlistMutation.mutateAsync({ userId, appId });
-      setAddedToWishlist(true);
-
-      if (UserDataContext?.userData) {
-        const updatedUserData = { ...UserDataContext.userData } as IUser;
-        updatedUserData.wishlist.push(appId);
-        UserDataContext.setUser(updatedUserData);
-      }
-    } else {
-      handleNavigate(
-        history,
-        APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
-      );
-    }
-  };
-
-  const handleAddToLibrary = async () => {
-    if (UserDataContext?.userData) {
-      const appId = id;
-      const userId = UserDataContext.userData._id;
-      await addToLibraryMutation.mutateAsync({ userId, appId });
-      setAddedToLibrary(true);
-
-      if (UserDataContext?.userData) {
-        const updatedUserData = { ...UserDataContext.userData } as IUser;
-        updatedUserData.apps.push(appId);
-        UserDataContext.setUser(updatedUserData);
-      }
-    } else {
-      handleNavigate(
-        history,
-        APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
-      );
-    }
-  };
+    
+  }, [reviewDataIdChanged]);
 
   return (
     <>
@@ -371,7 +232,19 @@ export const AppPage = () => {
                           </AdditionalInfoTitle>
                           <Tags>
                             {app?.tags.map((tag) => (
-                              <Tag onClick={() => history.push('/' + APP_KEYS.ROUTER_KEYS.STORE + '/' + `?tags=${tag}`)} key={tag}>{tag}</Tag>
+                              <Tag
+                                onClick={() =>
+                                  history.push(
+                                    "/" +
+                                      APP_KEYS.ROUTER_KEYS.STORE +
+                                      "/" +
+                                      `?tags=${tag}`
+                                  )
+                                }
+                                key={tag}
+                              >
+                                {tag}
+                              </Tag>
                             ))}
                           </Tags>
                         </TagsContainer>
@@ -393,7 +266,16 @@ export const AppPage = () => {
                 ✔ In Wishlist
               </QueueButton>
             ) : (
-              <QueueButton onClick={handleAddToWishlist}>
+              <QueueButton
+                onClick={() =>
+                  handleAddToWishlist(
+                    UserDataContext,
+                    addToWishlistMutation,
+                    setAddedToWishlist,
+                    app?._id
+                  )
+                }
+              >
                 Add to your wishlist
               </QueueButton>
             )}
@@ -432,7 +314,9 @@ export const AppPage = () => {
                   />
                   <StyledTextArea
                     maxLength={2000}
-                    onChange={handleTextAreaChange}
+                    onChange={(event) =>
+                      handleTextAreaChange(event, setReviewData)
+                    }
                   />
                 </FormWrapper>
                 <RecommendButtonsContainer>
@@ -440,7 +324,13 @@ export const AppPage = () => {
                   <RecommendButtonWrapper>
                     <div>
                       <ButtonWithIcon
-                        onClick={() => handleRecommendClick(true)}
+                        onClick={() =>
+                          handleRecommendClick(
+                            true,
+                            setReviewData,
+                            setIsRecommended
+                          )
+                        }
                       >
                         <RecommendButton
                           style={
@@ -452,7 +342,13 @@ export const AppPage = () => {
                         </RecommendButton>
                       </ButtonWithIcon>
                       <ButtonWithIcon
-                        onClick={() => handleRecommendClick(false)}
+                        onClick={() =>
+                          handleRecommendClick(
+                            false,
+                            setReviewData,
+                            setIsRecommended
+                          )
+                        }
                       >
                         <RecommendButton
                           style={
@@ -471,12 +367,34 @@ export const AppPage = () => {
                     ) ? (
                       <PostReviewButton
                         style={{ padding: "1px" }}
-                        onClick={handleUpdateReview}
+                        onClick={() =>
+                          handleUpdateReview(
+                            UserDataContext,
+                            reviewData,
+                            setDescriptionError,
+                            updateReviewMutation,
+                            app,
+                            setUserReviewed,
+                            setApp
+                          )
+                        }
                       >
                         Update Review
                       </PostReviewButton>
                     ) : (
-                      <PostReviewButton onClick={handlePostReview}>
+                      <PostReviewButton
+                        onClick={() =>
+                          handlePostReview(
+                            UserDataContext,
+                            reviewData,
+                            setDescriptionError,
+                            postReviewMutation,
+                            app,
+                            setUserReviewed,
+                            setApp
+                          )
+                        }
+                      >
                         Post Review
                       </PostReviewButton>
                     )}
@@ -527,7 +445,16 @@ export const AppPage = () => {
                   ✔ In Library
                 </PurchaseButton>
               ) : (
-                <PurchaseButton onClick={handleAddToLibrary}>
+                <PurchaseButton
+                  onClick={() =>
+                    handleAddToLibrary(
+                      UserDataContext,
+                      addToLibraryMutation,
+                      setAddedToLibrary,
+                      app?._id
+                    )
+                  }
+                >
                   Add to Library
                 </PurchaseButton>
               )}

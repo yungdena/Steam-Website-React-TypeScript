@@ -14,7 +14,7 @@ export const DropdownContainer = styled.div`
   padding: 5px 15px;
 `;
 
-export const DropdownLink = styled.button`
+export const DropdownLink = styled.div`
   width: fit-content;
   border: none;
   background-color: transparent;

@@ -11,32 +11,11 @@ import { Navigation, Pagination, EffectFade, Autoplay } from "swiper/modules";
 
 import { Header } from "../header";
 import {
-  AppContainer,
-  AppImage,
-  AppNewPrice,
-  AppOldPrice,
-  AppPrice,
-  AppPriceContainer,
-  AppsLine,
-  AppTags,
-  AppTitle,
   ContentContainer,
   ContentWrap,
-  FeaturedButton,
   FeaturedTitle,
-  HomeAppsContainer,
   MainBanner,
   MainContainer,
-  PricePercent,
-  PriceWrapper,
-  SelectedAppContainer,
-  SelectedAppsImage,
-  SelectedAppsImages,
-  SelectedAppsReviews,
-  SelectedAppsReviewsTitle,
-  SelectedAppsTag,
-  SelectedAppsTags,
-  SelectedAppTitle,
   StyledPagination,
   WishlistButton,
 } from "./index.styled";
@@ -45,7 +24,6 @@ import { HomepageHeader } from "./home-header";
 import { Footer } from "./footer";
 import { Offers } from "./offers";
 import { LoaderBig } from "../../common/loader/loader";
-import { AppLink } from "../store/app-list/index.styled";
 import { useAppsData } from "../../common/context/apps-context";
 import { useBannersData } from "../../common/context/banners-context";
 import { useUserData } from "../../common/context/user-context";
@@ -53,14 +31,12 @@ import SearchApps from "./search-dropdown";
 import { IApp } from "../../common/types/app.interface";
 import { DiscountDataProvider } from "../../common/context/discounts-context";
 import { HomeMenu } from "./home-menu";
-import { calculatePercentageDecrease } from "../../common/utils/countPercentage";
-import { calculateReviewTitle } from "../../common/utils/calculateReviewRate";
 import { BigTags } from "./big-tags";
 import { BigOffers } from "./offers/main-offers";
 import { useGetAppsByTitle } from "../../common/services/apps.service";
+import { HomeAppList } from "./home-apps-list";
 
 export const HomePage = () => {
-  const [filteredApps, setFilteredApps] = useState<IApp[] | null>(null);
   const { isLoadingApps, appsData } = useAppsData();
   const [selectedApp, setSelectedApp] = useState<IApp | null>(null);
   const [searchedApps, setSearchedApps] = useState<IApp[] | null>(null);
@@ -183,127 +159,16 @@ export const HomePage = () => {
                 <Offers />
               </DiscountDataProvider>
             )}
-
             {isLoadingApps ? (
               <LoaderBig marginTop="10rem" marginBottom="10rem" />
             ) : (
-              <>
-                <AppsLine>
-                  <FeaturedTitle left="-200px" top="-30px">
-                    Top Sellers
-                  </FeaturedTitle>
-                  <FeaturedButton onClick={handleNavigateToApps}>
-                    To apps
-                  </FeaturedButton>
-                </AppsLine>
-                <HomeAppsContainer>
-                  {appsData.slice(0, 10).map((app) => (
-                    <AppLink
-                      key={app._id}
-                      onClick={() => handleNavigate(app._id)}
-                      onMouseEnter={() => handleSelectApp(app)}
-                    >
-                      <AppContainer
-                        isSelected={
-                          selectedApp && selectedApp._id === app._id
-                            ? true
-                            : false
-                        }
-                      >
-                        <AppImage src={app.bannerImage} />
-                        <div
-                          style={{ display: "flex", flexDirection: "column" }}
-                        >
-                          <AppTitle
-                            isSelected={
-                              selectedApp && selectedApp._id === app._id
-                                ? true
-                                : false
-                            }
-                          >
-                            {app.title}
-                          </AppTitle>
-                          <AppTags>
-                            {app.tags.map((tag, index) => (
-                              <Fragment key={index}>
-                                <span>{tag}</span>
-                                {index < app.tags.length - 1 && <span>, </span>}
-                              </Fragment>
-                            ))}
-                          </AppTags>
-                        </div>
-                        {!app.newPrice && (
-                          <AppPrice
-                            isSelected={
-                              selectedApp && selectedApp._id === app._id
-                                ? true
-                                : false
-                            }
-                          >
-                            {app.price}
-                            {app.price === "Free to Play" ? "" : "$"}
-                          </AppPrice>
-                        )}
-                        {app.newPrice && (
-                          <PriceWrapper>
-                            <PricePercent style={{ marginLeft: "4px" }}>
-                              -
-                              {calculatePercentageDecrease(
-                                Number(app.price),
-                                Number(app.newPrice),
-                                0
-                              )}
-                              %
-                            </PricePercent>
-                            <AppPriceContainer>
-                              <AppOldPrice>{app.price}$</AppOldPrice>
-                              <AppNewPrice
-                                isSelected={
-                                  selectedApp && selectedApp._id === app._id
-                                    ? true
-                                    : false
-                                }
-                              >
-                                {app.newPrice}$
-                              </AppNewPrice>
-                            </AppPriceContainer>
-                          </PriceWrapper>
-                        )}
-                      </AppContainer>
-                    </AppLink>
-                  ))}
-                  <SelectedAppContainer>
-                    <SelectedAppTitle>{selectedApp?.title}</SelectedAppTitle>
-                    <SelectedAppsReviews>
-                      <SelectedAppsReviewsTitle>
-                        Overall user reviews:
-                        <SelectedAppsReviewsTitle
-                          style={{
-                            color: calculateReviewTitle(selectedApp?.reviews)
-                              .color,
-                          }}
-                        >
-                          {selectedApp?.reviews &&
-                            calculateReviewTitle(selectedApp?.reviews).title}
-                          <span style={{ color: "#c6d4df" }}>
-                            {' '}({selectedApp?.reviews.length})
-                          </span>
-                        </SelectedAppsReviewsTitle>
-                      </SelectedAppsReviewsTitle>
-                    </SelectedAppsReviews>
-                    <SelectedAppsTags>
-                      {selectedApp?.tags.map((tag) => (
-                        <SelectedAppsTag key={tag}>{tag}</SelectedAppsTag>
-                      ))}
-                    </SelectedAppsTags>
-                    <SelectedAppsImages>
-                      {selectedApp?.imagesUrl.map((image) => (
-                        <SelectedAppsImage key={image} src={image}/>
-                      ))}
-                    </SelectedAppsImages>
-                  </SelectedAppContainer>
-                </HomeAppsContainer>
-              </>
+              <HomeAppList 
+                appsData={appsData} 
+                selectedApp={selectedApp} 
+                handleNavigateToApps={handleNavigateToApps}
+                handleNavigate={handleNavigate}
+                handleSelectApp={handleSelectApp}
+              />
             )}
             <BigTags />
             <DiscountDataProvider>

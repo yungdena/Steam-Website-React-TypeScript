@@ -8,6 +8,7 @@ import { Header } from "../../header";
 import { Footer } from "../../home/footer";
 import { CancelButton } from "../../profile/edit/index.styled";
 import { Background } from "../index.styled";
+import { handleCreatePost, handleDescriptionChange, handleTitleChange } from "../utils/functions";
 import { CreatePostButton, Input, MainContainer, PreviewImage, StyledTextArea } from "./index.styled";
 
 export const CreatePost = () => {
@@ -66,33 +67,6 @@ export const CreatePost = () => {
     );
   }, []);
 
-  const handleCreatePost = async () => {
-    try {
-      if (post && cloudinaryImageURL) {
-        setPost({ ...post, image: cloudinaryImageURL });
-
-        const newPost = await createPostMutation.mutateAsync({ postData: {...post} });
-        history.push(`/${APP_KEYS.ROUTER_KEYS.COMMUNITY}`);
-      }
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
-  };
-
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (post) {
-      setPost({ ...post, title: event.target.value });
-    }
-  };
-
-  const handleDescriptionChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    if (post) {
-      setPost({ ...post, description: event.target.value });
-    }
-  };
-
   useEffect(() => {
     if (UserDataContext?.userData) {
       setPost({ ...post, user: UserDataContext?.userData?._id })
@@ -110,12 +84,12 @@ export const CreatePost = () => {
                 type="text"
                 placeholder="Title"
                 value={post.title}
-                onChange={handleTitleChange}
+                onChange={(event) => handleTitleChange(event, post, setPost)}
               />
               <StyledTextArea
                 placeholder="Description"
                 value={post.description}
-                onChange={handleDescriptionChange}
+                onChange={(event) => handleDescriptionChange(event, post, setPost)}
               />
             </>
           )}
@@ -132,7 +106,7 @@ export const CreatePost = () => {
               "https://res.cloudinary.com/didkbrlcz/image/upload/v1699599822/preview-2_djgbzq.jpg"
             }
           />
-          <CreatePostButton onClick={handleCreatePost}>Create Post</CreatePostButton>
+          <CreatePostButton onClick={() => handleCreatePost(post, cloudinaryImageURL, setPost, history, createPostMutation)}>Create Post</CreatePostButton>
         </MainContainer>
       </Background>
       <Footer />

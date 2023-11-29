@@ -32,11 +32,15 @@ export class LibraryService {
         return;
       }
 
-      user.apps = user.apps.filter((app) => app !== appId);
-      user.apps.push(appId);
-      await user.save();
-
-      res.send(user);
+      const addedToLibrary = user.apps.some((app) => app === appId);
+      if (addedToLibrary) {
+        user.apps.push(appId);
+        await user.save();
+  
+        res.send(user);
+      } else {
+        res.status(400).send({ message: "App is already in the library" });
+      }
     } catch (error) {
       res.status(500).send({ message: "Internal server error" });
     }
