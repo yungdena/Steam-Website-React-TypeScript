@@ -19,7 +19,6 @@ export const PageContainer = styled.div`
 
 export const InfoContainer = styled.div`
   width: 58.75rem;
-  height: fit-content;
   padding: 9.5rem 0 2rem;
   padding-bottom: 0;
   background: rgb(27, 40, 56);
@@ -44,7 +43,8 @@ export const AppTitle = styled.div`
 export const SmallInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 27.75rem;
+  min-height: 28rem;
+  padding-bottom: 1rem;
 `;
 
 export const ImageContainer = styled.div`
