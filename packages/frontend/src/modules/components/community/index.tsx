@@ -8,7 +8,7 @@ import { usePostsData } from "../../common/context/community-context";
 import { LoaderBig } from "../../common/loader/loader";
 import { Header } from "../header"
 import { Footer } from "../home/footer"
-import { Author, Background, CommunityInfoContainer, CommunityInfoText, CommunitySubtitle, CommunityTitle, CreatePost, JoinSteamButton, MainContainer, PopularGameDescription, PopularGameItem, PopularGamesContainer, PopularGameTitle, Post, PostData, PostImage, PostTitle, RecentTitle, UserAvatar, UserName } from "./index.styled"
+import { Author, Background, CommunityInfoContainer, CommunityInfoText, CommunitySubtitle, CommunityTitle, CreatePost, GamesWrapper, JoinSteamButton, MainContainer, PopularGameDescription, PopularGameItem, PopularGamesContainer, PopularGameTitle, Post, PostData, PostImage, PostTitle, RecentTitle, UserAvatar, UserName } from "./index.styled"
 import { APP_KEYS } from "../../common/consts";
 import { useUserData } from "../../common/context/user-context";
 import { getAppById } from "../profile/utils/functions";
@@ -61,59 +61,79 @@ export const Community = () => {
               </CommunitySubtitle>
               <CommunityInfoContainer>
                 {UserDataContext?.userData ? (
-                  <>
-                    <RecentTitle>YOUR RECENTLY ADDED GAMES</RecentTitle>
-                    <RecentTitle>NEW STEAM GAMES</RecentTitle>
-                    <PopularGamesContainer>
-                      {UserDataContext.userData.apps
-                        .slice(
-                          UserDataContext.userData.apps.length - 4,
-                          UserDataContext.userData.apps.length
-                        )
-                        .reverse()
-                        .map((appId: string) => {
-                          const app = getAppById(appId, appsData);
-                          if (app) {
-                            return (
-                              <PopularGameItem key={app._id}>
-                                <PopularGameTitle>{app.title}</PopularGameTitle>
-                                <PopularGameDescription
-                                  onClick={() =>
-                                    history.push(
-                                      "/" +
+                  <><GamesWrapper>
+                      <PopularGamesContainer>
+                        <RecentTitle>Recently added</RecentTitle>
+                        {UserDataContext.userData.apps.length >= 4
+                          ? UserDataContext.userData.apps
+                            .slice(
+                              UserDataContext.userData.apps.length - 4,
+                              UserDataContext.userData.apps.length
+                            )
+                            .reverse()
+                            .map((appId: string) => {
+                              const app = getAppById(appId, appsData);
+                              if (app) {
+                                return (
+                                  <PopularGameItem key={app._id}>
+                                    <PopularGameTitle>
+                                      {app.title}
+                                    </PopularGameTitle>
+                                    <PopularGameDescription
+                                      onClick={() => history.push(
+                                        "/" +
                                         APP_KEYS.ROUTER_KEYS.APPS +
                                         "/" +
                                         app._id
-                                    )
-                                  }
+                                      )}
+                                    >
+                                      To App Page
+                                    </PopularGameDescription>
+                                  </PopularGameItem>
+                                );
+                              }
+                            })
+                          : appsData
+                            .slice(appsData.length - 4, appsData.length)
+                            .reverse()
+                            .map((app) => (
+                              <PopularGameItem key={app._id}>
+                                <PopularGameTitle>{app.title}</PopularGameTitle>
+                                <PopularGameDescription
+                                  onClick={() => history.push(
+                                    "/" +
+                                    APP_KEYS.ROUTER_KEYS.APPS +
+                                    "/" +
+                                    app._id
+                                  )}
                                 >
                                   To App Page
                                 </PopularGameDescription>
                               </PopularGameItem>
-                            );
-                          }
-                        })}
-                      {appsData
-                        .slice(appsData.length - 4, appsData.length)
-                        .reverse()
-                        .map((app) => (
-                          <PopularGameItem key={app._id}>
-                            <PopularGameTitle>{app.title}</PopularGameTitle>
-                            <PopularGameDescription
-                              onClick={() =>
-                                history.push(
+                            ))}
+                      </PopularGamesContainer>
+                      <PopularGamesContainer>
+                        <RecentTitle>Popular in Steam</RecentTitle>
+                        {appsData
+                          .slice(0, 4)
+                          .reverse()
+                          .map((app) => (
+                            <PopularGameItem key={app._id}>
+                              <PopularGameTitle>{app.title}</PopularGameTitle>
+                              <PopularGameDescription
+                                onClick={() => history.push(
                                   "/" +
-                                    APP_KEYS.ROUTER_KEYS.APPS +
-                                    "/" +
-                                    app._id
-                                )
-                              }
-                            >
-                              To App Page
-                            </PopularGameDescription>
-                          </PopularGameItem>
-                        ))}
-                    </PopularGamesContainer>
+                                  APP_KEYS.ROUTER_KEYS.APPS +
+                                  "/" +
+                                  app._id
+                                )}
+                              >
+                                To App Page
+                              </PopularGameDescription>
+                            </PopularGameItem>
+                          ))}
+                      </PopularGamesContainer>
+                    </GamesWrapper>
                     <CommunitySubtitle
                       style={{
                         lineHeight: "20px",
@@ -123,23 +143,20 @@ export const Community = () => {
                         width: "24rem",
                       }}
                     >
-                      In Community Page you can add post <br /> with whatever
-                      image, title, description you want.
-                      <br /> Share your thoughts and ideas.
-                    </CommunitySubtitle>
-                    <CreatePost
-                      onClick={() =>
-                        history.push(
+                        In Community Page you can add post <br /> with whatever
+                        image, title, description you want.
+                        <br /> Share your thoughts and ideas.
+                      </CommunitySubtitle><CreatePost
+                        onClick={() => history.push(
                           "/" +
-                            APP_KEYS.ROUTER_KEYS.COMMUNITY +
-                            "/" +
-                            APP_KEYS.ROUTER_KEYS.CREATE
-                        )
-                      }
-                    >
-                      Create Your Own Post
-                    </CreatePost>
-                  </>
+                          APP_KEYS.ROUTER_KEYS.COMMUNITY +
+                          "/" +
+                          APP_KEYS.ROUTER_KEYS.CREATE
+                        )}
+                      >
+                        Create Your Own Post
+                      </CreatePost>
+                    </>
                 ) : (
                   <>
                     <CommunityInfoText>

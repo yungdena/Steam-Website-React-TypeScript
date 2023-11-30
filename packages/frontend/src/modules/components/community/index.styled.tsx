@@ -64,22 +64,25 @@ export const CommunityInfoText = styled.div`
 `;
 
 export const RecentTitle = styled.div`
-  margin-right: 12.1rem;
   font-size: 11px;
   color: #8f98a0;
   text-transform: uppercase;
   padding-bottom: 10px;
-  width: 100%;
+  width: fit-content;
 `;
+
+export const GamesWrapper = styled.div`
+  display: flex;
+`
 
 export const PopularGamesContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 220px;
-  width: 70%;
+  height: 250px;
   flex-wrap: wrap;
   padding: 2px;
+  width: 300px;
 `;
 
 export const PopularGameItem = styled.div`
