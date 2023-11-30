@@ -16,6 +16,9 @@ import { IUser } from "../../common/types/User";
 import { Background, Capsule, ItemImage, ItemTitle, MainContainer, MidContainer, NicknameSpan, NoItems, SearchBar, SearchContainer, Stats, StatsLabel, Tag, TagsContainer, LibraryContainer, LibraryItem, LibraryTitle, RemoveButton } from "./index.styled"
 import { CustomSelect } from "./select/custom-select";
 import { useLibraryData } from "../../common/context/library-context";
+import { handleNavigateToApp } from "../../common/utils/handleNavigate";
+import { defaultAvatar } from "../../common/consts/avatar";
+import { COLORS } from "../../common/theme";
 
 export const Library = () => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
@@ -113,6 +116,7 @@ export const Library = () => {
       <Background>
         <MainContainer>
           <LibraryTitle>
+            <img style={{border: `1px solid ${COLORS.tagBlue}`, width: '64px', marginRight: '16px'}} src={user?.avatar || defaultAvatar}/>
             {user && user.name}
             <NicknameSpan>
               {">"}
@@ -142,9 +146,7 @@ export const Library = () => {
                   <ItemImage src={item.titleImage} />
                   <Capsule>
                     <ItemTitle
-                      onClick={() =>
-                        history.push('/' + APP_KEYS.ROUTER_KEYS.APPS + `/${item._id}`)
-                      }
+                      onClick={() => handleNavigateToApp(item._id, history)}
                     >
                       {item.title}
                     </ItemTitle>

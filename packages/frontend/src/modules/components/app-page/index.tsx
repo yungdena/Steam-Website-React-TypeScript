@@ -310,7 +310,7 @@ export const AppPage = () => {
                       height: "92px",
                       border: `1px solid ${COLORS.tagBlue}`,
                     }}
-                    src={UserDataContext?.userData?.avatar}
+                    src={UserDataContext?.userData?.avatar || defaultAvatar}
                   />
                   <StyledTextArea
                     maxLength={2000}

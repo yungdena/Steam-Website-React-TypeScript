@@ -12,15 +12,22 @@ export const fetchUserDataById = async (
     setFriendsData: (friendData: any[]) => void
   ) => Promise<void>
 ) => {
+  let isMounted = true;
+
   try {
     const userData = await getUserByIdMutation.mutateAsync(userId);
-    setUserData(userData);
 
-    if (userData?.friends.length > 0) {
-      fetchFriendData(userData.friends, getUserByIdMutation, setFriendsData);
+    if (isMounted) {
+      setUserData(userData);
+
+      if (userData?.friends.length > 0) {
+        fetchFriendData(userData.friends, getUserByIdMutation, setFriendsData);
+      }
     }
   } catch (error) {
     console.error("Error fetching user data:", error);
+  } finally {
+    isMounted = false;
   }
 };
 

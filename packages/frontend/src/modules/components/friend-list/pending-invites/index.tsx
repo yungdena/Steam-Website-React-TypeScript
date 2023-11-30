@@ -15,7 +15,7 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
   const history = useHistory()
   const avatar =
     "https://res.cloudinary.com/didkbrlcz/image/upload/v1695624961/System/b5bd56c1aa4644a474a2e4972be27ef9e82e517e_full_pfrgqw.jpg";
-  console.log('received request', receivedInvites)
+
   const handleGetSentUser = async (userId: string) => {
     try {
       const user = await getUserByIdMutation.mutateAsync(userId);
@@ -57,8 +57,6 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
   ) => {
     if (UserDataContext && UserDataContext.userData) {
       try {
-        console.log("receiverId: ", receiverId);
-        console.log("senderId: ", senderId);
         const updatedUsers = foundReceivedUsers.filter(
           (user: IUser) => user._id !== senderId
         );

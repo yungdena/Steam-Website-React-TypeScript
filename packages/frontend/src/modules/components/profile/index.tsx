@@ -33,6 +33,7 @@ import {
 } from "./index.styled";
 import { fetchFriendData, fetchUserDataById, getAppById, handleRemoveFriend, handleSendFriendRequest } from "./utils/functions";
 import { APP_KEYS } from "../../common/consts";
+import { handleNavigateToApp } from "../../common/utils/handleNavigate";
 
 export const Profile = () => {
   const [userData, setUserData] = useState<IUser | null>(null);
@@ -50,15 +51,40 @@ export const Profile = () => {
   const isOwnProfile = id === parsedId;
   const history = useHistory();
   
-    useEffect(() => {
-      if (!isOwnProfile && UserDataContext?.userData?.friends.includes(id)) {
-        setIsFriend(true);
-      }
+  useEffect(() => {
+    let isMounted = true;
 
-      if (id) {
-        fetchUserDataById(id, getUserByIdMutation, setUserData, setFriendsData, fetchFriendData);
+    const fetchData = async () => {
+      try {
+        if (isMounted) {
+          if (
+            !isOwnProfile &&
+            UserDataContext?.userData?.friends.includes(id)
+          ) {
+            setIsFriend(true);
+          }
+
+          if (id) {
+            await fetchUserDataById(
+              id,
+              getUserByIdMutation,
+              setUserData,
+              setFriendsData,
+              fetchFriendData
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
-    }, [id]);
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
 
   return (
     <>
@@ -109,7 +135,7 @@ export const Profile = () => {
           <InfoContainer>
             <ActivityContainer>
               <ActivityTitle>Recent Activity</ActivityTitle>
-              {userData?.apps
+              {userData?.apps && UserDataContext?.userData?.apps && userData?.apps
                 .slice(
                   UserDataContext?.userData?.apps.length
                     ? Math.max(UserDataContext.userData.apps.length - 3, 0)
@@ -124,23 +150,17 @@ export const Profile = () => {
                       <GameContainer key={appId}>
                         <div style={{ display: "flex" }}>
                           <GameImage
-                            onClick={() =>
-                              history.push("/" + "apps/" + appData._id)
-                            }
+                            onClick={() => handleNavigateToApp(appId, history)}
                             src={appData.bannerImage}
                           />
                           <GameTitle
-                            onClick={() =>
-                              history.push("/" + "apps/" + appData._id)
-                            }
+                            onClick={() => handleNavigateToApp(appId, history)}
                           >
                             {appData.title}
                           </GameTitle>
                         </div>
                         <AchievementsContainer
-                          onClick={() =>
-                            history.push("/" + "apps/" + appData._id)
-                          }
+                          onClick={() => handleNavigateToApp(appId, history)}
                         >
                           App Page
                         </AchievementsContainer>

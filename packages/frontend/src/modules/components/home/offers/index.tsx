@@ -8,6 +8,7 @@ import { APP_KEYS } from "../../../common/consts";
 import { Offer, OffersContainer, StyledPagination } from "./index.styled";
 import { calculatePercentageDecrease } from "../../../common/utils/countPercentage";
 import { useDiscountData } from "../../../common/context/discounts-context";
+import { handleNavigateToApp } from "../../../common/utils/handleNavigate";
 
 export const Offers = () => {
   const appsWithNewPrice = useDiscountData()
@@ -32,31 +33,6 @@ export const Offers = () => {
 
   const history = useHistory();
 
-  const handleNavigate = (appId: string) => {
-    const recentGamesKey = "recentGames";
-    const maxRecentGames = 7;
-
-    let recentGames: string[] = JSON.parse(
-      localStorage.getItem(recentGamesKey) || "[]"
-    );
-
-    const alreadyInList = recentGames.includes(appId);
-
-    if (!alreadyInList) {
-      if (recentGames.length >= maxRecentGames) {
-        recentGames.shift();
-      }
-
-      recentGames.push(appId);
-
-      localStorage.setItem(recentGamesKey, JSON.stringify(recentGames));
-    }
-
-    history.push(
-      `${APP_KEYS.ROUTER_KEYS.ROOT}${APP_KEYS.ROUTER_KEYS.APPS}/${appId}`
-    );
-  };
-
   return (
     <MainContainer>
       <Swiper style={{ marginLeft: "0" }} {...swiperParams}>
@@ -64,7 +40,7 @@ export const Offers = () => {
           <SwiperSlide key={slideIndex}>
             <OffersContainer>
               {appsChunk.map((app) => (
-                <Offer onClick={() => handleNavigate(app._id)} key={app._id}>
+                <Offer onClick={() => handleNavigateToApp(app._id, history)} key={app._id}>
                   <OfferImage src={app.titleImage} />
                   <PriceContainer style={{ marginTop: "5px" }}>
                     <PricePercent>

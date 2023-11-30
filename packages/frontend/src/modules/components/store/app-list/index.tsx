@@ -12,6 +12,7 @@ import { calculateReviewTitle, getReviewImageURL } from '../../../common/utils/c
 import { sortAppsByHighestPrice, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from './utils/sort-apps';
 import { handleNavigate, handleSearch, handleSearchInputChange, handleSortChange } from './utils/handlers';
 import { useGetAppsByPrice, useGetAppsByTags, useGetAppsByTitle, useGetDiscounts, useGetMaxPages } from '../../../common/services/apps.service';
+import { handleNavigateToApp } from '../../../common/utils/handleNavigate';
 
 export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number | null, minHeight?: string, margin?: string }) => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
@@ -269,7 +270,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
               .map((app) => (
                 <AppLink
                   key={app._id}
-                  onClick={() => handleNavigate(app._id, history)}
+                  onClick={() => handleNavigateToApp(app._id, history)}
                 >
                   <AppContainer>
                     <AppImageContainer>

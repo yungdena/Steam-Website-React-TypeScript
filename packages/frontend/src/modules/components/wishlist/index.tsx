@@ -21,6 +21,8 @@ import { CustomSelect } from "./select/custom-select";
 import Toast from "./toast";
 import { handleAddToLibrary, handleDeleteFromWishlist, handleInputChange, handleSortChange } from "./utils/functions";
 import { useWishlistData } from "../../common/context/wishlist-context";
+import { defaultAvatar } from "../../common/consts/avatar";
+import { COLORS } from "../../common/theme";
 
 export const Wishlist = () => {
   const [sortedApps, setSortedApps] = useState<IApp[]>([]);
@@ -83,6 +85,7 @@ export const Wishlist = () => {
       <Background>
         <MainContainer>
           <WishlistTitle>
+            <img style={{border: `2px solid ${COLORS.tagBlue}`, marginRight: '16px', width: '64px'}} src={UserDataContext?.userData?.avatar || defaultAvatar} />
             {UserDataContext?.userData && UserDataContext?.userData.name}'s wishlist
           </WishlistTitle>
           <SearchContainer>

@@ -3,6 +3,7 @@ import { APP_KEYS } from "../../../../common/consts";
 import { useDiscountData } from "../../../../common/context/discounts-context";
 import { IApp } from "../../../../common/types/app.interface";
 import { calculatePercentageDecrease } from "../../../../common/utils/countPercentage";
+import { handleNavigateToApp } from "../../../../common/utils/handleNavigate";
 import { BigCard, DiscountPrice, MainContainer, NewPrice, OldPrice, PriceAmounts, PriceContainer, SaleRow, SmallCard, TitleImageBig, TitleImageSmall } from "./index.styled"
 
 export const BigOffers = () => {
@@ -27,9 +28,7 @@ export const BigOffers = () => {
           {row.map((app: IApp, index: number) => (
             <SmallCard key={index}>
               <TitleImageSmall
-                onClick={() =>
-                  history.push("/" + APP_KEYS.ROUTER_KEYS.APPS + "/" + app._id)
-                }
+                onClick={() => handleNavigateToApp(app._id, history)}
                 src={app.titleImage}
               />
               <PriceContainer>
@@ -56,9 +55,7 @@ export const BigOffers = () => {
           {row.map((app: IApp, index: number) => (
             <BigCard key={index}>
               <TitleImageBig
-                onClick={() =>
-                  history.push("/" + APP_KEYS.ROUTER_KEYS.APPS + "/" + app._id)
-                }
+                onClick={() => handleNavigateToApp(app._id, history)}
                 src={app.titleImage}
               />
               <PriceContainer>
@@ -85,9 +82,7 @@ export const BigOffers = () => {
           {row.map((app: IApp, index: number) => (
             <SmallCard key={index}>
               <TitleImageSmall
-                onClick={() =>
-                  history.push("/" + APP_KEYS.ROUTER_KEYS.APPS + "/" + app._id)
-                }
+                onClick={() => handleNavigateToApp(app._id, history)}
                 src={app.titleImage}
               />
               <PriceContainer>
@@ -114,9 +109,7 @@ export const BigOffers = () => {
           {row.map((app: IApp, index: number) => (
             <BigCard key={index}>
               <TitleImageBig
-                onClick={() =>
-                  history.push("/" + APP_KEYS.ROUTER_KEYS.APPS + "/" + app._id)
-                }
+                onClick={() => handleNavigateToApp(app._id, history)}
                 src={app.titleImage}
               />
               <PriceContainer>

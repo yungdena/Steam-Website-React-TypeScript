@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_KEYS } from "../../../common/consts";
+import { useAppsData } from "../../../common/context/apps-context";
 import { useGetAppsByTags, useGetTitle } from "../../../common/services/apps.service";
 import { Tags } from "../../../common/utils/tags";
 
@@ -10,7 +11,7 @@ export const HomeMenu = () => {
   const [recentApps, setRecentApps] = useState<any>([]);
   const getAppsTitleMutation = useGetTitle();
   const history = useHistory();
-
+  const { appsData } = useAppsData()
   useEffect(() => {
     let isMounted = true;
 
@@ -70,19 +71,35 @@ export const HomeMenu = () => {
 
   return (
     <>
-      <RecentContainer style={{ minHeight: "220px" }}>
-        <TagTitle>Recently Viewed</TagTitle>
-        {recentApps.slice(0, 7).map((app: any) => (
-          <TagLink
-            onClick={() =>
-              history.push(`/${APP_KEYS.ROUTER_KEYS.APPS}/${app.id}`)
-            }
-            key={app.id}
-          >
-            {app.title}
-          </TagLink>
-        ))}
-      </RecentContainer>
+      {recentApps.length >= 7 ? (
+        <RecentContainer style={{ minHeight: "220px" }}>
+          <TagTitle>Recently Viewed</TagTitle>
+          {recentApps.slice(0, 7).map((app: any) => (
+            <TagLink
+              onClick={() =>
+                history.push(`/${APP_KEYS.ROUTER_KEYS.APPS}/${app.id}`)
+              }
+              key={app.id}
+            >
+              {app.title}
+            </TagLink>
+          ))}
+        </RecentContainer>
+      ) : (
+        <RecentContainer style={{ minHeight: "220px" }}>
+          <TagTitle>Top Sellers</TagTitle>
+          {appsData.slice(0, 8).map((app: any) => (
+            <TagLink
+              onClick={() =>
+                history.push(`/${APP_KEYS.ROUTER_KEYS.APPS}/${app.id}`)
+              }
+              key={app.id}
+            >
+              {app.title}
+            </TagLink>
+          ))}
+        </RecentContainer>
+      )}
       <RecentContainer style={{ background: "none", top: "800px" }}>
         <TagTitle>Your Tags</TagTitle>
         {Object.values(Tags).map((tag) => (

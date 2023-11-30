@@ -40,7 +40,6 @@ export const Dropdown = ({ linkId, hoveredLink, content }: { linkId: string, hov
       default:
         handleNavigate(item.linkTo);
     }
-    console.log(`Item clicked: ${item.title}`);
   };
 
     return (

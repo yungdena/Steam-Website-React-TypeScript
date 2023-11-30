@@ -1,7 +1,9 @@
 import { Fragment } from "react";
+import { useHistory } from "react-router-dom";
 import { IApp } from "../../../common/types/app.interface";
 import { calculateReviewTitle } from "../../../common/utils/calculateReviewRate";
 import { calculatePercentageDecrease } from "../../../common/utils/countPercentage";
+import { handleNavigateToApp } from "../../../common/utils/handleNavigate";
 import { AppLink } from "../../store/app-list/index.styled";
 import { AppContainer, AppImage, AppNewPrice, AppOldPrice, AppPrice, AppPriceContainer, AppsLine, AppTags, AppTitle, FeaturedButton, FeaturedTitle, HomeAppsContainer, PricePercent, PriceWrapper, SelectedAppContainer, SelectedAppsImage, SelectedAppsImages, SelectedAppsReviews, SelectedAppsReviewsTitle, SelectedAppsTag, SelectedAppsTags, SelectedAppTitle } from "../index.styled";
 
@@ -9,9 +11,9 @@ export const HomeAppList = ({
   selectedApp,
   appsData,
   handleNavigateToApps,
-  handleNavigate,
   handleSelectApp,
 }: any) => {
+  const history = useHistory()
   return (
     <>
       <AppsLine>
@@ -24,7 +26,7 @@ export const HomeAppList = ({
         {appsData.slice(0, 10).map((app: IApp) => (
           <AppLink
             key={app._id}
-            onClick={() => handleNavigate(app._id)}
+            onClick={() => handleNavigateToApp(app._id, history)}
             onMouseEnter={() => handleSelectApp(app)}
           >
             <AppContainer

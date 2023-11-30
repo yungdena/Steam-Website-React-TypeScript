@@ -33,8 +33,6 @@ export const WishlistDataProvider = ({ children, userId }: any) => {
     fetchWishlist();
   }, [userId]);
 
-  console.log(wishlistApps)
-
   const contextValue: AppsDataContextType = {
     wishlistApps,
     isLoadingWishlist,

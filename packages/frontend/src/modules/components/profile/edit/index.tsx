@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_KEYS } from "../../../common/consts";
+import { defaultAvatar } from "../../../common/consts/avatar";
 import { useUserData } from "../../../common/context/user-context";
 import { useUpdateUser } from "../../../common/services/user.service";
 import { Header } from "../../header"
@@ -51,22 +52,22 @@ export const EditProfile = () => {
     );
   }, []);
 
-  const handleUpdateUser = async () => {
-    try {
-      if (user && cloudinaryImageURL) {
-        setUser({ ...user, avatar: cloudinaryImageURL });
+    const handleUpdateUser = async () => {
+      try {
+        if (user && cloudinaryImageURL) {
+          setUser({ ...user, avatar: cloudinaryImageURL });
 
-        const updatedUser = await updateUserMutation.mutateAsync(user);
-        history.push(`/${APP_KEYS.ROUTER_KEYS.PROFILE}/${user._id}`)
+          const updatedUser = await updateUserMutation.mutateAsync(user);
+          history.push(`/${APP_KEYS.ROUTER_KEYS.PROFILE}/${user._id}`)
+        }
+      } catch (error) {
+        console.error("Error updating user:", error);
       }
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
-  };
+    };
 
-  useEffect(() => {
-    setUser(UserDataContext?.userData);
-  }, [UserDataContext]);
+    useEffect(() => {
+      setUser(UserDataContext?.userData);
+    }, [UserDataContext]);
 
   return (
     <>
@@ -74,7 +75,7 @@ export const EditProfile = () => {
       <Background>
         <MainContainer>
           <ProfileHeading>
-            <Avatar src={user?.avatar} />
+            <Avatar src={user?.avatar || defaultAvatar} />
             <ProfileName>{UserDataContext?.userData?.name}</ProfileName>
           </ProfileHeading>
           <About>
@@ -97,7 +98,7 @@ export const EditProfile = () => {
               <AvatarSection>
                 <AboutTitle>AVATAR</AboutTitle>
                 <AvatarWrapper>
-                  <EditAvatar src={cloudinaryImageURL || user.avatar} />
+                  <EditAvatar src={cloudinaryImageURL || user.avatar || defaultAvatar} />
                   <div>
                     <CancelButton
                       type="button"

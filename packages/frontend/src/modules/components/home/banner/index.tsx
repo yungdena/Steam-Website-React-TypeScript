@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_KEYS } from "../../../common/consts";
 import { IApp } from "../../../common/types/app.interface";
+import { handleNavigateToApp } from "../../../common/utils/handleNavigate";
 import { AppTitle, BannerContent, BannerMainImage, GameBannerContainer, GlobalContainer, Image, ImagesContainer, Price, ReasonBig, ReasonContainer, ReasonSmall, Recommended, Tag, TagsContainer } from "./index.styled";
-
 export const GameBannerComponent = ({appInfo}: Partial<IApp>) => {
   const { titleImage, title, imagesUrl, tags, price, reason, appid } = appInfo;
   const [hoveredImage, setHoveredImage] = useState(titleImage);
@@ -12,7 +12,7 @@ export const GameBannerComponent = ({appInfo}: Partial<IApp>) => {
 
   return (
     <GlobalContainer>
-      <GameBannerContainer onClick={() => history.push(APP_KEYS.ROUTER_KEYS.APPS + `/${appid}`)}>
+      <GameBannerContainer onClick={() => handleNavigateToApp(appid, history)}>
         <BannerMainImage src={hoveredImage} />
         <BannerContent>
           <AppTitle>{title}</AppTitle>
@@ -38,10 +38,17 @@ export const GameBannerComponent = ({appInfo}: Partial<IApp>) => {
             )}
             <TagsContainer>
               {tags.slice(0, 4).map((tag: string) => (
-                <Tag onClick={(event) => {
-                  event.stopPropagation()
-                  history.push('/' + APP_KEYS.ROUTER_KEYS.STORE + '/' + `?tags=${tag}`)
-                }} key={tag}>{tag}</Tag>
+                <Tag
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    history.push(
+                      "/" + APP_KEYS.ROUTER_KEYS.STORE + "/" + `?tags=${tag}`
+                    );
+                  }}
+                  key={tag}
+                >
+                  {tag}
+                </Tag>
               ))}
             </TagsContainer>
           </ReasonContainer>

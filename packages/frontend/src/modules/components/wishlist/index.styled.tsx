@@ -18,6 +18,8 @@ export const WishlistTitle = styled.div`
   font-size: 26px;
   text-transform: uppercase;
   margin-bottom: 5rem;
+  display: flex;
+  align-items: center;
 `;
 
 export const WishlistItem = styled.div`
