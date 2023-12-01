@@ -65,44 +65,6 @@ class AppsService {
     }
   }
 
-  async getAppsByPrice(price: string, res: Response) {
-    try {
-      let apps;
-
-      if (price === "Free") {
-        apps = await AppModel.find({ price: "Free to Play" });
-      } else {
-        const numericPrice = parseFloat(price);
-        console.log(numericPrice);
-
-        const query: FilterQuery<IApp> = {
-          $or: [
-            { price: "Free to Play" },
-            { $expr: { $lt: [{ $toDecimal: "$price" }, numericPrice] } },
-            {
-              $and: [
-                { newPrice: { $exists: true } },
-                { $expr: { $lt: [{ $toDecimal: "$newPrice" }, numericPrice] } },
-              ],
-            },
-          ],
-        };
-
-        apps = await AppModel.find(query);
-      }
-
-      if (!apps || apps.length === 0) {
-        res.status(404).send({ message: "No apps found by title" });
-        return;
-      }
-
-      res.send(apps);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send({ message: "Internal Server Error" });
-    }
-  }
-
   async getAppTitle(id: string, res: Response) {
     try {
       const app = await AppModel.findById(id);
@@ -121,24 +83,6 @@ class AppsService {
     }
   }
 
-  async getAppsByTags(tags: string[], res: Response) {
-    try {
-      const apps = await AppModel.find({ tags: { $in: tags } });
-
-      if (!apps || apps.length === 0) {
-        res
-          .status(404)
-          .send({ message: "No apps found with the specified tags" });
-        return;
-      }
-
-      res.send(apps);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send({ message: "Internal Server Error" });
-    }
-  }
-
   async getAppById(id: string, res: Response) {
     const app = await AppModel.findById(id);
 
@@ -148,6 +92,73 @@ class AppsService {
     }
 
     res.send(app);
+  }
+
+  async getFilteredApps(filters: Record<string, any>, res: Response) {
+    try {
+      type TransformedFilters = Record<string, any>;
+      console.log(filters);
+      const transformedFilters: TransformedFilters = Object.entries(
+        filters
+      ).reduce((acc: any, [key, value]) => {
+        if (key === "price") {
+          if (value === "Free") {
+            acc["price"] = "Free to Play";
+          } else {
+            const numericPrice = parseFloat(value);
+            if (filters.specialOffers === "true") {
+              acc["$and"] = [
+                { $expr: { $lt: [{ $toDecimal: "$newPrice" }, numericPrice] } },
+              ];
+            } else {
+              if (!acc["$or"]) {
+                acc["$or"] = [];
+              }
+              acc["$or"].push(
+                { price: "Free to Play" },
+                { $expr: { $lt: [{ $toDecimal: "$price" }, numericPrice] } },
+                {
+                  $and: [
+                    { newPrice: { $exists: true } },
+                    {
+                      $expr: {
+                        $lt: [{ $toDecimal: "$newPrice" }, numericPrice],
+                      },
+                    },
+                  ],
+                }
+              );
+            }
+          }
+        } else if (key === "title") {
+          const regex = new RegExp(value, "i");
+          acc["title"] = { $regex: regex };
+        } else if (key === "hideFree" && value === "true") {
+          acc["price"] = { $ne: "Free to Play" };
+        } else if (key === "specialOffers" && value === "true") {
+          acc["$or"] = [{ newPrice: { $exists: true } }];
+        } else if (key === "tags") {
+          const tagsArray = Array.isArray(value) ? value : value.split(",");
+          acc[key] = { $in: tagsArray };
+        } else {
+          acc[key] = Array.isArray(value) ? { $in: value } : value;
+        }
+
+        return acc;
+      }, {});
+
+      const filteredApps = await AppModel.find(transformedFilters);
+
+      if (!filteredApps || filteredApps.length === 0) {
+        res.status(404).send({ message: "No apps found based on the filters" });
+        return;
+      }
+
+      res.send(filteredApps);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Internal Server Error" });
+    }
   }
 
   async createApp({ app, res }: ICreatePayload) {

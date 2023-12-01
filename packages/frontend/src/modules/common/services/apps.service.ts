@@ -153,6 +153,21 @@ const getAppsByPrice = async (price: string) => {
   return responseData;
 };
 
+const getFilteredApps = async (filters: any) => {
+  const queryString = new URLSearchParams(filters).toString();
+  console.log(queryString)
+  const response = await fetch(`${BASE_URL}/apps/filtered?${queryString}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
+    },
+  });
+
+  const responseData = await response.json();
+  return responseData;
+};
+
 
 export const useGetAllApps = (page: number = 1, pageSize: number = 100) => {
   return useMutation(() => getAllApps(page, pageSize));
@@ -161,6 +176,7 @@ export const useGetDiscounts = () => useMutation(getAllDiscounts);
 export const useGetAppsByTitle = () => useMutation(getAppsByTitle);
 export const useGetAppsByPrice = () => useMutation(getAppsByPrice);
 export const useGetMaxPages = () => useMutation(getMaxPages);
+export const useGetFilteredApps = () => useMutation(getFilteredApps);
 export const useGetAppById = () => useMutation(getAppById)
 export const useGetTitle = () => useMutation(getAppTitle);
 export const useGetAppsByTags = () => useMutation(getAppsByTags);

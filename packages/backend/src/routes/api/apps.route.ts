@@ -30,9 +30,10 @@ appsRouter.get(
 );
 
 appsRouter.get(
-  "/price/:price",
-  appsController.getByPrice.bind(appsController)
+  "/filtered",
+  appsController.getFilteredApps.bind(appsController)
 );
+
 
 appsRouter.get("/search/:title?", (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string, 10) || 1;
@@ -52,8 +53,6 @@ appsRouter.get(
   "/title/:id",
   appsController.getTitle.bind(appsController)
 );
-
-appsRouter.get("/tags/:tags", appsController.getByTags.bind(appsController));
 
 appsRouter.post("/", validate(appSchema), appsController.create.bind(appsController));
 

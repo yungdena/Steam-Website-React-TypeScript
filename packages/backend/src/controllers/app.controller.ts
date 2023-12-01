@@ -35,11 +35,6 @@ export class AppsController {
     }
   }
 
-  async getByPrice(req: Request, res: Response) {
-    const price = req.params.price
-    const apps = await this.appsService.getAppsByPrice(price, res)
-  }
-
   async getTitle(req: Request, res: Response) {
     const appId = req.params.id;
 
@@ -51,18 +46,16 @@ export class AppsController {
     const app = await this.appsService.getAppById(appId, res);
   }
 
-  async getByTags(req: Request, res: Response) {
-    const appTags = req.params.tags
-      .split(",")
-      .map((tag) => decodeURIComponent(tag));
-
-    const app = await this.appsService.getAppsByTags(appTags, res);
-  }
-
   async update(req: Request, res: Response) {
     const app: IApp = req.body;
     const id = req.params.id;
     const updatedApp = await this.appsService.updateApp({ app, id, res });
+  }
+
+  async getFilteredApps(req: Request, res: Response) {
+    const filters = req.query;
+    console.log('filters', filters)
+    await this.appsService.getFilteredApps(filters, res);
   }
 }
 

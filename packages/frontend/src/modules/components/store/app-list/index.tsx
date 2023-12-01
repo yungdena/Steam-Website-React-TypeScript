@@ -11,7 +11,7 @@ import { formatDate } from '../../../common/utils/formatDate';
 import { calculateReviewTitle, getReviewImageURL } from '../../../common/utils/calculateReviewRate';
 import { sortAppsByHighestPrice, sortAppsByLowestPrice, sortAppsByName, sortAppsByReleaseDate, sortAppsByReviews } from './utils/sort-apps';
 import { handleNavigate, handleSearch, handleSearchInputChange, handleSortChange } from './utils/handlers';
-import { useGetAppsByPrice, useGetAppsByTags, useGetAppsByTitle, useGetDiscounts, useGetMaxPages } from '../../../common/services/apps.service';
+import { useGetAppsByPrice, useGetAppsByTags, useGetAppsByTitle, useGetDiscounts, useGetFilteredApps, useGetMaxPages } from '../../../common/services/apps.service';
 import { handleNavigateToApp } from '../../../common/utils/handleNavigate';
 
 export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number | null, minHeight?: string, margin?: string }) => {
@@ -23,11 +23,9 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const history = useHistory();
 
   const location = useLocation();
-  const getAppsByTagsMutation = useGetAppsByTags();
   const getAppsByTitleMutation = useGetAppsByTitle();
-  const getDiscounts = useGetDiscounts();
-  const getAppsByPrice = useGetAppsByPrice();
-  const getMaxPages = useGetMaxPages()
+  const getMaxPages = useGetMaxPages();
+  const getFilteredAppsMutation = useGetFilteredApps();
   const searchParams = new URLSearchParams(location.search);
   const searchUrl = searchParams.get("search");
   const tagsParam = searchParams.get("tags");
@@ -39,129 +37,132 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
     searchUrl || ""
   );
   const isMountedRef = useRef(true);
-
-  const { isLoadingApps, appsData, page, setPage, isLoadingNewApps } = useAppsData();
+  
+  const { isLoadingApps, appsData, page, setPage, isLoadingNewApps } =
+    useAppsData();
 
   useEffect(() => {
-    const appsCopy = [...appsData];
+    const fetchData = async () => {
+      const appsCopy = [...appsData];
+      let filters: any = {};
+      switch (sortBy) {
+        case "Relevance":
+          break;
+        case "Release date":
+          sortAppsByReleaseDate(appsCopy);
+          break;
+        case "Name":
+          sortAppsByName(appsCopy);
+          break;
+        case "Lowest Price":
+          sortAppsByLowestPrice(appsCopy);
+          break;
+        case "Highest Price":
+          sortAppsByHighestPrice(appsCopy);
+          break;
+        case "User Reviews":
+          sortAppsByReviews(appsCopy);
+          break;
+        default:
+          break;
+      }
 
-    switch (sortBy) {
-      case "Relevance":
-        break;
-      case "Release date":
-        sortAppsByReleaseDate(appsCopy);
-        break;
-      case "Name":
-        sortAppsByName(appsCopy);
-        break;
-      case "Lowest Price":
-        sortAppsByLowestPrice(appsCopy);
-        break;
-      case "Highest Price":
-        sortAppsByHighestPrice(appsCopy);
-        break;
-      case "User Reviews":
-        sortAppsByReviews(appsCopy);
-        break;
-      default:
-        break;
-    }
+      let filteredApps = appsCopy;
 
-    let filteredApps = appsCopy;
-
-    const fetchDiscounts = async () => {
       try {
         if (
           onlySpecialOffersParam !== null &&
           onlySpecialOffersParam === "true"
         ) {
-          const fetchedApps = await getDiscounts.mutateAsync()
-          if (isMountedRef.current) {
-            setSortedApps(fetchedApps);
-          }
-        } else {
-          if (isMountedRef.current) {
-            setSortedApps(filteredApps);
-          }
+          filters = {
+            ...filters,
+            specialOffers: true,
+          };
+          const response = await getFilteredAppsMutation.mutateAsync(
+            filters
+          );
+          filteredApps = response;
         }
-      } catch (error) {
-        console.error("Error fetching apps by tags:", error);
-        if (isMountedRef.current) {
-          setSortedApps(filteredApps);
-        }
-      }
-    };
-
-    const fetchByPrice = async () => {
-      try {
-        let fetchedApps;
 
         if (priceParam !== null) {
+          let fetchedApps;
+
           if (priceParam === "Free to Play") {
-            fetchedApps = await getAppsByPrice.mutateAsync("Free%20to%20Play");
+            filters = {
+              ...filters,
+              price: "Free",
+            };
+            fetchedApps = await getFilteredAppsMutation.mutateAsync(
+              filters
+            );
           } else if (priceParam === "Any Price") {
             fetchedApps = filteredApps;
           } else {
-            fetchedApps = await getAppsByPrice.mutateAsync(priceParam);
+            filters = {
+              ...filters,
+              price: priceParam,
+            };
+            fetchedApps = await getFilteredAppsMutation.mutateAsync(
+              filters
+            );
           }
+
+          filteredApps = fetchedApps;
         }
-
-        if (isMountedRef.current) {
-          setSortedApps(fetchedApps);
+        if (hideFreeParam !== null && hideFreeParam.toLowerCase() === "true") {
+          filters = {
+            ...filters,
+            hideFree: true,
+          };
+          const response = await getFilteredAppsMutation.mutateAsync(
+            filters
+          );
+          filteredApps = response;
+        } else {
+          delete filters.hideFree;
         }
-      } catch (error) {
-        console.error("Error fetching apps by price:", error);
-        if (isMountedRef.current) {
-          setSortedApps(filteredApps);
+        if (searchInput) {
+          filters = {
+            ...filters,
+            search: searchInput,
+          };
+          const response = await getFilteredAppsMutation.mutateAsync(
+            filters
+          );
+          filteredApps = response;
         }
-      }
-    };
-
-    if (hideFreeParam !== null && Boolean(hideFreeParam) === true) {
-      const hideFree = hideFreeParam === "true";
-      filteredApps = filteredApps.filter(
-        (app) => !(hideFree && app.price === "Free to Play")
-      );
-    }
-
-    if (searchInput) {
-      filteredApps = filteredApps.filter((app) =>
-        app.title.toLowerCase().includes(searchInput.toLowerCase())
-      );
-    }
-
-    const fetchAppsByTags = async () => {
-      try {
+        
         if (tagsParam) {
           const tagsArray = tagsParam.split(",").map((tag) => tag.trim());
-          const fetchedApps = await getAppsByTagsMutation.mutateAsync(
-            tagsArray
-          );
-          if (isMountedRef.current) {
-            setSortedApps(fetchedApps);
-          }
-        } else {
-          if (isMountedRef.current) {
-            setSortedApps(filteredApps);
-          }
+          filters = {
+            ...filters,
+            tags: tagsArray,
+          };
+          const response = await getFilteredAppsMutation.mutateAsync(filters);
+          console.log(response)
+          filteredApps = response;
+        }
+        
+        if (isMountedRef.current) {
+          setSortedApps(filteredApps);
         }
       } catch (error) {
-        console.error("Error fetching apps by tags:", error);
+        console.error("Error fetching data:", error);
         if (isMountedRef.current) {
           setSortedApps(filteredApps);
         }
       }
+      console.log(filters);
     };
-    fetchByPrice();
-    fetchDiscounts();
-    fetchAppsByTags();
+    
+    fetchData();
   }, [
     appsData,
     sortBy,
     tagsParam,
     hideFreeParam,
     priceParam,
-    onlySpecialOffersParam,
+    onlySpecialOffersParam
   ]);
 
   useEffect(() => {
@@ -177,7 +178,6 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
     );
     setDisplayedApps(displayedApps);
   }, [page, sortedApps]);
-
   useEffect(() => {
     const handleScroll = async () => {
       const scrolledToBottom =
@@ -241,14 +241,16 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
           <SearchBarContainer>
             <SearchBarInput
               onChange={(event) =>
-                handleSearchInputChange(event, setSearchInput, setDebouncedSearchInput)
+                handleSearchInputChange(
+                  event,
+                  setSearchInput,
+                  setDebouncedSearchInput
+                )
               }
               value={debouncedSearchInput}
               placeholder="enter search term or tag"
             />
-            <SearchBarButton
-              onClick={() => debouncedPerformSearch()}
-            >
+            <SearchBarButton onClick={() => debouncedPerformSearch()}>
               Search
             </SearchBarButton>
             <SearchBarSortByTitle>Sort by</SearchBarSortByTitle>
