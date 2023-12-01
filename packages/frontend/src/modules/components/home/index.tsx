@@ -114,7 +114,9 @@ export const HomePage = () => {
   return (
     <>
       <Header />
-      <MainBanner />
+      <MainBanner
+        onClick={() => history.push("/apps/656069c3110b426928da8340")}
+      />
       <MainContainer>
         <ContentContainer>
           <HomeMenu />
@@ -128,7 +130,11 @@ export const HomePage = () => {
             >
               Wishlist ({UserDataContext?.userData?.wishlist.length})
             </WishlistButton>
-            <HomepageHeader smallScreenMarginLeft="-60px" margin="6.5rem 0 0 55px" onSearch={handleSearch} />
+            <HomepageHeader
+              smallScreenMarginLeft="-60px"
+              margin="6.5rem 0 0 55px"
+              onSearch={handleSearch}
+            />
             <SearchApps apps={searchedApps} searchQuery={searchQuery} />
             {isLoadingBanners ? (
               <LoaderBig marginTop="40rem" marginBottom="10rem" />
@@ -137,7 +143,10 @@ export const HomePage = () => {
                 <FeaturedTitle left="60px" top="33rem">
                   FEATURED & RECOMMENDED
                 </FeaturedTitle>
-                <Swiper style={{ marginLeft: '0', marginTop: "21rem" }} {...swiperParams}>
+                <Swiper
+                  style={{ marginLeft: "0", marginTop: "21rem" }}
+                  {...swiperParams}
+                >
                   {bannersData.map((banner) => (
                     <SwiperSlide key={banner._id} className="banner-slide">
                       <GameBannerComponent
@@ -162,9 +171,9 @@ export const HomePage = () => {
             {isLoadingApps ? (
               <LoaderBig marginTop="10rem" marginBottom="10rem" />
             ) : (
-              <HomeAppList 
-                appsData={appsData} 
-                selectedApp={selectedApp} 
+              <HomeAppList
+                appsData={appsData}
+                selectedApp={selectedApp}
                 handleNavigateToApps={handleNavigateToApps}
                 handleNavigate={handleNavigate}
                 handleSelectApp={handleSelectApp}

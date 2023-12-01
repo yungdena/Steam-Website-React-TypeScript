@@ -23,7 +23,6 @@ export const ContentContainer = styled.div`
   background-repeat: no-repeat;
   background-size: 100% 100%;
   margin-top: 4rem;
-
   .swiper {
     width: 1050px;
     overflow: hidden;
@@ -176,7 +175,7 @@ export const MainBanner = styled.div`
   top: 104px;
   left: 50%;
   transform: translateX(-50%);
-
+  cursor: pointer;
   @media (min-width: 1850px) {
     &::before,
     &::after {

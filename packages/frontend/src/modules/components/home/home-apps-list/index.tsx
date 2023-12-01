@@ -115,7 +115,7 @@ export const HomeAppList = ({
             ))}
           </SelectedAppsTags>
           <SelectedAppsImages>
-            {selectedApp?.imagesUrl.map((image: string) => (
+            {selectedApp?.imagesUrl.slice(0, 4).map((image: string) => (
               <SelectedAppsImage key={image} src={image} />
             ))}
           </SelectedAppsImages>
