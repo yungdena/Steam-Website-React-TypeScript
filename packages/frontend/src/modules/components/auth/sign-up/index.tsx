@@ -116,7 +116,7 @@ export const SignUp: React.FC = () => {
         password,
         country,
       });
-      UserDataContext?.setUser(user);
+      UserDataContext?.setUser(user, true);
 
       localStorage.setItem(
         APP_KEYS.STORAGE_KEYS.ACCOUNT,
