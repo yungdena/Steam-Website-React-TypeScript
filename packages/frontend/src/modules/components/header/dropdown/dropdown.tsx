@@ -18,7 +18,7 @@ export const Dropdown = ({ linkId, hoveredLink, content }: { linkId: string, hov
 
 
   const handleLogOut = (route: string) => {
-    UserDataContext?.setUser(null);
+    UserDataContext?.setUser(null, false);
 
     localStorage.removeItem("account");
     sessionStorage.removeItem("account");
