@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { APP_KEYS } from "../../../common/consts";
+import { useUserData } from "../../../common/context/user-context";
 import { useGetUserById } from "../../../common/services/user.service";
 import { IUser } from "../../../common/types/User";
 import { AddFriend, Avatar, FriendContainer, FriendName, FriendsList, Heading, HeadingTitle, MainContainer, NoFriends } from "./index.styled"
@@ -17,6 +18,7 @@ export const YourFriends = ({ setComponent }: IComponent) => {
   const [friends, setFriends] = useState<IUser[]>([]);
   const [user, setUser] = useState<IUser | null>(null);
   const getUserByIdMutation = useGetUserById();
+  const UserDataContext = useUserData();
   const history = useHistory();
   const { id } = useParams<{id: string}>();
 
@@ -51,28 +53,31 @@ export const YourFriends = ({ setComponent }: IComponent) => {
     <MainContainer>
       <Heading>
         <HeadingTitle>
-          {user?.name}'s friends {friends.length !== undefined && `(${friends.length})`}
+          {user?.name}'s friends{" "}
+          {friends.length !== undefined && `(${friends.length})`}
         </HeadingTitle>
       </Heading>
       <FriendsList>
-        {friends.length !== undefined && friends.length === 0 && (
-          <div>
-            <NoFriends>No Friends?</NoFriends>
-            <AddFriend onClick={() => setComponent("AddFriend")}>
-              Add Friend
-            </AddFriend>
-          </div>
-        )}
-        {friends !== undefined &&
-          friends.length > 0 &&
-          friends.map((friend, index) => (
-            <FriendContainer
-              onClick={() => navigateToProfile(friend._id)}
-              key={index}
-            >
-              <Avatar src={friend.avatar || avatar} />
-              <FriendName>{friend.name}</FriendName>
-            </FriendContainer>
+        {UserDataContext?.userData?._id &&
+          (friends.length !== undefined && friends.length === 0 ? (
+            <div>
+              <NoFriends>No Friends?</NoFriends>
+              <AddFriend onClick={() => setComponent("AddFriend")}>
+                Add Friend
+              </AddFriend>
+            </div>
+          ) : (
+            friends !== undefined &&
+            friends.length > 0 &&
+            friends.map((friend, index) => (
+              <FriendContainer
+                onClick={() => navigateToProfile(friend._id)}
+                key={index}
+              >
+                <Avatar src={friend.avatar || avatar} />
+                <FriendName>{friend.name}</FriendName>
+              </FriendContainer>
+            ))
           ))}
       </FriendsList>
     </MainContainer>

@@ -73,7 +73,7 @@ export const SignIn: React.FC = () => {
         formik.setFieldError("name", "error");
         return;
       }
-      UserDataContext?.setUser(user);
+      UserDataContext?.setUser(user, isChecked);
 
       history.push(route);
     };

@@ -272,7 +272,8 @@ export const AppPage = () => {
                     UserDataContext,
                     addToWishlistMutation,
                     setAddedToWishlist,
-                    app?._id
+                    app?._id,
+                    history
                   )
                 }
               >
@@ -451,7 +452,8 @@ export const AppPage = () => {
                       UserDataContext,
                       addToLibraryMutation,
                       setAddedToLibrary,
-                      app?._id
+                      app?._id,
+                      history
                     )
                   }
                 >

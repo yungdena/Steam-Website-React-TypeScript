@@ -5,7 +5,7 @@ export const handleNavigate =
   (history: any, route: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    history.replace(route);
+    history.push(route);
   };
 
 export const handleNavigateToApp = (appId: string, history: any) => {

@@ -124,7 +124,8 @@ export const Profile = () => {
                     userData?._id,
                     UserDataContext,
                     addFriendMutation,
-                    setRequestSent
+                    setRequestSent,
+                    history
                   )
                 }
               >

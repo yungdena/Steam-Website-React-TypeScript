@@ -171,7 +171,8 @@ export const handleAddToWishlist = async (
   UserDataContext: any,
   addToWishlistMutation: any,
   setAddedToWishlist: any,
-  id: string
+  id: string,
+  history: any
 ) => {
   if (UserDataContext?.userData) {
     const appId = id;
@@ -185,13 +186,10 @@ export const handleAddToWishlist = async (
       UserDataContext.setUser(updatedUserData);
     }
   } else {
-    handleNavigate(
-      history,
-      APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
-    );
+    history.push(APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN);
   }
 };
-export const handleAddToLibrary = async (UserDataContext: any, addToLibraryMutation: any, setAddedToLibrary: any, id: string) => {
+export const handleAddToLibrary = async (UserDataContext: any, addToLibraryMutation: any, setAddedToLibrary: any, id: string, history: any) => {
   if (UserDataContext?.userData) {
     const appId = id;
     const userId = UserDataContext.userData._id;

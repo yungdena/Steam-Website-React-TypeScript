@@ -5,7 +5,7 @@ import { useGetUserById } from "../services/user.service";
 
 export interface IUserContext {
   userData: IUser | null;
-  setUser: (user: IUser | null) => void;
+  setUser: (user: IUser | null, rememberMe: boolean) => void;
 }
 
 const UserDataContext = createContext<IUserContext | null>(null);
@@ -31,9 +31,20 @@ export const UserDataProvider = ({ children }: any) => {
     }
   }, []);
 
-  const setUser = (user: IUser | null) => {
+  const setUser = (user: IUser | null, rememberMe: boolean) => {
     setUserData(user);
-    localStorage.setItem(APP_KEYS.STORAGE_KEYS.ACCOUNT, JSON.stringify(user?._id));
+    if (rememberMe) {
+      localStorage.setItem(
+        APP_KEYS.STORAGE_KEYS.ACCOUNT,
+        JSON.stringify(user?._id)
+      );
+    } else {
+      sessionStorage.setItem(
+        APP_KEYS.STORAGE_KEYS.ACCOUNT,
+        JSON.stringify(user?._id)
+      );
+      localStorage.removeItem(APP_KEYS.STORAGE_KEYS.ACCOUNT);
+    }
   };
 
   return (

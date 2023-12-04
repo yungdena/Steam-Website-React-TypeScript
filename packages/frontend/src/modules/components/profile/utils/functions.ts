@@ -1,3 +1,4 @@
+import { APP_KEYS } from "../../../common/consts";
 import { IUserContext } from "../../../common/context/user-context";
 import { IApp } from "../../../common/types/app.interface";
 
@@ -57,7 +58,8 @@ export const handleSendFriendRequest = (
   receiverId: string | undefined,
   UserDataContext: IUserContext | null,
   addFriendMutation: { mutate: (data: { senderId: string; receiverId: string }) => void },
-  setRequestSent: (requestSent: boolean) => void
+  setRequestSent: (requestSent: boolean) => void,
+  history: any
 ) => {
   if (UserDataContext && UserDataContext.userData) {
     const senderId = UserDataContext.userData._id;
@@ -65,6 +67,8 @@ export const handleSendFriendRequest = (
       addFriendMutation.mutate({ senderId, receiverId });
       setRequestSent(true);
     }
+  } else {
+    history.push(APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN)
   }
 };
 
