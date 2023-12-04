@@ -30,7 +30,7 @@ export const handleDeleteFromWishlist = (
       updatedUserData.wishlist = updatedUserData.wishlist.filter(
         (id) => id !== appId
       );
-      UserDataContext.setUser(updatedUserData);
+      UserDataContext.setUser(updatedUserData, true);
     }
   }
 };
@@ -53,7 +53,7 @@ export const handleAddToLibrary = async (
     const updatedUserData = { ...UserDataContext?.userData } as IUser | null;
     if (updatedUserData) {
       updatedUserData.apps.push(appId);
-      UserDataContext?.setUser(updatedUserData);
+      UserDataContext?.setUser(updatedUserData, true);
       handleDeleteFromWishlist(
         appId,
         UserDataContext,
