@@ -155,6 +155,7 @@ const getAppsByPrice = async (price: string) => {
 
 const getFilteredApps = async (filters: any) => {
   const queryString = new URLSearchParams(filters).toString();
+  console.log(queryString)
   const response = await fetch(`${BASE_URL}/apps/filtered?${queryString}`, {
     method: "GET",
     headers: {

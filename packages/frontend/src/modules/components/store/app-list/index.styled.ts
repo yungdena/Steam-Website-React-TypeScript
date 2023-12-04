@@ -194,10 +194,3 @@ export const AppReleaseDate = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
 `;
-
-export const Error = styled.div`
-  font-size: 22px;
-  margin-left: 2px;
-  margin-top: 1rem;
-  color: rgba(255, 255, 255, 0.4);
-`;
