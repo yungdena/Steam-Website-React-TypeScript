@@ -45,7 +45,7 @@ export const SignUp: React.FC = () => {
     setIsChecked(!isChecked);
   };
 
-  const formik = useFormik<{
+  const formik: any = useFormik<{
     email: "";
     password: "";
     confirmPassword: "";

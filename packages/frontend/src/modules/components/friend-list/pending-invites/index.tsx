@@ -74,7 +74,7 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
         UserDataContext.setUser({
           ...UserDataContext.userData,
           friends: newFriends,
-        });
+        }, true);
 
         setFoundReceivedUsers(updatedUsers);
       } catch (error) {
