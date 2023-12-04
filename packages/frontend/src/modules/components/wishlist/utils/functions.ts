@@ -44,9 +44,8 @@ export const handleAddToLibrary = async (
   setSortedApps: any,
   history: any
 ) => {
-  const user = localStorage.getItem(APP_KEYS.STORAGE_KEYS.ACCOUNT);
-  if (user) {
-    const userId = JSON.parse(user);
+  if (UserDataContext?.userData?._id) {
+    const userId = UserDataContext?.userData?._id
     await addToLibraryMutation.mutateAsync({ userId, appId });
     setShowToast(true);
 
