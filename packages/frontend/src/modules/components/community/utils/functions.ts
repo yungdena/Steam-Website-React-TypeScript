@@ -98,7 +98,7 @@ export const handleAddComment = async (
 
 export const handleCreatePost = async (post: any, cloudinaryImageURL: any, setPost: any, history: any, createPostMutation: any) => {
   try {
-    if (post && cloudinaryImageURL) {
+    if (post) {
       setPost({ ...post, image: cloudinaryImageURL });
 
       const newPost = await createPostMutation.mutateAsync({

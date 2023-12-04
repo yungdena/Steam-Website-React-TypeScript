@@ -19,6 +19,7 @@ import { defaultAvatar } from "../../common/consts/avatar";
 import { IPost } from "../../common/types/Post.interface";
 import { ViewPost } from "./view-post";
 import { IApp } from "../../common/types/app.interface";
+import { ViewTextPost } from "./view-post/text-post";
 
 export const Community = () => {
   const UserDataContext = useUserData();
@@ -44,7 +45,6 @@ export const Community = () => {
 
     fetchUsers();
   }, [postsData]);
-
   return (
     <>
       <Header />
@@ -61,56 +61,63 @@ export const Community = () => {
               </CommunitySubtitle>
               <CommunityInfoContainer>
                 {UserDataContext?.userData ? (
-                  <><GamesWrapper>
+                  <>
+                    <GamesWrapper>
                       <PopularGamesContainer>
                         <RecentTitle>Recently added</RecentTitle>
                         {UserDataContext.userData.apps.length >= 4
                           ? UserDataContext.userData.apps
-                            .slice(
-                              UserDataContext.userData.apps.length - 4,
-                              UserDataContext.userData.apps.length
-                            )
-                            .reverse()
-                            .map((appId: string) => {
-                              const app = getAppById(appId, appsData);
-                              if (app) {
-                                return (
-                                  <PopularGameItem key={app._id}>
-                                    <PopularGameTitle>
-                                      {app.title}
-                                    </PopularGameTitle>
-                                    <PopularGameDescription
-                                      onClick={() => history.push(
-                                        "/" +
-                                        APP_KEYS.ROUTER_KEYS.APPS +
-                                        "/" +
-                                        app._id
-                                      )}
-                                    >
-                                      To App Page
-                                    </PopularGameDescription>
-                                  </PopularGameItem>
-                                );
-                              }
-                            })
+                              .slice(
+                                UserDataContext.userData.apps.length - 4,
+                                UserDataContext.userData.apps.length
+                              )
+                              .reverse()
+                              .map((appId: string) => {
+                                const app = getAppById(appId, appsData);
+                                if (app) {
+                                  return (
+                                    <PopularGameItem key={app._id}>
+                                      <PopularGameTitle>
+                                        {app.title}
+                                      </PopularGameTitle>
+                                      <PopularGameDescription
+                                        onClick={() =>
+                                          history.push(
+                                            "/" +
+                                              APP_KEYS.ROUTER_KEYS.APPS +
+                                              "/" +
+                                              app._id
+                                          )
+                                        }
+                                      >
+                                        To App Page
+                                      </PopularGameDescription>
+                                    </PopularGameItem>
+                                  );
+                                }
+                              })
                           : appsData
-                            .slice(appsData.length - 4, appsData.length)
-                            .reverse()
-                            .map((app) => (
-                              <PopularGameItem key={app._id}>
-                                <PopularGameTitle>{app.title}</PopularGameTitle>
-                                <PopularGameDescription
-                                  onClick={() => history.push(
-                                    "/" +
-                                    APP_KEYS.ROUTER_KEYS.APPS +
-                                    "/" +
-                                    app._id
-                                  )}
-                                >
-                                  To App Page
-                                </PopularGameDescription>
-                              </PopularGameItem>
-                            ))}
+                              .slice(appsData.length - 4, appsData.length)
+                              .reverse()
+                              .map((app) => (
+                                <PopularGameItem key={app._id}>
+                                  <PopularGameTitle>
+                                    {app.title}
+                                  </PopularGameTitle>
+                                  <PopularGameDescription
+                                    onClick={() =>
+                                      history.push(
+                                        "/" +
+                                          APP_KEYS.ROUTER_KEYS.APPS +
+                                          "/" +
+                                          app._id
+                                      )
+                                    }
+                                  >
+                                    To App Page
+                                  </PopularGameDescription>
+                                </PopularGameItem>
+                              ))}
                       </PopularGamesContainer>
                       <PopularGamesContainer>
                         <RecentTitle>Popular in Steam</RecentTitle>
@@ -121,12 +128,14 @@ export const Community = () => {
                             <PopularGameItem key={app._id}>
                               <PopularGameTitle>{app.title}</PopularGameTitle>
                               <PopularGameDescription
-                                onClick={() => history.push(
-                                  "/" +
-                                  APP_KEYS.ROUTER_KEYS.APPS +
-                                  "/" +
-                                  app._id
-                                )}
+                                onClick={() =>
+                                  history.push(
+                                    "/" +
+                                      APP_KEYS.ROUTER_KEYS.APPS +
+                                      "/" +
+                                      app._id
+                                  )
+                                }
                               >
                                 To App Page
                               </PopularGameDescription>
@@ -143,20 +152,23 @@ export const Community = () => {
                         width: "24rem",
                       }}
                     >
-                        In Community Page you can add post <br /> with whatever
-                        image, title, description you want.
-                        <br /> Share your thoughts and ideas.
-                      </CommunitySubtitle><CreatePost
-                        onClick={() => history.push(
+                      In Community Page you can add post <br /> with whatever
+                      image, title, description you want.
+                      <br /> Share your thoughts and ideas.
+                    </CommunitySubtitle>
+                    <CreatePost
+                      onClick={() =>
+                        history.push(
                           "/" +
-                          APP_KEYS.ROUTER_KEYS.COMMUNITY +
-                          "/" +
-                          APP_KEYS.ROUTER_KEYS.CREATE
-                        )}
-                      >
-                        Create Your Own Post
-                      </CreatePost>
-                    </>
+                            APP_KEYS.ROUTER_KEYS.COMMUNITY +
+                            "/" +
+                            APP_KEYS.ROUTER_KEYS.CREATE
+                        )
+                      }
+                    >
+                      Create Your Own Post
+                    </CreatePost>
+                  </>
                 ) : (
                   <>
                     <CommunityInfoText>
@@ -195,7 +207,7 @@ export const Community = () => {
                         setSelectedPost(post);
                         setSelectedUser(post.user);
                       }}
-                      key={post.image}
+                      key={post._id}
                     >
                       <Post className="post-item">
                         <PostImage src={post.image} />
@@ -211,10 +223,20 @@ export const Community = () => {
                       </Post>
                     </ImageListItem>
                   ) : (
-                    <ImageListItem key={post._id}>
+                    <ImageListItem
+                      onClick={() => {
+                        setSelectedPost(post);
+                        setSelectedUser(post.user);
+                      }}
+                      key={post._id}
+                    >
                       <Post
                         style={{ minWidth: "333px", minHeight: "120px" }}
                         className="post-item"
+                        onClick={() => {
+                          setSelectedPost(post);
+                          setSelectedUser(post.user);
+                        }}
                       >
                         <PostData>
                           <PostTitle>{post.title}</PostTitle>
@@ -232,16 +254,27 @@ export const Community = () => {
               </ImageList>
             </MainContainer>
           )}
-          {selectedPost && (
-            <RemoveScroll>
-              <ViewPost
-                post={selectedPost}
-                user={selectedUser}
-                setSelectedPost={setSelectedPost}
-                setSelectedUser={setSelectedUser}
-              />
-            </RemoveScroll>
-          )}
+          {selectedPost ? (
+            selectedPost.image ? (
+              <RemoveScroll>
+                <ViewPost
+                  post={selectedPost}
+                  user={selectedUser}
+                  setSelectedPost={setSelectedPost}
+                  setSelectedUser={setSelectedUser}
+                />
+              </RemoveScroll>
+            ) : (
+              <RemoveScroll>
+                <ViewTextPost
+                  post={selectedPost}
+                  user={selectedUser}
+                  setSelectedPost={setSelectedPost}
+                  setSelectedUser={setSelectedUser}
+                />
+              </RemoveScroll>
+            )
+          ) : null}
         </div>
       </Background>
       <Footer />

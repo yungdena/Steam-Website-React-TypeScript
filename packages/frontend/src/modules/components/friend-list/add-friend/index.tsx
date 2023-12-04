@@ -1,15 +1,18 @@
 import { useUserData } from "../../../common/context/user-context";
 import { CodeBlockTop, CodeBlockBottom, MainContainer, Header, CodeBlockMid, CodeBlockHeading, FriendCode, CodeBlockText, CodeBlockInput, UserContainer, UserAvatar, UserName, Button } from "./index.styled"
-import { useGetUserByFriendCode, useSendFriendRequest } from "../../../common/services/user.service";
+import { useGetUserByFriendCode, useGetUserByName, useSendFriendRequest } from "../../../common/services/user.service";
 import { useEffect, useState } from "react";
 import { IUser } from "../../../common/types/User";
 
 export const AddFriend = () => {
   const UserDataContext = useUserData();
   const getUserByFriendCodeMutation = useGetUserByFriendCode();
+  const getUserByName = useGetUserByName();
   const [friendCodeInput, setFriendCodeInput] = useState("");
+  const [nameInput, setNameInput] = useState("");
   const [requestSent, setRequestSent] = useState(false);
-  const [foundUser, setFoundUser] = useState<IUser | null>(null);
+  const [foundUserByCode, setFoundUserByCode] = useState<IUser | null>(null);
+  const [foundUserByName, setFoundUserByName] = useState<IUser[] | null>(null);
   const avatar =
     "https://res.cloudinary.com/didkbrlcz/image/upload/v1695624961/System/b5bd56c1aa4644a474a2e4972be27ef9e82e517e_full_pfrgqw.jpg";
   const addFriendMutation = useSendFriendRequest()
@@ -34,15 +37,40 @@ export const AddFriend = () => {
     }
 
     searchTimeout = setTimeout(async () => {
+      if (input !== UserDataContext?.userData?.friendCode) {
+        try {
+          const user = await getUserByFriendCodeMutation.mutateAsync(input);
+
+          if (user) {
+            setFoundUserByCode(user);
+          } else {
+            setFoundUserByCode(null);
+          }
+        } catch (error) {
+          console.error("Error searching for user:", error);
+        }
+      }
+    }, 1000);
+  };
+
+  const handleNameInputChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const input = e.target.value;
+    setNameInput(input);
+    let searchTimeout;
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    searchTimeout = setTimeout(async () => {
       try {
-        const user = await getUserByFriendCodeMutation.mutateAsync(input);
+        const user = await getUserByName.mutateAsync(input);
 
         if (user) {
-          setFoundUser(user);
-          console.log(`Found ${user}`);
+          setFoundUserByName(user.filter((user: IUser) => user.name !== UserDataContext?.userData?.name));
         } else {
-          console.log(`User not found`);
-          setFoundUser(null);
+          setFoundUserByName(null);
         }
       } catch (error) {
         console.error("Error searching for user:", error);
@@ -52,13 +80,13 @@ export const AddFriend = () => {
 
   useEffect(() => {
     const isRequestSent = UserDataContext?.userData?.sentFriendRequests.some(
-      (request: any) => request.receiverId === foundUser?._id
+      (request: any) => request.receiverId === foundUserByCode?._id
     );
-    
+
     if (isRequestSent) {
       setRequestSent(true);
     }
-  }, [foundUser, UserDataContext?.userData?.sentFriendRequests]);
+  }, [foundUserByCode, UserDataContext?.userData?.sentFriendRequests]);
 
   return (
     <MainContainer>
@@ -75,17 +103,21 @@ export const AddFriend = () => {
           value={friendCodeInput}
           onChange={handleFriendCodeInputChange}
         />
-        {foundUser && (
+        {foundUserByCode && (
           <UserContainer>
-            <UserAvatar src={foundUser.avatar || avatar} />
-            <UserName>{foundUser.name}</UserName>
+            <UserAvatar src={foundUserByCode.avatar || avatar} />
+            <UserName>{foundUserByCode.name}</UserName>
             {!requestSent && (
-              <Button onClick={() => handleSendFriendRequest(foundUser._id)}>
+              <Button
+                onClick={() => handleSendFriendRequest(foundUserByCode._id)}
+              >
                 Send Invite
               </Button>
             )}
             {requestSent && (
-              <Button onClick={() => handleSendFriendRequest(foundUser._id)}>
+              <Button
+                onClick={() => handleSendFriendRequest(foundUserByCode._id)}
+              >
                 ✔ Invite Sent
               </Button>
             )}
@@ -95,9 +127,31 @@ export const AddFriend = () => {
       <CodeBlockBottom>
         <CodeBlockHeading>Or try searching for your friend</CodeBlockHeading>
         <CodeBlockInput
+          value={nameInput}
+          onChange={handleNameInputChange}
           style={{ marginTop: 20 }}
           placeholder="Enter your friend's profile name"
         />
+        {foundUserByName && (
+          <div>
+            {foundUserByName.slice(0, 3).map((user, index) => (
+              <UserContainer key={index}>
+                <UserAvatar src={user.avatar || avatar} />
+                <UserName>{user.name}</UserName>
+                {!requestSent && (
+                  <Button onClick={() => handleSendFriendRequest(user._id)}>
+                    Send Invite
+                  </Button>
+                )}
+                {requestSent && (
+                  <Button onClick={() => handleSendFriendRequest(user._id)}>
+                    ✔ Invite Sent
+                  </Button>
+                )}
+              </UserContainer>
+            ))}
+          </div>
+        )}
       </CodeBlockBottom>
     </MainContainer>
   );

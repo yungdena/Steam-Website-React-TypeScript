@@ -1,33 +1,28 @@
-import { useEffect, useRef, useState } from "react";
-
-import { usePostsData } from "../../../common/context/community-context";
-import { defaultAvatar } from "../../../common/consts/avatar";
-import { useUserData } from "../../../common/context/user-context";
-import { useAddCommentToPost, useAddLikeToPost } from "../../../common/services/community.service";
-import { useGetUserById } from "../../../common/services/user.service";
-import { IUser } from "../../../common/types/User";
-import { PostImage, ImageBlock, InfoBlock, MainContainer, AuthorBlock, AuthorAvatar, AuthorName, PostText, ClosePost, Cross, LikesCount, ThumbsUpIcon, LikeButton, DislikeButton, CommentsBlock, MyComment, Comment, CommentNickname, CommentText, PostCommentWrap, PostCommentButton, AuthorSpan } from "./index.styled";
-import { IComment, IPost } from "../../../common/types/Post.interface";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { APP_KEYS } from "../../../common/consts";
-import { handleAddComment, handleCommentTextChange, handleLikeClick, handleMainContainerClick } from "../utils/functions";
+import { APP_KEYS } from "../../../../common/consts";
+import { defaultAvatar } from "../../../../common/consts/avatar";
+import { usePostsData } from "../../../../common/context/community-context";
+import { useUserData } from "../../../../common/context/user-context";
+import { useAddCommentToPost, useAddLikeToPost } from "../../../../common/services/community.service";
+import { useGetUserById } from "../../../../common/services/user.service";
+import { IComment, IPost } from "../../../../common/types/Post.interface";
+import { IUser } from "../../../../common/types/User";
+import { handleAddComment, handleCommentTextChange, handleLikeClick, handleMainContainerClick } from "../../utils/functions";
+import { AuthorAvatar, AuthorBlock, AuthorName, AuthorSpan, ClosePost, Comment, CommentNickname, CommentsBlock, CommentText, Cross, DislikeButton, InfoBlock, LikeButton, LikesCount, MyComment, PostCommentButton, PostCommentWrap, PostText, ThumbsUpIcon } from "../index.styled";
+import { MainContainer, PostDescription, TextBlock } from "./index.styled";
 
-export const ViewPost = ({ post, setSelectedPost, setSelectedUser }: any) => {
+export const ViewTextPost = ({ post, setSelectedPost, setSelectedUser }: any) => {
   const { postsData, setPostsData, likedPosts, setLikedPosts } = usePostsData();
   const [userInfo, setUserInfo] = useState<IUser | null>(null);
   const [userLiked, setUserLiked] = useState<boolean>(false);
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState("");
   const [commentUsers, setCommentUsers] = useState<IUser[]>([]);
   const UserDataProvider = useUserData();
-  const history = useHistory()
+  const history = useHistory();
   const getUserByIdMutation = useGetUserById();
-  const addLikeMutation = useAddLikeToPost()
+  const addLikeMutation = useAddLikeToPost();
   const addCommentMutation = useAddCommentToPost();
-
-  const imageRef = useRef<HTMLImageElement>(null);
-  const infoBlockRef = useRef<HTMLDivElement>(null);
-  const imageBlockRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const fetchCommentUsers = async () => {
       const usersPromises = postsData
@@ -46,16 +41,8 @@ export const ViewPost = ({ post, setSelectedPost, setSelectedUser }: any) => {
   }, [post.comments, postsData]);
 
   useEffect(() => {
-    if (imageRef.current && infoBlockRef.current && imageBlockRef.current) {
-      const imageHeight = imageRef.current.clientHeight;
-      infoBlockRef.current.style.height = `${imageHeight}px`;
-      imageBlockRef.current.style.height = `${imageHeight}px`;
-    }
-  }, []);
-  useEffect(() => {
     setUserLiked(likedPosts.includes(post._id));
   }, [likedPosts, post._id]);
-
 
   useEffect(() => {
     let isMounted = true;
@@ -75,11 +62,22 @@ export const ViewPost = ({ post, setSelectedPost, setSelectedUser }: any) => {
   }, [post.user]);
 
   return (
-    <MainContainer onClick={(event) => handleMainContainerClick(event, setSelectedPost, setSelectedUser)}>
-      <ImageBlock className="ImageBlock" ref={imageBlockRef}>
-        <PostImage ref={imageRef} src={post.image} />
-      </ImageBlock>
-      <InfoBlock className="InfoBlock" ref={infoBlockRef}>
+    <MainContainer
+      onClick={(event) =>
+        handleMainContainerClick(event, setSelectedPost, setSelectedUser)
+      }
+    >
+      <TextBlock className="ImageBlock">
+        <PostDescription>
+          {post.description.split("\n").map((item: any, index: number) => (
+            <Fragment key={index}>
+              {item}
+              <br />
+            </Fragment>
+          ))}
+        </PostDescription>
+      </TextBlock>
+      <InfoBlock className="InfoBlock">
         <ClosePost>
           <Cross
             onClick={() => {
@@ -109,7 +107,6 @@ export const ViewPost = ({ post, setSelectedPost, setSelectedUser }: any) => {
           </AuthorName>
         </AuthorBlock>
         <PostText>{post.title}</PostText>
-        <PostText>{post.description}</PostText>
         <LikesCount>
           <ThumbsUpIcon src="https://community.cloudflare.steamstatic.com/public/images/sharedfiles/icons/icon_rate.png" />
           {postsData.find((p: IPost) => p._id === post._id)?.likes.count || 0}
@@ -117,7 +114,20 @@ export const ViewPost = ({ post, setSelectedPost, setSelectedUser }: any) => {
         <div style={{ display: "flex", margin: "0.5rem 0 0 0.5rem" }}>
           <LikeButton
             style={userLiked ? { backgroundPosition: "8px -60px" } : {}}
-            onClick={() => handleLikeClick(post._id, userLiked, UserDataProvider, addLikeMutation, setUserLiked, likedPosts, post, setLikedPosts, setPostsData, postsData)}
+            onClick={() =>
+              handleLikeClick(
+                post._id,
+                userLiked,
+                UserDataProvider,
+                addLikeMutation,
+                setUserLiked,
+                likedPosts,
+                post,
+                setLikedPosts,
+                setPostsData,
+                postsData
+              )
+            }
           />
           <DislikeButton />
         </div>
@@ -136,7 +146,9 @@ export const ViewPost = ({ post, setSelectedPost, setSelectedUser }: any) => {
                 src={UserDataProvider?.userData?.avatar || defaultAvatar}
               />
               <MyComment
-                onChange={(event) => handleCommentTextChange(event, setCommentText)}
+                onChange={(event) =>
+                  handleCommentTextChange(event, setCommentText)
+                }
                 placeholder="Add a comment"
                 value={commentText}
               />
@@ -185,7 +197,10 @@ export const ViewPost = ({ post, setSelectedPost, setSelectedUser }: any) => {
                     }
                   >
                     {post.user === commentUsers[index]?._id ? (
-                      <>{commentUsers[index]?.name} <AuthorSpan>author</AuthorSpan></>
+                      <>
+                        {commentUsers[index]?.name}{" "}
+                        <AuthorSpan>author</AuthorSpan>
+                      </>
                     ) : (
                       commentUsers[index]?.name || "Unknown"
                     )}

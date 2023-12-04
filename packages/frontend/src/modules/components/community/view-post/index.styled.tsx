@@ -39,6 +39,25 @@ export const InfoBlock = styled.div`
   border-left: 1px solid transparent;
   display: flex;
   flex-direction: column;
+
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 `;
 
 export const PostImage = styled.img`
@@ -175,7 +194,7 @@ export const CommentsBlock = styled.div`
   padding: 0.5rem 0;
   overflow: auto;
 
-    &::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     width: 5px;
   }
 

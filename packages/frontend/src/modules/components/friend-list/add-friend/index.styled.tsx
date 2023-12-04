@@ -99,6 +99,7 @@ export const UserContainer = styled.div`
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   display: flex;
+  margin-bottom: 2px;
 `;
 
 export const UserAvatar = styled.img`
