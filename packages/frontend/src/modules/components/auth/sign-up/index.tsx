@@ -106,29 +106,43 @@ export const SignUp: React.FC = () => {
   };
 
   const handleAuthorized = async (route: string) => {
-    const { email, name, password, country } = formik.values;
+    const { email, name, password, country, confirmPassword } = formik.values;
     setIsLoading(true);
 
-    if (email && password && country && name) {
+    try {
       const user = await signUpMutation.mutateAsync({
         email,
         name,
         password,
         country,
       });
-      UserDataContext?.setUser(user, true);
 
-      localStorage.setItem(
-        APP_KEYS.STORAGE_KEYS.ACCOUNT,
-        JSON.stringify(user._id)
-      );
-    }
+      if (!user.message) {
+        UserDataContext?.setUser(user, true);
+  
+        localStorage.setItem(
+          APP_KEYS.STORAGE_KEYS.ACCOUNT,
+          JSON.stringify(user._id)
+        );
+  
+        if (isValid && confirmPassword === password) {
+          history.push(route);
+        }
+      }
+      if (user.message) {
+        const errorMessage = user.message;
 
-    setIsLoading(false);
-    
-    if (isValid) {
-      history.push(route);
-    } else {
+        if (errorMessage === "Email is already in use") {
+          setTrueEmail(true)
+          setIsSignedEmail(false);
+          formik.setFieldError("email", "Email is already in use");
+        } else if (errorMessage === "Username is already taken") {
+          formik.setFieldError("name", "Username is already taken");
+        }
+      }
+    } catch (error: any) {
+      console.error(error);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -145,7 +159,8 @@ export const SignUp: React.FC = () => {
             <ErrorMessage>{formik.errors.name}</ErrorMessage>
           )}
           {formik.values.confirmPassword !== formik.values.password &&
-            formik.touched.confirmPassword && formik.touched.password && (
+            formik.touched.confirmPassword &&
+            formik.touched.password && (
               <ErrorMessage>
                 Please make sure that your passwords are identical
               </ErrorMessage>
@@ -174,8 +189,11 @@ export const SignUp: React.FC = () => {
         </Form>
       ) : (
         <Form onSubmit={formik.handleSubmit}>
-          {(!trueEmail || !isChecked) && (
+          {(!trueEmail || !isChecked || (formik.errors.email && formik.touched.email) ) && (
             <ErrorMessage>
+              {formik.touched.email && formik.errors.email ? (
+                <span>{formik.errors.email}</span>
+              ) : null}
               {!trueEmail &&
                 "Please enter the same address in both email address fields."}
               <br />

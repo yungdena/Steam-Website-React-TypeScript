@@ -139,7 +139,6 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
             tags: tagsArray,
           };
           const response = await getFilteredAppsMutation.mutateAsync(filters);
-          console.log(response)
           filteredApps = response;
         }
         
@@ -152,7 +151,6 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
           setSortedApps(filteredApps);
         }
       }
-      console.log(filters);
     };
     
     fetchData();

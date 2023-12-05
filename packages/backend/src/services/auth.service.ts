@@ -19,11 +19,10 @@ export class AuthService {
 
   async generateToken(user: IUser) {
     const { id, name, email } = user;
-    return jwt.sign({ id, name, email }, JWT_SECRET, { expiresIn: '7d' });
+    return jwt.sign({ id, name, email }, JWT_SECRET, { expiresIn: "7d" });
   }
 
   async generateFriendCode(userId: string) {
-    console.log('generating friend code', userId);
     const hash = crypto.createHash("sha256");
     hash.update(userId);
     const hashValue = hash.digest("hex");
@@ -34,8 +33,22 @@ export class AuthService {
   }
 
   async signUp(userData: IUser, res: Response) {
-    console.log('signUp');
-    console.log('userdata', userData);
+    const existingUserWithEmail = await UserModel.findOne({
+      email: userData.email,
+    });
+    if (existingUserWithEmail) {
+      res.status(400).send({ message: "Email is already in use" });
+      return;
+    }
+
+    const existingUserWithName = await UserModel.findOne({
+      name: userData.name,
+    });
+    if (existingUserWithName) {
+      res.status(400).send({ message: "Username is already taken" });
+      return;
+    }
+
     const password = await this.hashPassword(userData.password);
 
     if (!userData.avatar) {
@@ -44,9 +57,9 @@ export class AuthService {
     }
 
     const user = await UserModel.create({ ...userData, password });
-    console.log('signUp', user);
+    console.log("signUp", user);
     if (!user) {
-      res.status(400).send({ message: 'sign up failed' });
+      res.status(400).send({ message: "Sign up failed" });
       return;
     }
 
@@ -59,15 +72,17 @@ export class AuthService {
 
   async signIn(userData: IUser, res: Response) {
     const user = await UserModel.findOne({ name: userData.name });
-    console.log("signIn", user);
     if (!user) {
-      res.status(404).send({ message: 'User not found' });
+      res.status(404).send({ message: "User not found" });
       return;
     }
 
-    const passwordMatched = await this.comparePassword(userData.password, user.password);
+    const passwordMatched = await this.comparePassword(
+      userData.password,
+      user.password
+    );
     if (!passwordMatched) {
-      res.status(403).send({ message: 'password' });
+      res.status(403).send({ message: "password" });
       return;
     }
 

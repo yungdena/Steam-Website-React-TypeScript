@@ -5,7 +5,7 @@ import { Tags } from "../../../common/utils/tags";
 import { CheckBoxLabel, FilterContainer, FilterTitle, MainMenuContainer, PriceRangeInput, PriceRangeLabel, StyledCheckbox } from "./index.styled"
 
 export const StoreMenu = () => {
-  const [selectedPrice, setSelectedPrice] = useState<string | number>('Free');
+  const [selectedPrice, setSelectedPrice] = useState<string | number>('Any Price');
   const [onlySpecialOffers, setIncludeFree] = useState(false);
   const [hideFree, setHideFree] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -59,17 +59,24 @@ export const StoreMenu = () => {
   };
 
   useEffect(() => {
-    const onlySpecialOffers = searchParams.get("onlySpecialOffers");
-    const hideFreeParam = searchParams.get("hideFree");
+    const urlSearchParams = new URLSearchParams(location.search);
+    const urlTags = urlSearchParams.get("tags");
+    const urlPrice = urlSearchParams.get("price");
+    const urlHideFree = urlSearchParams.get("hideFree");
+    const urlOnlySpecialOffers = urlSearchParams.get("onlySpecialOffers");
 
-    if (onlySpecialOffers !== null) {
-      setIncludeFree(onlySpecialOffers === "true");
-    }
+    const parsedTags = urlTags ? urlTags.split(",") : [];
+    setSelectedTags(parsedTags);
 
-    if (hideFreeParam !== null) {
-      setHideFree(hideFreeParam === "true");
-    }
-  }, [searchParams]);
+    const parsedPrice = urlPrice ? urlPrice : "Any Price";
+    setSelectedPrice(parsedPrice);
+
+    const parsedOnlySpecialOffers = urlOnlySpecialOffers === "true";
+    setIncludeFree(parsedOnlySpecialOffers);
+
+    const parsedHideFree = urlHideFree === "true";
+    setHideFree(parsedHideFree);
+  }, [location.search]);
 
   return (
     <MainMenuContainer>
@@ -80,8 +87,8 @@ export const StoreMenu = () => {
           min={0}
           max={priceOptions.length - 1}
           step={1}
-          value={priceOptions.indexOf(selectedPrice)}
           onChange={handlePriceChange}
+          value={priceOptions.indexOf(selectedPrice)}
         />
         <PriceRangeLabel>{renderLabel()}</PriceRangeLabel>
         <CheckBoxLabel>
@@ -103,11 +110,12 @@ export const StoreMenu = () => {
       </FilterContainer>
       <FilterContainer style={{ marginTop: "1rem" }}>
         <FilterTitle>Narrow by Tags</FilterTitle>
-        {Object.values(Tags).map((tag) => (
+        {Object.values(Tags).map((tag, index) => (
           <CheckBoxLabel key={tag}>
             <StyledCheckbox
               type="checkbox"
               onClick={() => handleApplyTag(tag)}
+              checked={selectedTags.includes(tag)}
             />
             {tag}
           </CheckBoxLabel>

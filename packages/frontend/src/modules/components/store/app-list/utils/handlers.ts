@@ -21,7 +21,6 @@ export const handleSearchInputChange = (
 
 
 export const handleSearch = (searchInput: string, setSortedApps: any, apps: IApp[]) => {
-  console.log('search input', searchInput)
   if (searchInput.trim() === "") {
     setSortedApps(apps);
   } else {

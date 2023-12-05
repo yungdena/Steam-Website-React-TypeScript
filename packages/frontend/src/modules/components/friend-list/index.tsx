@@ -63,50 +63,57 @@ export const FriendList = () => {
       <Background>
         <BackgroundImage>
           <MainContainer>
-            {UserDataContext?.userData?._id === id 
-              ? (            
-                <>
-                  <UserContainer>
-                    <Avatar src={UserDataContext?.userData?.avatar || avatar} />
-                    <UserName>{UserDataContext?.userData?.name}</UserName>
-                  </UserContainer><MenuContainer>
-                      <ButtonsMenu>
-                        <MenuTitle>friends</MenuTitle>
-                        <ButtonWrapper
-                          onClick={() => setActiveComponent("YourFriends")}
-                        >
-                          <Button>Your Friends</Button>
-                        </ButtonWrapper>
-                        <ButtonWrapper onClick={() => setActiveComponent("AddFriend")}>
-                          <Button backgroundPosition="0 -176px">Add a Friend</Button>
-                        </ButtonWrapper>
-                        <ButtonWrapper onClick={() => setActiveComponent("PendingInvites")}>
-                          <Button backgroundPosition="0 -32px">Pending invites</Button>
-                        </ButtonWrapper>
-                      </ButtonsMenu>
-                      {renderComponent()}
-                    </MenuContainer>
-                  </>
-                )
-              : (
+            {UserDataContext?.userData?._id === id ? (
               <>
                 <UserContainer>
-                  <Avatar src={avatar} />
+                  <Avatar src={UserDataContext?.userData?.avatar || avatar} />
+                  <UserName>{UserDataContext?.userData?.name}</UserName>
+                </UserContainer>
+                <MenuContainer>
+                  <ButtonsMenu>
+                    <MenuTitle>friends</MenuTitle>
+                    <ButtonWrapper
+                      onClick={() => setActiveComponent("YourFriends")}
+                    >
+                      <Button>Your Friends</Button>
+                    </ButtonWrapper>
+                    <ButtonWrapper
+                      onClick={() => setActiveComponent("AddFriend")}
+                    >
+                      <Button backgroundPosition="0 -176px">
+                        Add a Friend
+                      </Button>
+                    </ButtonWrapper>
+                    <ButtonWrapper
+                      onClick={() => setActiveComponent("PendingInvites")}
+                    >
+                      <Button backgroundPosition="0 -32px">
+                        Pending invites
+                      </Button>
+                    </ButtonWrapper>
+                  </ButtonsMenu>
+                  {renderComponent()}
+                </MenuContainer>
+              </>
+            ) : (
+              <>
+                <UserContainer>
+                  <Avatar src={user?.avatar || avatar} />
                   <UserName>{user?.name}</UserName>
-                </UserContainer><MenuContainer>
-                    <ButtonsMenu>
-                      <MenuTitle>friends</MenuTitle>
-                      <ButtonWrapper
-                        onClick={() => setActiveComponent("YourFriends")}
-                      >
-                        <Button>All Friends ({user?.friends.length})</Button>
-                      </ButtonWrapper>
-                    </ButtonsMenu>
-                    {renderComponent()}
-                  </MenuContainer>
-                </>
-              )
-            }
+                </UserContainer>
+                <MenuContainer>
+                  <ButtonsMenu>
+                    <MenuTitle>friends</MenuTitle>
+                    <ButtonWrapper
+                      onClick={() => setActiveComponent("YourFriends")}
+                    >
+                      <Button>All Friends ({user?.friends.length})</Button>
+                    </ButtonWrapper>
+                  </ButtonsMenu>
+                  {renderComponent()}
+                </MenuContainer>
+              </>
+            )}
           </MainContainer>
         </BackgroundImage>
       </Background>

@@ -11,7 +11,7 @@ export const MainContainer = styled.div`
   transform: translate(-50%, -50%);
   background-color: rgba(0, 0, 0, 0.4);
   padding: 4rem;
-  z-index: 9999;
+  z-index: 9998;
 `;
 
 export const ImageBlock = styled.div`
@@ -39,8 +39,6 @@ export const InfoBlock = styled.div`
   border-left: 1px solid transparent;
   display: flex;
   flex-direction: column;
-
-  overflow: auto;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -127,6 +125,7 @@ export const Cross = styled.img`
   width: 10px;
   height: 10px;
   cursor: pointer;
+  z-index: 9999;
 `
 
 export const LikesCount = styled.div`

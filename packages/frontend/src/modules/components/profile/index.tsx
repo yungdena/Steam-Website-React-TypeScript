@@ -136,13 +136,8 @@ export const Profile = () => {
           <InfoContainer>
             <ActivityContainer>
               <ActivityTitle>Recent Activity</ActivityTitle>
-              {userData?.apps && UserDataContext?.userData?.apps && userData?.apps
-                .slice(
-                  UserDataContext?.userData?.apps.length
-                    ? Math.max(UserDataContext.userData.apps.length - 3, 0)
-                    : 0,
-                  UserDataContext?.userData?.apps.length
-                )
+              {userData?.apps.length && userData?.apps
+                .slice(userData.apps.length - 3, userData.apps.length)
                 .reverse()
                 .map((appId: string) => {
                   const appData = getAppById(appId, appsData);
