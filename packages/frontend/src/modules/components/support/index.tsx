@@ -24,7 +24,7 @@ export const Support = () => {
       <Header />
       <Container>
         <TextContainer>
-          If you experiencing any problems contact me via email
+          If you are experiencing any problems contact me via email
           or Telegram:
         </TextContainer>
         <TextContainer>
