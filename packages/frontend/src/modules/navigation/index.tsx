@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, useHistory, useParams } from 'react-router-dom';
 
 import { SignUp } from '../components/auth/sign-up';
 import { SignIn } from '../components/auth/sign-in';
@@ -34,12 +34,19 @@ const LibraryRoute = () => {
   );
 };
 
-const WishlistRoute = ({ id }: { id: string }) => {
-  return (
-    <WishlistDataProvider userId={id}>
-      <Wishlist />
-    </WishlistDataProvider>
-  );
+const WishlistRoute = () => {
+  const UserDataProvider = useUserData();
+  const history = useHistory()
+  if (UserDataProvider?.userData?._id) {
+    return (
+      <WishlistDataProvider userId={UserDataProvider?.userData?._id}>
+        <Wishlist />
+      </WishlistDataProvider>
+    );
+  } else {
+    history.push(APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN);
+    return null;
+  }
 };
   
 export const MainRouter = () => {
@@ -89,12 +96,9 @@ export const MainRouter = () => {
         />
         <Route
           path={APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.WISHLIST}
-          render={() =>
-            UserDataProvider?.userData?._id ? (
-              <WishlistRoute id={UserDataProvider?.userData?._id} />
-            ) : null
-          }
-        />
+        >
+          <WishlistRoute />
+        </Route>
         <Route
           path={
             APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.LIBRARY + "/:id"

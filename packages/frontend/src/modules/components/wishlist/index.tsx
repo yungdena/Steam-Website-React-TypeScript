@@ -30,6 +30,7 @@ export const Wishlist = () => {
   const [searchInput, setSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string>('');
 
   const UserDataContext = useUserData();
   const wishlistApps = useWishlistData()
@@ -159,7 +160,7 @@ export const Wishlist = () => {
                         )}
                         <PurchaseButton
                           className="to-cart-button"
-                          onClick={() => handleAddToLibrary(item._id, UserDataContext, addToLibraryMutation, deleteAppFromWishlistMutation, setShowToast, setSortedApps, history)}
+                          onClick={() => handleAddToLibrary(item._id, UserDataContext, addToLibraryMutation, deleteAppFromWishlistMutation, setShowToast, setSortedApps, history, setToastMessage)}
                         >
                           Add to Cart
                         </PurchaseButton>
@@ -187,7 +188,7 @@ export const Wishlist = () => {
         </MainContainer>
         {showToast && (
           <Toast
-            message="Successfully added to Library"
+            message={toastMessage}
             onClose={() => setShowToast(false)}
           />
         )}

@@ -42,11 +42,13 @@ export const handleAddToLibrary = async (
   deleteAppFromWishlistMutation: any,
   setShowToast: any,
   setSortedApps: any,
-  history: any
+  history: any,
+  setToastMessage: any
 ) => {
-  if (UserDataContext?.userData?._id) {
+  if (UserDataContext?.userData?._id && !UserDataContext.userData.apps.includes(appId)) {
     const userId = UserDataContext?.userData?._id
     await addToLibraryMutation.mutateAsync({ userId, appId });
+    setToastMessage('Successfully added to library')
     setShowToast(true);
 
     const updatedUserData = { ...UserDataContext?.userData } as IUser | null;
@@ -61,10 +63,9 @@ export const handleAddToLibrary = async (
       );
     }
   } else {
-    handleNavigate(
-      history,
-      APP_KEYS.ROUTER_KEYS.ROOT + APP_KEYS.ROUTER_KEYS.SIGNIN
-    );
+    console.log('prikol')
+    setToastMessage("App is already in the library");
+    setShowToast(true);
   }
 };
 
