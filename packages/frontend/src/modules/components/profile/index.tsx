@@ -48,7 +48,7 @@ export const Profile = () => {
   const { appsData } = useAppsData();
   const loggedId = localStorage.getItem('account');
   const parsedId = loggedId ? JSON.parse(loggedId) : null;
-  const isOwnProfile = id === parsedId;
+  const isOwnProfile = id === UserDataContext?.userData?._id;
   const history = useHistory();
   
   useEffect(() => {
