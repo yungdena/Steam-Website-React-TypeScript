@@ -63,7 +63,7 @@ export class FriendsService {
       try {
         const receiver = await UserModel.findById(receiverId);
         const sender = await UserModel.findById(senderId);
-
+  
         if (!receiver || !sender) {
           res
             .status(404)
@@ -76,15 +76,15 @@ export class FriendsService {
             request.senderId.toString() === senderId.toString() &&
             request.status === "pending"
         );
-
+  
         const friendRequestFromReceiver = sender.sentFriendRequests.find(
           (request) =>
+            request.receiverId &&
             request.receiverId.toString() === receiverId.toString() &&
             request.status === "pending"
         );
-
+  
         if (!friendRequestFromSender || !friendRequestFromReceiver) {
-          console.log('1')
           res
             .status(400)
             .send({ success: false, message: "Friend request not found" });
@@ -95,24 +95,21 @@ export class FriendsService {
           friendRequestFromSender.status === "accepted" ||
           friendRequestFromReceiver.status === "accepted"
         ) {
-          console.log("2");
           res
             .status(400)
             .send({ success: false, message: "Friend request already accepted" });
           return;
         }
-
-        if (response === "accepted") {
-          receiver.friendRequests = receiver.friendRequests.filter(
+  
+        if (response === "accepted" || response === "declined") {
+          sender.sentFriendRequests = sender.sentFriendRequests.filter(
             (request) => {
               if (
-                request.senderId &&
-                request.senderId.toString() === senderId.toString() &&
+                request.receiverId &&
+                request.receiverId.toString() === receiverId.toString() &&
                 (request.status === "pending" ||
-                  (request.status === "accepted" &&
-                    request === friendRequestFromSender))
+                  request === friendRequestFromReceiver)
               ) {
-                request.status = "accepted";
                 if (request.status === "accepted") {
                   receiver.friends.push(senderId.toString());
                   sender.friends.push(receiverId.toString());
@@ -122,40 +119,33 @@ export class FriendsService {
               return true;
             }
           );
-          sender.sentFriendRequests = sender.sentFriendRequests.filter(
-            (request) => request.receiverId.toString() !== receiverId.toString()
-          );
-        } else if (response === "declined") {
-          receiver.friendRequests = receiver.friendRequests.filter(
-            (request) =>
-              !(
-                request.senderId &&
-                request.senderId.toString() === senderId.toString() &&
-                (request.status === "pending" ||
-                  (request.status === "accepted" &&
-                    request === friendRequestFromSender))
-              )
-          );
-          sender.sentFriendRequests = sender.sentFriendRequests.filter(
-            (request) =>
-              !(
-                request.receiverId &&
-                request.receiverId.toString() === receiverId.toString() &&
-                (request.status === "pending" ||
-                  (request.status === "accepted" &&
-                    request === friendRequestFromReceiver))
-              )
-          );
-          console.log('sender', sender.sentFriendRequests)
-          console.log('receiver', receiver.friendRequests);
+  
+          receiver.friendRequests = receiver.friendRequests.filter((request) => {
+            if (
+              request.senderId &&
+              request.senderId.toString() === senderId.toString() &&
+              (request.status === "pending" ||
+                (request.status === "accepted" &&
+                  request === friendRequestFromSender))
+            ) {
+              request.status = "accepted";
+              if (request.status === "accepted") {
+                receiver.friends.push(senderId.toString());
+                sender.friends.push(receiverId.toString());
+              }
+              return false;
+            }
+            return true;
+          });
+  
+          await sender.save();
         } else {
-          console.log("3");
           res
             .status(400)
             .send({ success: false, message: "Invalid response status" });
           return;
         }
-        await sender.save();
+  
         await receiver.save();
   
         res
