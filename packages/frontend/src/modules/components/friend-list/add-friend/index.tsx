@@ -22,9 +22,15 @@ export const AddFriend = () => {
   const handleSendFriendRequest = (receiverId: string) => {
     if (UserDataContext && UserDataContext.userData) {
       const senderId = UserDataContext?.userData._id;
-  
-      addFriendMutation.mutate({ senderId, receiverId });
-      setRequestSentMap((prevState) => ({ ...prevState, [receiverId]: true }));
+
+      const isAlreadyFriend = UserDataContext.userData.friends.includes(senderId);
+
+      if (!isAlreadyFriend) {
+        addFriendMutation.mutate({ senderId, receiverId });
+        setRequestSentMap((prevState) => ({ ...prevState, [receiverId]: true }));
+      } else {
+        console.log("You are already friends with this user.");
+      }
     }
   };
 
