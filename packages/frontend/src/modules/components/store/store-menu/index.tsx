@@ -68,9 +68,6 @@ export const StoreMenu = () => {
     const parsedTags = urlTags ? urlTags.split(",") : [];
     setSelectedTags(parsedTags);
 
-    const parsedPrice = urlPrice ? urlPrice : "Any Price";
-    setSelectedPrice(parsedPrice);
-
     const parsedOnlySpecialOffers = urlOnlySpecialOffers === "true";
     setIncludeFree(parsedOnlySpecialOffers);
 

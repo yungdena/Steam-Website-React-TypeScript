@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { useAppsData } from '../../../common/context/apps-context';
-import { ContentContainer, AppsList, AppContainer, AppImage, AppImageContainer, AppTitle, AppTextContainer, AppPrice, AppLink, AppReleaseDate, AppReviews, SearchBarContainer, SearchBarInput, SearchBarButton, SearchBarSortByTitle, SearchBarSortBySelect, SearchBarOption, Dropdown } from './index.styled';
+import { ContentContainer, AppsList, AppContainer, AppImage, AppImageContainer, AppTitle, AppTextContainer, AppPrice, AppLink, AppReleaseDate, AppReviews, SearchBarContainer, SearchBarInput, SearchBarButton, SearchBarSortByTitle, SearchBarSortBySelect, SearchBarOption, Dropdown, Error } from './index.styled';
 import { PriceContainer, PriceAmounts, PricePercent, OriginalPrice, FinalPrice } from '../../home/offers/index.styled';
 import { IApp } from '../../../common/types/app.interface';
 import { calculatePercentageDecrease } from '../../../common/utils/countPercentage';
@@ -19,6 +19,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   const [sortBy, setSortBy] = useState("Relevance");
   const [displayedApps, setDisplayedApps] = useState<IApp[]>([]);
   const [loadingNextPage, setLoadingNextPage] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const history = useHistory();
 
@@ -43,6 +44,7 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
 
   useEffect(() => {
     const fetchData = async () => {
+      setError(null);
       const appsCopy = [...appsData];
       let filters: any = {};
       switch (sortBy) {
@@ -170,12 +172,17 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
   }, [page, sortedApps]);
 
   useEffect(() => {
-    const displayedApps = sortedApps.slice(
-      0,
-      sliceIndex ? sliceIndex : appsData.length
-    );
-    setDisplayedApps(displayedApps);
+    if (Array.isArray(sortedApps)) {
+      const displayedApps = sortedApps.slice(
+        0,
+        sliceIndex ? sliceIndex : appsData.length
+      );
+      setDisplayedApps(displayedApps);
+    } else {
+      setError("No apps found based on the filters");
+    }
   }, [page, sortedApps]);
+
   useEffect(() => {
     const handleScroll = async () => {
       const scrolledToBottom =
@@ -265,54 +272,57 @@ export const AppList = ({ sliceIndex, minHeight, margin }: { sliceIndex: number 
             </SearchBarSortBySelect>
           </SearchBarContainer>
           <AppsList margin={margin}>
-            {displayedApps
-              .slice(0, sliceIndex ? sliceIndex : appsData.length)
-              .map((app) => (
-                <AppLink
-                  key={app._id}
-                  onClick={() => handleNavigateToApp(app._id, history)}
-                >
-                  <AppContainer>
-                    <AppImageContainer>
-                      <AppImage src={app.bannerImage} />
-                    </AppImageContainer>
-                    <AppTextContainer>
-                      <AppTitle>{app.title}</AppTitle>
-                      <AppReleaseDate>
-                        {formatDate(app.releaseDate)}
-                      </AppReleaseDate>
-                      <AppReviews
-                        src={getReviewImageURL(
-                          calculateReviewTitle(app.reviews).title
+            {!error &&
+              displayedApps.length > 0 &&
+              displayedApps
+                .slice(0, sliceIndex ? sliceIndex : appsData.length)
+                .map((app) => (
+                  <AppLink
+                    key={app._id}
+                    onClick={() => handleNavigateToApp(app._id, history)}
+                  >
+                    <AppContainer>
+                      <AppImageContainer>
+                        <AppImage src={app.bannerImage} />
+                      </AppImageContainer>
+                      <AppTextContainer>
+                        <AppTitle>{app.title}</AppTitle>
+                        <AppReleaseDate>
+                          {formatDate(app.releaseDate)}
+                        </AppReleaseDate>
+                        <AppReviews
+                          src={getReviewImageURL(
+                            calculateReviewTitle(app.reviews).title
+                          )}
+                        />
+                        {!app.newPrice && (
+                          <AppPrice>
+                            {app.price}
+                            {app.price === "Free to Play" ? "" : "$"}
+                          </AppPrice>
                         )}
-                      />
-                      {!app.newPrice && (
-                        <AppPrice>
-                          {app.price}
-                          {app.price === "Free to Play" ? "" : "$"}
-                        </AppPrice>
-                      )}
-                      {app.newPrice && (
-                        <PriceContainer className="New-Price">
-                          <PricePercent>
-                            -
-                            {calculatePercentageDecrease(
-                              Number(app.price),
-                              Number(app.newPrice),
-                              0
-                            )}
-                            %
-                          </PricePercent>
-                          <PriceAmounts>
-                            <OriginalPrice>{app.price}$</OriginalPrice>
-                            <FinalPrice>{app.newPrice}$</FinalPrice>
-                          </PriceAmounts>
-                        </PriceContainer>
-                      )}
-                    </AppTextContainer>
-                  </AppContainer>
-                </AppLink>
-              ))}
+                        {app.newPrice && (
+                          <PriceContainer className="New-Price">
+                            <PricePercent>
+                              -
+                              {calculatePercentageDecrease(
+                                Number(app.price),
+                                Number(app.newPrice),
+                                0
+                              )}
+                              %
+                            </PricePercent>
+                            <PriceAmounts>
+                              <OriginalPrice>{app.price}$</OriginalPrice>
+                              <FinalPrice>{app.newPrice}$</FinalPrice>
+                            </PriceAmounts>
+                          </PriceContainer>
+                        )}
+                      </AppTextContainer>
+                    </AppContainer>
+                  </AppLink>
+                ))}
+            {error && <Error>{error}</Error>}
           </AppsList>
           {isLoadingNewApps && <LoaderBig marginTop="2rem" />}
         </>
