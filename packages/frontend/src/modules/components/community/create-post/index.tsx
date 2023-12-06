@@ -89,7 +89,9 @@ export const CreatePost = () => {
               <StyledTextArea
                 placeholder="Description"
                 value={post.description}
-                onChange={(event) => handleDescriptionChange(event, post, setPost)}
+                onChange={(event) =>
+                  handleDescriptionChange(event, post, setPost)
+                }
               />
             </>
           )}
@@ -106,7 +108,20 @@ export const CreatePost = () => {
               "https://res.cloudinary.com/didkbrlcz/image/upload/v1699599822/preview-2_djgbzq.jpg"
             }
           />
-          <CreatePostButton onClick={() => handleCreatePost(post, cloudinaryImageURL, setPost, history, createPostMutation)}>Create Post</CreatePostButton>
+          <CreatePostButton
+            disabled={!post.title || !post.description}
+            onClick={() =>
+              handleCreatePost(
+                post,
+                cloudinaryImageURL,
+                setPost,
+                history,
+                createPostMutation
+              )
+            }
+          >
+            Create Post
+          </CreatePostButton>
         </MainContainer>
       </Background>
       <Footer />
