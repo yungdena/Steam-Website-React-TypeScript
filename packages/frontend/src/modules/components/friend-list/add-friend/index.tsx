@@ -23,7 +23,7 @@ export const AddFriend = () => {
     if (UserDataContext && UserDataContext.userData) {
       const senderId = UserDataContext?.userData._id;
 
-      const isAlreadyFriend = UserDataContext.userData.friends.includes(senderId);
+      const isAlreadyFriend = UserDataContext.userData.friends.includes(receiverId);
 
       if (!isAlreadyFriend) {
         addFriendMutation.mutate({ senderId, receiverId });
