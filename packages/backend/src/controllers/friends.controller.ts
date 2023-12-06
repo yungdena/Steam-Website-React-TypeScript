@@ -12,10 +12,12 @@ export class FriendsController {
 
   async respondToFriendRequest(req: Request, res: Response) {
     const { senderId, receiverId, response } = req.body;
-    console.log("Controller: ", senderId, receiverId, response);
+    console.log('sender id', senderId)
+    console.log("receiver id", receiverId);
+    console.log("response", response);
     await this.friendsService.respondToFriendRequest(
-      senderId,
       receiverId,
+      senderId,
       response,
       res
     );
@@ -23,7 +25,7 @@ export class FriendsController {
 
   async removeFriend(req: Request, res: Response) {
     const { senderId, receiverId } = req.body;
-    console.log(senderId, receiverId);
+
     await this.friendsService.removeFriend(senderId, receiverId, res);
   }
 }

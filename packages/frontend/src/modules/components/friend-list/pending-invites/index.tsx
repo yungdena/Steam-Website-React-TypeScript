@@ -109,12 +109,12 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
             <Avatar src={user.avatar || avatar} />
             <InviteSender>{user.name}</InviteSender>
             <ButtonAccept
-              onClick={() => handleRequest(user._id, userDataId, "accepted")}
+              onClick={() => handleRequest(userDataId, user._id, "accepted")}
             >
               Accept
             </ButtonAccept>
             <ButtonDecline
-              onClick={() => handleRequest(user._id, userDataId, "declined")}
+              onClick={() => handleRequest(userDataId, user._id, "declined")}
               style={{ margin: "1.5rem 0 0 0.5rem" }}
             >
               X
