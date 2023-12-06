@@ -53,30 +53,25 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
   const handleRequest = async (
     senderId: string,
     receiverId: string,
-    response: string,
+    response: string
   ) => {
     if (UserDataContext && UserDataContext.userData) {
       try {
-        const updatedUsers = foundReceivedUsers.filter(
-          (user: IUser) => user._id !== senderId
-        );
         await respondToRequestMutation.mutateAsync({
           senderId,
           receiverId,
           response,
         });
 
-        const newFriends = [
-          ...UserDataContext.userData.friends,
-          senderId,
-        ];
-
-        UserDataContext.setUser({
-          ...UserDataContext.userData,
-          friends: newFriends,
-        }, true);
-
-        setFoundReceivedUsers(updatedUsers);
+        if (response === "accepted") {
+          setFoundReceivedUsers((prevFoundUsers) =>
+            prevFoundUsers.filter((user: IUser) => user._id !== receiverId)
+          );
+        } else if (response === "declined") {
+          setFoundSentUsers((prevFoundUsers) =>
+            prevFoundUsers.filter((user: IUser) => user._id !== senderId)
+          );
+        }
       } catch (error) {
         console.error("Error responding to friend request:", error);
       }
@@ -85,6 +80,8 @@ export const PendingInvites = ({ sentInvites, receivedInvites }: any) => {
     }
   };
 
+  console.log(foundReceivedUsers);
+  console.log(foundSentUsers);
   if (!UserDataContext || UserDataContext.userData === null) {
     console.error(
       "UserDataContext or UserDataContext.userData is null or undefined"
