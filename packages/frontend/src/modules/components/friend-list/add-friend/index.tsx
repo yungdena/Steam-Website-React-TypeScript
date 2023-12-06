@@ -10,7 +10,9 @@ export const AddFriend = () => {
   const getUserByName = useGetUserByName();
   const [friendCodeInput, setFriendCodeInput] = useState("");
   const [nameInput, setNameInput] = useState("");
-  const [requestSent, setRequestSent] = useState(false);
+  const [requestSentMap, setRequestSentMap] = useState<{
+    [userId: string]: boolean;
+  }>({});
   const [foundUserByCode, setFoundUserByCode] = useState<IUser | null>(null);
   const [foundUserByName, setFoundUserByName] = useState<IUser[] | null>(null);
   const avatar =
@@ -22,7 +24,7 @@ export const AddFriend = () => {
       const senderId = UserDataContext?.userData._id;
   
       addFriendMutation.mutate({ senderId, receiverId });
-      setRequestSent(true);
+      setRequestSentMap((prevState) => ({ ...prevState, [receiverId]: true }));
     }
   };
 
@@ -79,12 +81,15 @@ export const AddFriend = () => {
   };
 
   useEffect(() => {
-    const isRequestSent = UserDataContext?.userData?.sentFriendRequests.some(
-      (request: any) => request.receiverId === foundUserByCode?._id
-    );
+    if (foundUserByCode && UserDataContext?.userData) {
+      const isRequestSent = UserDataContext.userData.sentFriendRequests.some(
+        (request: any) => request.receiverId === foundUserByCode._id
+      );
 
-    if (isRequestSent) {
-      setRequestSent(true);
+      setRequestSentMap((prevState) => ({
+        ...prevState,
+        [foundUserByCode._id]: isRequestSent,
+      }));
     }
   }, [foundUserByCode, UserDataContext?.userData?.sentFriendRequests]);
 
@@ -107,14 +112,14 @@ export const AddFriend = () => {
           <UserContainer>
             <UserAvatar src={foundUserByCode.avatar || avatar} />
             <UserName>{foundUserByCode.name}</UserName>
-            {!requestSent && (
+            {!requestSentMap[foundUserByCode._id] && (
               <Button
                 onClick={() => handleSendFriendRequest(foundUserByCode._id)}
               >
                 Send Invite
               </Button>
             )}
-            {requestSent && (
+            {requestSentMap[foundUserByCode._id] && (
               <Button
                 onClick={() => handleSendFriendRequest(foundUserByCode._id)}
               >
@@ -138,12 +143,12 @@ export const AddFriend = () => {
               <UserContainer key={index}>
                 <UserAvatar src={user.avatar || avatar} />
                 <UserName>{user.name}</UserName>
-                {!requestSent && (
+                {!requestSentMap[user._id] && (
                   <Button onClick={() => handleSendFriendRequest(user._id)}>
                     Send Invite
                   </Button>
                 )}
-                {requestSent && (
+                {requestSentMap[user._id] && (
                   <Button onClick={() => handleSendFriendRequest(user._id)}>
                     ✔ Invite Sent
                   </Button>
