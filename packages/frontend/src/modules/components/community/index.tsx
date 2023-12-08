@@ -30,6 +30,16 @@ export const Community = () => {
   const { isLoadingPosts, postsData } = usePostsData();
   const history = useHistory();
   const getUserByIdMutation = useGetUserById();
+  const [loadedImageCount, setLoadedImageCount] = useState(0);
+  const totalImages = postsData.length;
+
+  const handleImageLoad = () => {
+    setLoadedImageCount((prevCount) => prevCount + 1);
+  };
+
+  useEffect(() => {
+    setLoadedImageCount(0);
+  }, [postsData]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -45,13 +55,14 @@ export const Community = () => {
 
     fetchUsers();
   }, [postsData]);
+
   return (
     <>
       <Header />
       <Background>
         <div style={{ position: "relative" }}>
-          {isLoadingPosts && users.length > 0 ? (
-            <LoaderBig />
+          {isLoadingPosts && users.length > 0 && loadedImageCount > postsData.length ? (
+            <LoaderBig marginTop="15rem" />
           ) : (
             <MainContainer className="grid-container">
               <CommunityTitle>Community Activity</CommunityTitle>
@@ -210,7 +221,7 @@ export const Community = () => {
                       key={post._id}
                     >
                       <Post className="post-item">
-                        <PostImage src={post.image} />
+                        <PostImage onLoad={handleImageLoad} src={post.image} />
                         <PostData>
                           <PostTitle>{post.title}</PostTitle>
                           <Author>
